@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 40" fill="none" role="img" aria-label="VigiTrust">
+  <circle cx="18" cy="20" r="16" fill="#C41E3A"/>
+  <path d="M8 14h20M8 20h16M8 26h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="42" y="27" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="0.04em">
+    <tspan fill="#0A1620">VIGI</tspan><tspan fill="#C41E3A">TRUST</tspan>
+  </text>
+</svg>

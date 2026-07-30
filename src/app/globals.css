@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+:root {
+  /* Refined VigiTrust palette  -  brand DNA preserved, contrast elevated */
+  --vt-red: #c41e3a;
+  --vt-red-dark: #9e1830;
+  --vt-red-soft: #f8e9ec;
+  --vt-navy: #0b1f33;
+  --vt-navy-mid: #123a56;
+  --vt-azure: #1b4f72;
+  --vt-cyan: #7ba8b0;
+  --vt-ink: #0a1620;
+  --vt-slate: #334857;
+  --vt-muted: #4f6473;
+  --vt-border: #d2dce4;
+  --vt-mist: #f4f7f9;
+  --vt-paper: #ffffff;
+  --vt-success: #1b7a4b;
+  --vt-price: #7a7f24;
+  --vt-on-dark: #f2f7f9;
+  --background: #f4f7f9;
+  --foreground: #0a1620;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-soft: 0 12px 40px -20px rgba(11, 31, 51, 0.28);
+  --ease: 180ms ease;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-vt-red: var(--vt-red);
+  --color-vt-red-dark: var(--vt-red-dark);
+  --color-vt-red-soft: var(--vt-red-soft);
+  --color-vt-navy: var(--vt-navy);
+  --color-vt-navy-mid: var(--vt-navy-mid);
+  --color-vt-navy-deep: var(--vt-navy);
+  --color-vt-azure: var(--vt-azure);
+  --color-vt-cyan: var(--vt-cyan);
+  --color-vt-ink: var(--vt-ink);
+  --color-vt-slate: var(--vt-slate);
+  --color-vt-muted: var(--vt-muted);
+  --color-vt-border: var(--vt-border);
+  --color-vt-mist: var(--vt-mist);
+  --color-vt-paper: var(--vt-paper);
+  --color-vt-success: var(--vt-success);
+  --color-vt-price: var(--vt-price);
+  --color-vt-on-dark: var(--vt-on-dark);
+  --font-sans: var(--font-inter);
+  --radius-lg: var(--radius-lg);
+}
+
+@layer base {
+  * {
+    border-color: var(--vt-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--vt-red) 18%, white);
+    color: var(--vt-navy);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--vt-red);
+    outline-offset: 3px;
+  }
+
+  a {
+    transition: color var(--ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .type-display {
+    font-size: clamp(2.25rem, 4vw + 1rem, 3.75rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .type-h2 {
+    font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .type-h3 {
+    font-size: clamp(1.25rem, 0.5vw + 1rem, 1.5rem);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .type-body-lg {
+    font-size: 1.1875rem;
+    line-height: 1.6;
+  }
+
+  .type-meta {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    font-weight: 500;
+  }
+
+  .type-eyebrow {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Back-compat alias used across pages */
+  .brand-display {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .section-pad {
+    @apply px-5 py-16 sm:px-8 md:py-20 lg:px-10 lg:py-28;
+  }
+
+  .container-vt {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .network-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(123, 168, 176, 0.22) 1px,
+      transparent 0
+    );
+    background-size: 28px 28px;
+  }
+
+  .navy-surface {
+    background:
+      radial-gradient(ellipse 65% 50% at 10% 12%, rgba(123, 168, 176, 0.12), transparent 55%),
+      radial-gradient(ellipse 40% 35% at 95% 5%, rgba(196, 30, 58, 0.1), transparent 50%),
+      linear-gradient(155deg, #081828 0%, #0b1f33 45%, #123a56 100%);
+  }
+
+  .card-lift {
+    transition:
+      transform var(--ease),
+      box-shadow var(--ease);
+  }
+
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-lift:hover {
+      transform: none;
+    }
+  }
+}

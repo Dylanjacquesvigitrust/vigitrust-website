@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Clean vector VigiTrust mark: red disc with path cutouts -->
+  <defs>
+    <mask id="vt-cutouts">
+      <circle cx="50" cy="50" r="48" fill="#fff"/>
+      <!-- center bar -->
+      <path d="M18 50h64" stroke="#000" stroke-width="7.5" stroke-linecap="round"/>
+      <!-- upper path -->
+      <path d="M16 34c18-8 38-9 55-2 7 3 13 7 17 12" stroke="#000" stroke-width="7.5" stroke-linecap="round"/>
+      <!-- lower path -->
+      <path d="M16 66c18 8 38 9 55 2 7-3 13-7 17-12" stroke="#000" stroke-width="7.5" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#C41E3A" mask="url(#vt-cutouts)"/>
+</svg>
