@@ -1,7 +1,22 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+/**
+ * GitHub Pages (project site) needs a basePath of `/<repo-name>`.
+ * Local `npm run dev` / `npm run build` leave basePath empty.
+ * CI sets GITHUB_PAGES=true so assets and routes resolve under the repo path.
+ */
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const isGithubPages = process.env.GITHUB_PAGES === "true" && Boolean(repoName);
+const basePath = isGithubPages ? `/${repoName}` : "";
+
 const nextConfig: NextConfig = {
+  // Static HTML export  -  required for GitHub Pages hosting.
+  output: "export",
+  trailingSlash: true,
+  basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
+
   // Hide the bottom-left "Rendering" / route indicator in development.
   // Real compile/runtime errors still surface.
   devIndicators: false,
@@ -9,13 +24,14 @@ const nextConfig: NextConfig = {
     root: path.join(__dirname),
   },
   images: {
+    // next/image optimizer needs a server; static export must skip it.
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
-  // Prefer fewer round-trips for static marketing pages.
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
