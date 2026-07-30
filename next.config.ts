@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath,
   assetPrefix: basePath ? `${basePath}/` : undefined,
+  // Used by withBasePath() for public/ image URLs (next/image leaves these unprefixed when unoptimized).
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
 
   // Hide the bottom-left "Rendering" / route indicator in development.
   // Real compile/runtime errors still surface.

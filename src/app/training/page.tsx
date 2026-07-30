@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { SiteImage } from "@/components/ui/site-image";
 import { training } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -61,7 +61,7 @@ export default function TrainingPage() {
                     href={`/training/${course.slug}`}
                     className="relative block aspect-[4/3] overflow-hidden bg-vt-mist"
                   >
-                    <Image
+                    <SiteImage
                       src={course.image}
                       alt={course.title}
                       fill

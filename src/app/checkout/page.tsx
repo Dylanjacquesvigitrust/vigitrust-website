@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { formatEuro, useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
 import { training } from "@/content/courses";
+import { withBasePath } from "@/lib/paths";
 
 function CourseThumb({ slug, image, title }: { slug: string; image?: string; title: string }) {
   const courseImage = training.courses.find((c) => c.slug === slug)?.image;
-  const src = courseImage || image || "/images/courses/quiz.webp";
+  const src = withBasePath(courseImage || image || "/images/courses/quiz.webp");
 
   return (
     // eslint-disable-next-line @next/next/no-img-element

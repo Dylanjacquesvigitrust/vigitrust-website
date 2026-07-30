@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHero, Reveal } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { blog } from "@/content/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -39,7 +39,7 @@ export default async function BlogPostPage({ params }: Props) {
           <Reveal>
             <article className="overflow-hidden rounded-2xl bg-white ring-1 ring-vt-border">
               <div className="relative aspect-[16/9]">
-                <Image src={post.image} alt="" fill className="object-cover" sizes="768px" />
+                <SiteImage src={post.image} alt="" fill className="object-cover" sizes="768px" />
               </div>
               <div className="space-y-5 p-8 text-vt-slate sm:p-10">
                 <p>{post.excerpt}</p>

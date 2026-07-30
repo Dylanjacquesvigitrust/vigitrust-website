@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { about, offices } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function AboutPage() {
       <section className="section-pad">
         <div className="container-vt grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-vt-mist ring-1 ring-vt-border">
-            <Image
+            <SiteImage
               src={about.leadership.image}
               alt={about.leadership.name}
               fill

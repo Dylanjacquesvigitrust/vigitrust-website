@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Building2, Hotel, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { HeroOrbit } from "@/components/ui/visuals";
 import { home, testimonials } from "@/content/site";
 
@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <Image
+        <SiteImage
           src={home.hero.image}
           alt=""
           fill

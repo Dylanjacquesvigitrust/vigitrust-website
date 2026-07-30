@@ -1,9 +1,9 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { SiteImage } from "@/components/ui/site-image";
 import type { Course } from "@/content/courses";
 
 export function CoursePurchasePanel({ course }: { course: Course }) {
@@ -126,7 +126,7 @@ export function CourseGallery({ course }: { course: Course }) {
   return (
     <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-vt-border">
       <div className="relative aspect-[16/9]">
-        <Image src={course.image} alt={course.title} fill className="object-cover" sizes="(max-width:1024px) 100vw, 60vw" />
+        <SiteImage src={course.image} alt={course.title} fill className="object-cover" sizes="(max-width:1024px) 100vw, 60vw" />
       </div>
       <div className="space-y-5 p-7 sm:p-8">
         <h1 className="brand-display text-3xl text-vt-ink">{course.title}</h1>

@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import Image from "next/image";
+import { SiteImage } from "@/components/ui/site-image";
 import { cn } from "@/lib/utils";
 
 export function SectionHeading({
@@ -74,7 +74,7 @@ export function PageHero({
     >
       {image && !videoLabel ? (
         <>
-          <Image src={image} alt="" fill priority quality={75} className="object-cover" sizes="100vw" />
+          <SiteImage src={image} alt="" fill priority quality={75} className="object-cover" sizes="100vw" />
           <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,24,40,0.92),rgba(18,58,86,0.78))]" />
         </>
       ) : null}
@@ -94,7 +94,7 @@ export function PageHero({
         {videoLabel ? (
           <div className="relative aspect-video overflow-hidden rounded-[12px] ring-1 ring-white/20">
             {image ? (
-              <Image src={image} alt="" fill className="object-cover" sizes="(max-width:1024px) 100vw, 40vw" />
+              <SiteImage src={image} alt="" fill className="object-cover" sizes="(max-width:1024px) 100vw, 40vw" />
             ) : (
               <div className="absolute inset-0 bg-vt-navy-mid" />
             )}
@@ -137,7 +137,7 @@ export function MediaPlaceholder({
       )}
     >
       {image ? (
-        <Image src={image} alt="" fill className="object-cover" sizes="(max-width:768px) 100vw, 50vw" />
+        <SiteImage src={image} alt="" fill className="object-cover" sizes="(max-width:768px) 100vw, 50vw" />
       ) : null}
       <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-vt-navy/85 to-transparent px-5 py-4">
         <p className="text-sm font-semibold text-white">{label}</p>

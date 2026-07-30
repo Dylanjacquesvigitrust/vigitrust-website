@@ -1,6 +1,6 @@
-﻿import Image from "next/image";
-import Link from "next/link";
+﻿import Link from "next/link";
 import { brand } from "@/content/layout";
+import { SiteImage } from "@/components/ui/site-image";
 import { cn } from "@/lib/utils";
 
 /** Official VigiTrust wordmark from the provided brand PNG. */
@@ -20,7 +20,7 @@ export function BrandLogo({
       className={cn("relative inline-flex h-8 w-[170px] items-center sm:h-9 sm:w-[196px]", className)}
       aria-label="VigiTrust home"
     >
-      <Image
+      <SiteImage
         src={brand.logo}
         alt="VigiTrust"
         fill

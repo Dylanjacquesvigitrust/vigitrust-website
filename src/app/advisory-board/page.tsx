@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Award,
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { advisory } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -257,7 +257,7 @@ export default function AdvisoryBoardPage() {
           <article className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-[12px] bg-vt-paper ring-1 ring-vt-border">
             <div className="grid sm:grid-cols-[14rem_1fr]">
               <div className="relative min-h-[16rem] bg-vt-mist sm:min-h-full">
-                <Image
+                <SiteImage
                   src={advisory.leadership.founder.image}
                   alt={advisory.leadership.founder.name}
                   fill

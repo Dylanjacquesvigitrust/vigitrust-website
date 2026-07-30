@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { blog } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default function BlogPage() {
               className="group card-lift flex h-full flex-col overflow-hidden rounded-[10px] bg-vt-paper ring-1 ring-vt-border"
             >
               <div className="relative aspect-[16/10]">
-                <Image
+                <SiteImage
                   src={post.image}
                   alt=""
                   fill

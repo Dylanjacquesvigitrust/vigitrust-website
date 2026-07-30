@@ -1,5 +1,5 @@
 import { Globe2, Binary, Activity, UserRound } from "lucide-react";
-import Image from "next/image";
+import { SiteImage } from "@/components/ui/site-image";
 import { cn } from "@/lib/utils";
 
 /** Framed product screenshot for VigiOne Platform pages only. */
@@ -23,7 +23,7 @@ export function ProductShot({
         className,
       )}
     >
-      <Image
+      <SiteImage
         src={src}
         alt={alt}
         width={1200}
