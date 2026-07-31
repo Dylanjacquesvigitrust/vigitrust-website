@@ -1,13 +1,13 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
-import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { Clock3, Star } from "lucide-react";
 import { SiteImage } from "@/components/ui/site-image";
-import { training } from "@/content/site";
+import { courseDetails, training } from "@/content/courses";
 
 export const metadata: Metadata = {
-  title: "Training & Certifications | eLearning Store",
+  title: "eLearning Catalogue",
   description:
-    "Buy VigiTrust eLearning courses  -  GDPR, PCI, CCPA, Secure Coding, phishing awareness and more.",
+    "Browse VigiTrust eLearning courses  -  GDPR, PCI, HIPAA, Secure Coding, phishing awareness and 200+ learning modules.",
 };
 
 export default function TrainingPage() {
@@ -15,82 +15,97 @@ export default function TrainingPage() {
 
   return (
     <>
-      <section className="border-b border-vt-border bg-vt-paper">
+      <section className="border-b border-vt-border bg-vt-navy text-white">
         <div className="container-vt px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
-          <p className="type-meta text-vt-muted">Home / Store / eLearning</p>
-          <h1 className="type-h2 mt-3 text-vt-ink">{training.hero.title}</h1>
-          <div className="mt-5 max-w-4xl space-y-4 leading-relaxed text-vt-slate">
-            <p>{training.hero.body}</p>
-            <p>
-              <strong className="text-vt-ink">{training.saaas.title}</strong>  -  {training.saaas.body}
-            </p>
-          </div>
+          <p className="type-eyebrow text-vt-cyan">{training.hero.eyebrow}</p>
+          <h1 className="type-h2 mt-3 text-white">{training.hero.title}</h1>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/90 sm:text-lg">
+            {training.hero.body}
+          </p>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-vt-cyan">
+            <strong className="text-white">{training.saaas.title}</strong>  -  {training.saaas.body}
+          </p>
         </div>
       </section>
 
       <section className="bg-vt-mist py-12 sm:py-16" id="catalogue">
         <div className="container-vt px-5 sm:px-8 lg:px-10">
-          <h2 className="type-h2 text-vt-ink">{training.catalogueHeading}</h2>
-          <p className="mt-2 text-vt-muted">{training.catalogueSub}</p>
-
-          <div className="mt-8 flex flex-col gap-3 border-b border-vt-border pb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 border-b border-vt-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="type-h2 text-vt-ink">{training.catalogueHeading}</h2>
+              <p className="mt-2 max-w-2xl text-vt-muted">{training.catalogueSub}</p>
+            </div>
             <p className="type-meta text-vt-muted">
-              Showing 1 - {courses.length} of {courses.length} results
+              Showing {courses.length} of {courses.length} courses
             </p>
-            <label className="flex items-center gap-2 text-sm text-vt-slate">
-              <span className="sr-only">Sort</span>
-              <select
-                className="rounded-[6px] border border-vt-border bg-vt-paper px-3 py-2 text-sm"
-                defaultValue="latest"
-                aria-label="Sort courses"
-              >
-                <option value="latest">Sort by latest</option>
-                <option value="price-asc">Sort by price: low to high</option>
-                <option value="price-desc">Sort by price: high to low</option>
-                <option value="title">Sort by name</option>
-              </select>
-            </label>
           </div>
 
-          <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
             {courses.map((course) => {
-              const needsOptions = course.cta === "Select options" || Boolean(course.modules);
+              const details = courseDetails(course);
               return (
-                <article key={course.slug} className="card-lift flex flex-col bg-vt-paper">
-                  <Link
-                    href={`/training/${course.slug}`}
-                    className="relative block aspect-[4/3] overflow-hidden bg-vt-mist"
-                  >
+                <article
+                  key={course.slug}
+                  className="card-lift group flex h-full flex-col overflow-hidden rounded-[12px] bg-vt-paper ring-1 ring-vt-border"
+                >
+                  <Link href={`/training/${course.slug}`} className="relative block aspect-[16/9] overflow-hidden bg-vt-mist">
                     <SiteImage
                       src={course.image}
                       alt={course.title}
                       fill
                       quality={70}
-                      className="object-cover"
+                      className="object-cover transition duration-300 group-hover:scale-[1.03]"
                       sizes="(max-width:768px) 100vw, 33vw"
                     />
+                    <span className="absolute left-3 top-3 rounded-[4px] bg-vt-navy/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-white">
+                      {details.category}
+                    </span>
                   </Link>
-                  <div className="flex flex-1 flex-col px-1 pt-4">
-                    <h3 className="text-lg font-bold text-vt-ink">
-                      <Link href={`/training/${course.slug}`} className="hover:text-vt-red">
+
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-vt-red">
+                      VigiTrust · {details.level}
+                    </p>
+                    <h3 className="mt-2 text-lg font-bold leading-snug text-vt-ink">
+                      <Link href={`/training/${course.slug}`} className="transition hover:text-vt-red">
                         {course.title}
                       </Link>
                     </h3>
-                    <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-vt-muted">
+                    <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-vt-slate">
                       {course.summary}
                     </p>
-                    <p className="mt-4 text-base font-semibold text-vt-price">{course.priceLabel}</p>
-                    <div className="mt-3">
-                      {needsOptions ? (
-                        <Link
-                          href={`/training/${course.slug}`}
-                          className="inline-flex w-full items-center justify-center rounded-[6px] bg-[#e8e6f0] px-4 py-2.5 text-sm font-semibold text-[#3d3558] transition hover:bg-[#ddd9ea]"
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {details.skills.slice(0, 3).map((skill) => (
+                        <span
+                          key={skill}
+                          className="rounded-[4px] bg-vt-mist px-2 py-1 text-[11px] font-medium text-vt-azure ring-1 ring-vt-border"
                         >
-                          Select options
-                        </Link>
-                      ) : (
-                        <AddToCartButton slug={course.slug} label="Add to basket" />
-                      )}
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-vt-border pt-4 text-xs text-vt-muted">
+                      <span className="inline-flex items-center gap-1 font-semibold text-vt-ink">
+                        <Star className="size-3.5 fill-vt-red text-vt-red" aria-hidden />
+                        {details.rating.toFixed(1)}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <Clock3 className="size-3.5" aria-hidden />
+                        {details.duration}
+                      </span>
+                      <span>{details.learnersLabel}</span>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <p className="text-base font-bold text-vt-price">{course.priceLabel}</p>
+                      <Link
+                        href={`/training/${course.slug}`}
+                        className="inline-flex items-center justify-center rounded-[6px] bg-vt-red px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-vt-red-dark"
+                      >
+                        View course
+                      </Link>
                     </div>
                   </div>
                 </article>

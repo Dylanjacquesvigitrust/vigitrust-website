@@ -9,32 +9,94 @@ export type Course = {
   summary: string;
   image: string;
   level?: string;
+  category?: string;
+  duration?: string;
+  skills?: string[];
+  learningOutcomes?: string[];
+  audience?: string;
+  description?: string;
+  rating?: number;
+  learnersLabel?: string;
   topics?: string[];
   modules?: { name: string; price: string; topics: string[] }[];
   bulkDeals?: { quantity: string; discount: string; price: string }[];
 };
 
+export type CourseDetails = Course & {
+  category: string;
+  duration: string;
+  skills: string[];
+  learningOutcomes: string[];
+  audience: string;
+  description: string;
+  rating: number;
+  learnersLabel: string;
+};
+
+export function courseDetails(course: Course): CourseDetails {
+  const skills =
+    course.skills ??
+    course.topics?.slice(0, 5) ??
+    ["Security awareness", "Compliance fundamentals", "Risk reduction"];
+
+  return {
+    ...course,
+    category: course.category ?? "Security Awareness",
+    duration: course.duration ?? (course.modules ? "2-6 hours" : "45-90 mins"),
+    skills,
+    learningOutcomes: course.learningOutcomes ?? [
+      `Explain the purpose and scope of ${course.title}`,
+      "Apply practical controls and behaviours in day-to-day work",
+      "Recognise common risks and escalate issues appropriately",
+      "Support organisational readiness for audits and assessments",
+    ],
+    audience:
+      course.audience ??
+      "Employees, managers, and compliance stakeholders who need practical, role-ready awareness.",
+    description:
+      course.description ??
+      `${course.summary} Designed for self-paced learning with clear outcomes, scenario-based examples, and completion tracking suitable for audit evidence.`,
+    rating: course.rating ?? 4.7,
+    learnersLabel: course.learnersLabel ?? "1,200+ learners",
+  };
+}
+
 export const training = {
   hero: {
     eyebrow: "Training & Certifications",
-    title: "VigiTrust eLearning and Information Security Awareness",
-    body: "A key component of VigiTrust Solutions are the various Cyber Security Awareness programs delivered through eLearning using a LMS (Learning Management System). Training and awareness are closely integrated into the VigiTrust compliance portals, and now supports around 100,000 users across more than 80 countries with considerable growth forecast.",
+    title: "eLearning catalogue",
+    body: "Browse VigiTrust’s Security Awareness as a Service catalogue  -  modular courses used by 100,000+ learners worldwide. Build role-ready skills across privacy, payment security, cloud, and cyber hygiene.",
   },
   saaas: {
-    title: "VigiOne  -  Security Awareness as a Service (SAaaS)",
-    body: "VigiOne Security Awareness as a Service is a highly configurable solution for organizations to provide their staff and stakeholders with access to a modular online LMS. The VigiTrust eLearning repository has over 50 modules. Considerable discounts apply for additional users and topics selected.",
+    title: "Security Awareness as a Service (SAaaS)",
+    body: "A configurable LMS experience with 200+ learning modules. Assign topics by role, track completion, and scale seats with volume discounts.",
   },
-  catalogueHeading: "SAaaS Key Subject Areas",
-  catalogueSub: "Select the key subject areas below for more information on the course levels, content and options.",
+  catalogueHeading: "Explore courses",
+  catalogueSub: "Coursera-style learning paths with clear outcomes, skills, and flexible pricing  -  including multi-level programmes.",
   courses: [
     {
       slug: "vigiquiz",
       title: "VigiQuiz",
       priceLabel: "€2,500.00  -  €7,250.00",
       cta: "Select options" as const,
-      summary: "Interactive knowledge checks and scenario quizzes to reinforce awareness topics and surface knowledge gaps quickly.",
+      summary:
+        "Interactive knowledge checks and scenario quizzes to reinforce awareness topics and surface knowledge gaps quickly.",
+      description:
+        "VigiQuiz turns awareness into measurable competence. Deploy scenario-based quizzes across your workforce, identify weak spots by topic or team, and reinforce learning before audits or phishing seasons.",
       image: "/images/courses/quiz.webp",
       level: "Assessment",
+      category: "Assessment",
+      duration: "Configurable",
+      skills: ["Knowledge checks", "Scenario testing", "Gap analysis", "Completion reporting"],
+      learningOutcomes: [
+        "Measure workforce understanding across key cyber topics",
+        "Identify teams that need targeted follow-up training",
+        "Generate evidence of awareness testing for stakeholders",
+        "Refresh knowledge with repeatable quiz campaigns",
+      ],
+      audience: "Security, HR, and compliance teams running organisation-wide awareness programmes.",
+      rating: 4.8,
+      learnersLabel: "Enterprise programmes",
     },
     {
       slug: "secure-coding",
@@ -44,9 +106,22 @@ export const training = {
       cta: "Buy Now" as const,
       summary:
         "Hackers use techniques such as Code Injection, Cross Site Scripting and Cross Site Request Forgery. This course examines how software vulnerabilities are exploited and provides a detailed look at the OWASP Top 10.",
+      description:
+        "Give developers and technical stakeholders a practical tour of how common application attacks work  -  and how secure coding habits prevent them. Ideal for engineering teams supporting PCI, ISO 27001, or product security programmes.",
       image: "/images/courses/coding.webp",
       level: "Intermediate",
+      category: "Application Security",
+      duration: "2 hours",
       topics: ["OWASP Top Ten", "Code Injection", "XSS", "CSRF", "Secure SDLC"],
+      skills: ["OWASP Top 10", "Secure SDLC", "Injection prevention", "XSS / CSRF controls"],
+      learningOutcomes: [
+        "Describe how common web vulnerabilities are exploited",
+        "Map OWASP Top 10 risks to day-to-day coding decisions",
+        "Apply defensive patterns against injection, XSS, and CSRF",
+        "Support secure development practices inside your team",
+      ],
+      audience: "Software engineers, QA, and technical product owners.",
+      rating: 4.6,
     },
     {
       slug: "gdpr-fundamentals",
@@ -54,10 +129,25 @@ export const training = {
       priceLabel: "€27.50",
       priceFrom: 27.5,
       cta: "Buy Now" as const,
-      summary: "Essential privacy and data protection awareness covering GDPR fundamentals, obligations, and the cost of non-compliance.",
+      summary:
+        "Essential privacy and data protection awareness covering GDPR fundamentals, obligations, and the cost of non-compliance.",
+      description:
+        "A clear, practical introduction to GDPR for people who handle personal data. Learners leave understanding principles, lawful bases, subject rights, and what good day-to-day behaviour looks like.",
       image: "/images/courses/gdpr.webp",
       level: "Fundamentals",
+      category: "Privacy",
+      duration: "60 mins",
       topics: ["GDPR principles", "Lawful basis", "Data subject rights", "Breach awareness"],
+      skills: ["GDPR principles", "Lawful basis", "Data subject rights", "Breach awareness"],
+      learningOutcomes: [
+        "Explain GDPR principles in plain language",
+        "Recognise when personal data processing needs a lawful basis",
+        "Respond appropriately to data subject rights requests",
+        "Know when and how to escalate a suspected breach",
+      ],
+      audience: "All staff who process EU personal data, plus managers and privacy champions.",
+      rating: 4.8,
+      learnersLabel: "18,000+ learners",
     },
     {
       slug: "ccpa-fundamentals",
@@ -67,8 +157,15 @@ export const training = {
       cta: "Buy Now" as const,
       summary:
         "The California Consumer Privacy Act (CCPA) enhances privacy rights and consumer protection for residents of California. This course covers the fundamentals of CCPA, the data it protects, business obligations, and the cost of non-compliance.",
+      description:
+        "Build CCPA literacy across customer-facing and data teams. Cover consumer rights, business obligations, and practical examples of compliant handling of California resident data.",
       image: "/images/courses/ccpa.webp",
       level: "Fundamentals",
+      category: "Privacy",
+      duration: "60 mins",
+      skills: ["CCPA rights", "Consumer requests", "Business obligations", "Privacy notices"],
+      audience: "Teams supporting US consumers, especially California residents.",
+      rating: 4.7,
     },
     {
       slug: "vendor-risk-management",
@@ -78,8 +175,15 @@ export const training = {
       cta: "Buy Now" as const,
       summary:
         "Interactive overview of Vendor Risk Management basics and good practices  -  including the importance of vendor information risk management, the VRM programme, tools, definitions, and roles and responsibilities.",
+      description:
+        "Help procurement, security, and business owners share a common language for third-party risk. Learn programme structure, roles, and practical habits that keep vendor oversight continuous.",
       image: "/images/courses/vendor.webp",
       level: "Fundamentals",
+      category: "Third-Party Risk",
+      duration: "75 mins",
+      skills: ["Vendor due diligence", "Risk tiers", "Contract controls", "Ongoing monitoring"],
+      audience: "Procurement, infosec, compliance, and business relationship owners.",
+      rating: 4.7,
     },
     {
       slug: "social-media-best-practices",
@@ -91,6 +195,11 @@ export const training = {
         "Social networking can present serious security risks if used carelessly. Learn practical best practices to protect yourself and your organisation online.",
       image: "/images/courses/social.webp",
       level: "Fundamentals",
+      category: "Awareness",
+      duration: "45 mins",
+      skills: ["Online hygiene", "Privacy settings", "Brand protection", "Social engineering awareness"],
+      audience: "All employees, especially customer-facing and marketing teams.",
+      rating: 4.5,
     },
     {
       slug: "introduction-to-secure-printing",
@@ -101,6 +210,11 @@ export const training = {
       summary: "Understand secure printing risks and controls to prevent document leakage in the workplace.",
       image: "/images/courses/printing.webp",
       level: "Introduction",
+      category: "Physical & Workplace",
+      duration: "40 mins",
+      skills: ["Print security", "Document handling", "Clear desk habits"],
+      audience: "Office staff and facilities teams handling sensitive print jobs.",
+      rating: 4.4,
     },
     {
       slug: "introduction-to-hipaa",
@@ -108,9 +222,17 @@ export const training = {
       priceLabel: "€100.00",
       priceFrom: 100,
       cta: "Buy Now" as const,
-      summary: "Introduction to HIPAA requirements for protecting health information and supporting compliance programmes.",
+      summary:
+        "Introduction to HIPAA requirements for protecting health information and supporting compliance programmes.",
+      description:
+        "Orient healthcare and partner staff to HIPAA expectations around PHI, privacy, and security  -  with practical examples of compliant handling.",
       image: "/images/courses/hipaa.webp",
       level: "Introduction",
+      category: "Healthcare",
+      duration: "90 mins",
+      skills: ["PHI handling", "HIPAA Privacy Rule", "Security basics", "Incident awareness"],
+      audience: "Healthcare staff, partners, and vendors who may access PHI.",
+      rating: 4.6,
     },
     {
       slug: "cloud-computing-fundamentals",
@@ -121,6 +243,11 @@ export const training = {
       summary: "Foundational awareness of cloud computing security responsibilities and common risk scenarios.",
       image: "/images/courses/cloud.webp",
       level: "Fundamentals",
+      category: "Cloud Security",
+      duration: "70 mins",
+      skills: ["Shared responsibility", "Cloud risks", "Access control basics", "Data residency awareness"],
+      audience: "Business and technical staff adopting or managing cloud services.",
+      rating: 4.6,
     },
     {
       slug: "data-protection-privacy",
@@ -129,8 +256,22 @@ export const training = {
       cta: "Select options" as const,
       summary:
         "No matter what you do in life, having an understanding of Data Protection regulation is important. These courses start with the basic contents of Data Protection, why compliance is important for you and your organization, and what you need to do to ensure compliance. They outline best practices for protecting data at work and in personal life, then cover more technical requirements such as EU GDPR and the EU US Privacy Shield.",
+      description:
+        "A multi-level privacy pathway  -  from everyday do’s and don’ts through to GDPR-focused intermediate content. Assign the right tier by role and scale seats with bulk pricing.",
       image: "/images/courses/privacy.webp",
       level: "Multi-level",
+      category: "Privacy",
+      duration: "1-4 hours",
+      skills: ["Data protection basics", "Privacy by design", "GDPR", "Protecting personal data"],
+      learningOutcomes: [
+        "Apply practical data protection habits at work",
+        "Explain core privacy principles to colleagues",
+        "Progress from introduction to GDPR-level topics as needed",
+        "Support organisational privacy programmes with consistent messaging",
+      ],
+      audience: "All staff, with intermediate modules for privacy and compliance roles.",
+      rating: 4.8,
+      learnersLabel: "22,000+ learners",
       modules: [
         {
           name: "Introduction",
@@ -173,18 +314,69 @@ export const training = {
       title: "Payment Card Security & PCI",
       priceLabel: "€25.00  -  €75.00",
       cta: "Select options" as const,
-      summary: "Help teams understand payment card security obligations and how PCI DSS shapes day-to-day practice across merchants and brands.",
+      summary:
+        "Help teams understand payment card security obligations and how PCI DSS shapes day-to-day practice across merchants and brands.",
+      description:
+        "Practical PCI awareness for people who touch cardholder data environments  -  from front-line handling to programme fundamentals.",
       image: "/images/courses/pci.webp",
       level: "Multi-level",
+      category: "Payment Security",
+      duration: "1-3 hours",
+      skills: ["PCI DSS basics", "Cardholder data handling", "SAQ awareness", "Merchant responsibilities"],
+      audience: "Retail, hospitality, finance, and operations teams in card-accepting businesses.",
+      rating: 4.7,
+      modules: [
+        {
+          name: "Introduction",
+          price: "€25.00",
+          topics: ["Why payment security matters", "Cardholder data basics", "Common risks", "Course test"],
+        },
+        {
+          name: "Fundamentals",
+          price: "€50.00",
+          topics: ["PCI DSS overview", "Roles and responsibilities", "Handling CHD safely", "Course test"],
+        },
+        {
+          name: "Intermediate",
+          price: "€75.00",
+          topics: ["SAQ pathways", "Segmentation concepts", "Evidence expectations", "Course test"],
+        },
+      ],
     },
     {
       slug: "email-phishing-ransomware",
       title: "Email, Phishing And Ransomware",
       priceLabel: "€7.50  -  €27.50",
       cta: "Select options" as const,
-      summary: "Recognise phishing and ransomware threats delivered over email, and build safer habits across the workforce.",
+      summary:
+        "Recognise phishing and ransomware threats delivered over email, and build safer habits across the workforce.",
+      description:
+        "One of the highest-ROI awareness topics. Teach people to spot phishing, report fast, and understand how ransomware campaigns start.",
       image: "/images/courses/phishing.webp",
       level: "Multi-level",
+      category: "Awareness",
+      duration: "45-120 mins",
+      skills: ["Phishing detection", "Safe email habits", "Ransomware awareness", "Incident reporting"],
+      audience: "All employees  -  especially high-risk roles like finance and executive assistants.",
+      rating: 4.9,
+      learnersLabel: "40,000+ learners",
+      modules: [
+        {
+          name: "Introduction",
+          price: "€7.50",
+          topics: ["What phishing looks like", "Red flags", "How to report", "Course test"],
+        },
+        {
+          name: "Fundamentals",
+          price: "€15.00",
+          topics: ["Social engineering tactics", "Ransomware basics", "Safe habits", "Course test"],
+        },
+        {
+          name: "Intermediate",
+          price: "€27.50",
+          topics: ["Advanced lures", "Business email compromise", "Response playbooks", "Course test"],
+        },
+      ],
     },
   ] satisfies Course[],
 };

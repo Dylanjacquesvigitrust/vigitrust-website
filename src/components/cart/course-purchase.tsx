@@ -3,10 +3,10 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { SiteImage } from "@/components/ui/site-image";
-import type { Course } from "@/content/courses";
+import { courseDetails, type Course } from "@/content/courses";
 
 export function CoursePurchasePanel({ course }: { course: Course }) {
+  const details = courseDetails(course);
   const hasModules = Boolean(course.modules?.length);
   const [moduleName, setModuleName] = useState(course.modules?.[0]?.name ?? "");
 
@@ -15,7 +15,7 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
       return {
         price: course.priceFrom ?? (Number(course.priceLabel.replace(/[^\d.]/g, "")) || 0),
         label: course.priceLabel,
-        topics: course.topics ?? [],
+        topics: course.topics ?? details.skills,
       };
     }
     const mod = course.modules!.find((m) => m.name === moduleName) ?? course.modules![0];
@@ -24,24 +24,26 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
       label: mod.price,
       topics: mod.topics,
     };
-  }, [course, hasModules, moduleName]);
+  }, [course, details.skills, hasModules, moduleName]);
 
   return (
-    <aside className="sticky top-28 rounded-2xl bg-white p-7 shadow-xl shadow-vt-navy/10 ring-1 ring-vt-border">
-      <p className="text-sm font-semibold uppercase tracking-wide text-vt-muted">Price</p>
+    <aside className="card-lift sticky top-28 rounded-[12px] bg-vt-paper p-7 shadow-[var(--shadow-soft)] ring-1 ring-vt-border">
+      <p className="text-sm font-semibold uppercase tracking-wide text-vt-muted">Enroll</p>
       <p className="mt-1 text-3xl font-bold text-vt-price">{selected.label}</p>
-      <p className="mt-1 text-sm text-vt-muted">{course.priceLabel}</p>
+      {hasModules ? (
+        <p className="mt-1 text-sm text-vt-muted">Full range: {course.priceLabel}</p>
+      ) : null}
 
       {hasModules ? (
         <div className="mt-5">
           <label className="mb-1.5 block text-sm font-medium text-vt-slate" htmlFor="module">
-            Modules
+            Module level
           </label>
           <select
             id="module"
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
-            className="w-full rounded-md bg-[#f3f3f3] px-3 py-2.5 ring-1 ring-vt-border"
+            className="w-full rounded-[6px] bg-vt-mist px-3 py-2.5 text-vt-ink ring-1 ring-vt-border"
           >
             {course.modules!.map((m) => (
               <option key={m.name} value={m.name}>
@@ -49,43 +51,41 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
               </option>
             ))}
           </select>
-          <button
-            type="button"
-            className="mt-2 text-sm text-[#7030a0] hover:underline"
-            onClick={() => setModuleName(course.modules![0].name)}
-          >
-            Clear
-          </button>
         </div>
       ) : null}
 
-      <div className="mt-6">
+      <div className="mt-6 space-y-3">
         <AddToCartButton
           slug={course.slug}
-          label="Add to basket"
+          label={hasModules ? "Add module to basket" : "Add to basket"}
           module={hasModules ? moduleName : undefined}
           price={selected.price}
           priceLabel={selected.label}
-          className="w-full !bg-[#7030a0] !text-white hover:!bg-[#5a2680]"
+          className="w-full"
         />
+        <Link
+          href="/checkout"
+          className="inline-flex w-full items-center justify-center rounded-[6px] border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy transition hover:bg-vt-mist"
+        >
+          Go to checkout
+        </Link>
       </div>
 
-      <Link
-        href="/checkout"
-        className="mt-3 inline-flex w-full items-center justify-center rounded-md border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy hover:bg-vt-mist"
-      >
-        Go to checkout
-      </Link>
+      <ul className="mt-6 space-y-2 border-t border-vt-border pt-5 text-sm text-vt-slate">
+        <li>Self-paced online learning</li>
+        <li>Completion tracking for audit evidence</li>
+        <li>Volume discounts available for teams</li>
+      </ul>
 
       {course.bulkDeals ? (
-        <div className="mt-8">
-          <h3 className="text-sm font-semibold text-vt-ink">Bulk deal</h3>
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-vt-ink">Bulk seats</h3>
           <table className="mt-3 w-full text-left text-sm">
             <thead>
               <tr className="border-b border-vt-border text-vt-muted">
                 <th className="py-2 font-medium">Quantity</th>
                 <th className="py-2 font-medium">Discount</th>
-                <th className="py-2 font-medium">Discounted price</th>
+                <th className="py-2 font-medium">Price</th>
               </tr>
             </thead>
             <tbody>
@@ -99,17 +99,16 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
             </tbody>
           </table>
           <p className="mt-3 text-xs text-vt-muted">
-            1 year subscription prices. Customers needing more than 500 seats should contact
-            info@vigitrust.com.
+            1 year subscription prices. For 500+ seats contact info@vigitrust.com.
           </p>
         </div>
       ) : null}
 
       {selected.topics.length ? (
-        <div className="mt-8 border-t border-vt-border pt-6">
-          <h3 className="font-semibold text-vt-ink">This module covers</h3>
+        <div className="mt-6 border-t border-vt-border pt-5">
+          <h3 className="font-semibold text-vt-ink">Includes</h3>
           <ul className="mt-3 space-y-2">
-            {selected.topics.map((t) => (
+            {selected.topics.slice(0, 6).map((t) => (
               <li key={t} className="flex gap-2 text-sm text-vt-slate">
                 <span className="mt-2 size-1.5 shrink-0 rounded-full bg-vt-red" />
                 {t}
@@ -119,42 +118,5 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
         </div>
       ) : null}
     </aside>
-  );
-}
-
-export function CourseGallery({ course }: { course: Course }) {
-  return (
-    <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-vt-border">
-      <div className="relative aspect-[16/9]">
-        <SiteImage src={course.image} alt={course.title} fill className="object-cover" sizes="(max-width:1024px) 100vw, 60vw" />
-      </div>
-      <div className="space-y-5 p-7 sm:p-8">
-        <h1 className="brand-display text-3xl text-vt-ink">{course.title}</h1>
-        <p className="text-base leading-relaxed text-vt-slate">{course.summary}</p>
-        {course.modules ? (
-          <div>
-            <h2 className="brand-display text-2xl text-vt-ink">Course levels</h2>
-            <div className="mt-4 space-y-4">
-              {course.modules.map((mod) => (
-                <div key={mod.name} className="rounded-xl bg-vt-mist p-5 ring-1 ring-vt-border">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold text-vt-navy">{mod.name}</h3>
-                    <span className="font-bold text-vt-price">{mod.price}</span>
-                  </div>
-                  <ul className="mt-3 space-y-1.5">
-                    {mod.topics.map((t) => (
-                      <li key={t} className="flex gap-2 text-sm text-vt-slate">
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-vt-red" />
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-      </div>
-    </div>
   );
 }

@@ -60,32 +60,15 @@ export function HeroOrbit() {
         ))}
       </div>
       <div className="absolute inset-[26%] grid place-items-center drop-shadow-[0_16px_36px_-12px_rgba(190,39,45,0.85)]">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 100 100"
-          className="size-full"
-          aria-hidden
-        >
-          <defs>
-            <mask id="vt-orbit-mark-mask">
-              <circle cx="50" cy="50" r="48" fill="#fff" />
-              <path d="M18 50h64" stroke="#000" strokeWidth="7.5" strokeLinecap="round" />
-              <path
-                d="M16 34c18-8 38-9 55-2 7 3 13 7 17 12"
-                stroke="#000"
-                strokeWidth="7.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M16 66c18 8 38 9 55 2 7-3 13-7 17-12"
-                stroke="#000"
-                strokeWidth="7.5"
-                strokeLinecap="round"
-              />
-            </mask>
-          </defs>
-          <circle cx="50" cy="50" r="48" fill="#C41E3A" mask="url(#vt-orbit-mark-mask)" />
-        </svg>
+        <SiteImage
+          src="/brand/vigitrust-icon.png"
+          alt=""
+          width={320}
+          height={320}
+          priority
+          unoptimized
+          className="size-full object-contain"
+        />
       </div>
     </div>
   );

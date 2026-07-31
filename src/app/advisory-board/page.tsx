@@ -115,7 +115,7 @@ export default function AdvisoryBoardPage() {
               return (
                 <article
                   key={item.title}
-                  className="rounded-[10px] bg-vt-paper p-7 ring-1 ring-vt-border"
+                  className="card-lift rounded-[10px] bg-vt-paper p-7 ring-1 ring-vt-border"
                 >
                   <span className="mb-4 inline-flex size-10 items-center justify-center rounded-[6px] bg-vt-mist text-vt-azure">
                     <Icon className="size-4" aria-hidden />
@@ -140,7 +140,7 @@ export default function AdvisoryBoardPage() {
             {advisory.membership.tiers.map((tier) => (
               <article
                 key={tier.id}
-                className={`relative flex h-full flex-col rounded-[12px] bg-vt-paper ring-1 ring-vt-border ${
+                className={`card-lift relative flex h-full flex-col rounded-[12px] bg-vt-paper ring-1 ring-vt-border ${
                   tier.featured
                     ? "shadow-[0_4px_32px_-8px_rgba(196,30,58,0.15)] ring-vt-red/35 lg:scale-[1.03]"
                     : ""
@@ -234,7 +234,7 @@ export default function AdvisoryBoardPage() {
             {advisory.globalParticipation.countries.map((country) => (
               <span
                 key={country}
-                className="rounded-full border border-vt-border bg-vt-paper px-4 py-2 text-sm font-medium text-vt-ink"
+                className="card-lift rounded-[6px] border border-vt-border bg-vt-paper px-4 py-2 text-sm font-medium text-vt-ink"
               >
                 {country}
               </span>
@@ -254,7 +254,7 @@ export default function AdvisoryBoardPage() {
       <section className="section-pad" id="leadership">
         <div className="container-vt">
           <SectionHeading title={advisory.leadership.title} align="center" />
-          <article className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-[12px] bg-vt-paper ring-1 ring-vt-border">
+          <article className="card-lift mx-auto mt-10 max-w-3xl overflow-hidden rounded-[12px] bg-vt-paper ring-1 ring-vt-border">
             <div className="grid sm:grid-cols-[14rem_1fr]">
               <div className="relative min-h-[16rem] bg-vt-mist sm:min-h-full">
                 <SiteImage
@@ -277,7 +277,7 @@ export default function AdvisoryBoardPage() {
             {advisory.leadership.regionalDirectors.map((director) => (
               <article
                 key={director.name}
-                className="rounded-[10px] bg-vt-paper p-6 ring-1 ring-vt-border"
+                className="card-lift rounded-[10px] bg-vt-paper p-6 ring-1 ring-vt-border"
               >
                 <div className="mb-4 flex size-14 items-center justify-center rounded-full border border-vt-border bg-vt-mist text-sm font-bold text-vt-azure">
                   {director.initials}
@@ -298,7 +298,7 @@ export default function AdvisoryBoardPage() {
             {advisory.testimonials.map((t) => (
               <blockquote
                 key={t.name}
-                className="flex h-full flex-col rounded-[10px] bg-vt-paper p-8 ring-1 ring-vt-border"
+                className="card-lift flex h-full flex-col rounded-[10px] bg-vt-paper p-8 ring-1 ring-vt-border"
               >
                 <p className="flex-1 leading-relaxed text-vt-muted">&ldquo;{t.quote}&rdquo;</p>
                 <footer className="mt-6 border-t border-vt-border pt-4">

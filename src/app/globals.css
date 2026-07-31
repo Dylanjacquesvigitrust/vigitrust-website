@@ -172,11 +172,12 @@
   .card-lift {
     transition:
       transform var(--ease),
-      box-shadow var(--ease);
+      box-shadow var(--ease),
+      border-color var(--ease);
   }
 
   .card-lift:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-soft);
   }
 

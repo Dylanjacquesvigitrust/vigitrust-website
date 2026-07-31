@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | VigiTrust",
   },
   description:
-    "Award-winning Integrated Risk Management SaaS. VigiOne helps organisations in 120+ countries prepare, validate, and maintain continuous compliance.",
+    "Award-winning Integrated Risk Management SaaS. VigiOne helps organisations in 120+ countries prepare for, validate & maintain continuous compliance.",
   icons: {
     icon: [
       { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },

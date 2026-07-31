@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Building2, Hotel, Shield } from "lucide-react";
+import { ArrowRight, Building2, Hotel, Shield, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
 import { HeroOrbit } from "@/components/ui/visuals";
 import { home, testimonials } from "@/content/site";
 
-const industryIcons = [Hotel, Shield, Building2];
+const industryIcons = [Hotel, Users, Building2];
 
 export default function HomePage() {
   return (
@@ -60,7 +60,7 @@ export default function HomePage() {
             {home.about.cards.map((card) => (
               <article
                 key={card.title}
-                className="rounded-[10px] bg-vt-mist p-7 ring-1 ring-vt-border"
+                className="card-lift rounded-[10px] bg-vt-mist p-7 ring-1 ring-vt-border"
               >
                 <h3 className="type-h3 text-vt-ink">{card.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-vt-slate">{card.body}</p>
@@ -90,11 +90,11 @@ export default function HomePage() {
           />
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {home.whyUs.items.map((item, i) => {
-              const Icon = industryIcons[i] ?? Shield;
+              const Icon = industryIcons[i] ?? Users;
               return (
                 <article
                   key={item.title}
-                  className="h-full rounded-[10px] bg-vt-paper p-7 ring-1 ring-vt-border"
+                  className="card-lift h-full rounded-[10px] bg-vt-paper p-7 ring-1 ring-vt-border"
                 >
                   <span className="mb-5 inline-flex size-11 items-center justify-center rounded-full bg-vt-red-soft text-vt-red ring-1 ring-vt-border">
                     <Icon className="size-5" aria-hidden />

@@ -32,11 +32,11 @@ export const home = {
     eyebrow: null as string | null,
     title: "VIGIONE",
     body: [
-      "Empowering organisations in 120+ countries to prepare, validate, and maintain continuous compliance.",
-      "Award-winning SaaS platform delivering clarity, credibility, and confidence across every major framework.",
+      "Prepare for, validate & maintain continuous compliance.",
+      "Award-winning SaaS helping organisations in 120+ countries strengthen governance, risk, and compliance with clarity and confidence.",
     ],
     primaryCta: { label: "Book A Demo", href: "/demo" },
-    secondaryCta: { label: "View Services", href: "/#solutions" },
+    secondaryCta: { label: "View Solutions", href: "/#solutions" },
     image: "/images/heroes/office-sm.webp",
   },
   about: {
@@ -45,7 +45,7 @@ export const home = {
     paragraphs: [
       "For over two decades, VigiTrust has helped organisations in 120+ countries simplify Governance, Risk, and Compliance (GRC).",
       "Our flagship platform VigiOne® provides a unified framework to assess, monitor, and manage compliance maturity across regulations like ISO 27001, PCI DSS, GDPR, CCPA, and more.",
-      "We combine expert insight, interactive eLearning, and real-time reporting to help businesses of all sizes maintain compliance and strengthen their cyber-resilience.",
+      "We combine interactive eLearning, real-time reporting, and practical methodology so teams can prepare for, validate & maintain continuous compliance.",
     ],
     cards: [
       {
@@ -61,7 +61,7 @@ export const home = {
   stats: [
     { value: "120+", label: "Countries" },
     { value: "100k+", label: "Learners" },
-    { value: "50+", label: "eLearning modules" },
+    { value: "200+", label: "Learning modules" },
     { value: "20+", label: "Years" },
   ],
   whyUs: {
@@ -73,8 +73,8 @@ export const home = {
         body: "Protect guest data, ensure global compliance, and maintain brand trust. VigiOne helps hotels, resorts, and hospitality groups meet PCI DSS, GDPR, and data protection standards through continuous monitoring and risk management.",
       },
       {
-        title: "Infosec Advisory",
-        body: "Strengthen your organisation’s security posture with expert guidance on governance, risk, and compliance. VigiTrust’s Infosec Advisory supports CISOs and security teams with maturity assessments, audit preparation, and roadmap development to help align business goals with global security standards.",
+        title: "Advisory Board",
+        body: "Connect with VigiTrust’s Global Advisory Board  -  a worldwide network of cyber leaders, regulators, and practitioners sharing threat insight, regulatory trends, and peer best practice across industries and regions.",
       },
       {
         title: "MSSP",
@@ -84,24 +84,20 @@ export const home = {
   },
   midCta: {
     title: "Ready To Simplify Compliance?",
-    body: "Book a free demo today and see how Vigitrust can help your organisation prepare, validate, and comply.",
+    body: "Book a free demo today and see how VigiTrust helps your organisation prepare for, validate & maintain continuous compliance.",
     cta: { label: "Book A Demo", href: "/demo" },
     image: "/images/heroes/team-sm.webp",
   },
   solutions: {
     eyebrow: "Our Solutions",
     title: "End-To-End Compliance & Risk Management Solutions",
-    body: "With VigiOne, eLearning, and expert advisory services, Vigitrust helps organisations worldwide prepare, validate, and stay compliant with confidence.",
+    body: "With VigiOne and a library of 200+ learning modules, VigiTrust helps organisations worldwide prepare for, validate & maintain continuous compliance with confidence.",
     items: [
       { title: "VigiOne GRC Platform", href: "/platform" },
       { title: "GRC Training Program", href: "/training" },
-      { title: "Vigitrust Cyber Institute", href: "/resources" },
+      { title: "Advisory Board", href: "/advisory-board" },
     ],
     image: "/images/heroes/datacenter-web.webp",
-  },
-  newsletter: {
-    title: "Stay Ahead In Compliance",
-    body: "Subscribe to get insights, news, and resources on VigiOne, eLearning, and global frameworks.",
   },
 };
 
@@ -125,8 +121,8 @@ export const platform = {
     eyebrow: "Global Compliance. Simplified.",
     title: "Unify Governance, Risk & Compliance With VIGIONE",
     body: [
-      "Empowering organisations in 120+ countries to prepare, validate, and maintain continuous compliance.",
-      "Award-winning SaaS platform delivering clarity, credibility, and confidence across every major framework.",
+      "VigiOne is the operating system for continuous compliance  -  one workspace where controls, evidence, assessments, and reporting stay connected.",
+      "Built for organisations and assessors who need shared visibility, fewer hand-offs, and a clearer path from readiness to validation.",
     ],
     image: "/images/heroes/security-sm.webp",
   },

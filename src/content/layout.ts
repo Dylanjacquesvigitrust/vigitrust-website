@@ -5,7 +5,7 @@ export const brand = {
   tagline: "Global Compliance. Simplified.",
   email: "info@vigitrust.com",
   logo: "/brand/vigitrust-logo.png",
-  mark: "/brand/vigitrust-logo.png",
+  mark: "/brand/vigitrust-icon.png",
 } as const;
 
 export const navigation = {
@@ -15,9 +15,12 @@ export const navigation = {
       href: "/about",
       children: [
         { label: "About VigiTrust", href: "/about", description: "Our mission and global reach" },
-        { label: "Advisory Board", href: "/advisory-board", description: "Global cyber leadership network" },
         { label: "Events", href: "/events", description: "Summits, dinners, and community gatherings" },
       ],
+    },
+    {
+      label: "Advisory Board",
+      href: "/advisory-board",
     },
     {
       label: "VigiOne Platform",
@@ -73,14 +76,15 @@ export const navigation = {
 
 export const footer = {
   blurb:
-    "VigiTrust provides award-winning solutions in Governance, Risk, and Compliance. With over 20 years of expertise and clients in 120+ countries, we empower organisations to prepare, validate, and maintain continuous compliance through our VigiOne platform, eLearning, and advisory services.",
+    "VigiTrust provides award-winning solutions in Governance, Risk, and Compliance. With over 20 years of expertise and clients in 120+ countries, we empower organisations to prepare for, validate & maintain continuous compliance through our VigiOne platform and eLearning programmes.",
   columns: [
     {
       title: "Quicklinks",
       links: [
         { label: "Home", href: "/" },
         { label: "About us", href: "/about" },
-        { label: "Solutions", href: "/platform" },
+        { label: "VigiOne Platform", href: "/platform" },
+        { label: "Advisory Board", href: "/advisory-board" },
         { label: "Events", href: "/events" },
         { label: "Contact Us", href: "/contact" },
       ],
@@ -97,8 +101,4 @@ export const footer = {
       ],
     },
   ],
-  newsletter: {
-    title: "Stay Ahead In Compliance",
-    body: "Subscribe to get insights, news, and resources on VigiOne, eLearning, and global frameworks.",
-  },
 } as const;
