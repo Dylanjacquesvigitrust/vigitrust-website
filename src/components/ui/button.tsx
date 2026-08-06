@@ -2,26 +2,22 @@ import Link from "next/link";
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "white" | "soft";
+type Variant = "primary" | "secondary" | "ghost" | "white" | "soft" | "navy";
 type Size = "md" | "lg" | "sm";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-vt-red text-white hover:bg-vt-red-dark shadow-[0_10px_28px_-14px_rgba(196,30,58,0.65)]",
-  secondary:
-    "bg-white/10 text-white ring-1 ring-white/35 hover:bg-white/16",
-  ghost:
-    "bg-transparent text-vt-azure ring-1 ring-vt-border hover:bg-vt-mist hover:text-vt-navy",
-  white:
-    "bg-vt-paper text-vt-navy hover:bg-vt-mist shadow-sm",
-  soft:
-    "bg-[#e8e6f0] text-[#3d3558] hover:bg-[#ddd9ea]",
+  primary: "bg-vt-red text-white hover:bg-vt-red-dark",
+  secondary: "bg-transparent text-white ring-1 ring-white/25 hover:bg-white/8 hover:ring-white/40",
+  ghost: "bg-transparent text-vt-navy ring-1 ring-vt-border hover:bg-vt-mist hover:ring-vt-border-strong",
+  white: "bg-vt-paper text-vt-navy ring-1 ring-vt-border hover:bg-vt-mist",
+  soft: "bg-vt-mist text-vt-navy ring-1 ring-vt-border hover:bg-vt-paper",
+  navy: "bg-vt-navy text-white hover:bg-vt-navy-mid",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm",
-  md: "px-5 py-2.5 text-sm",
-  lg: "px-7 py-3.5 text-[0.9375rem]",
+  sm: "h-9 px-3.5 text-[13px]",
+  md: "h-10 px-4 text-sm",
+  lg: "h-11 px-5 text-sm",
 };
 
 type Common = {
@@ -45,7 +41,7 @@ export function Button({
   ...props
 }: ButtonAsButton | ButtonAsLink) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-[6px] font-semibold tracking-wide transition duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-vt-red disabled:pointer-events-none disabled:opacity-55",
+    "inline-flex items-center justify-center gap-2 rounded-[4px] font-semibold tracking-[-0.01em] transition-[background-color,box-shadow,transform,border-color,color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vt-red disabled:pointer-events-none disabled:opacity-50 active:translate-y-px",
     variants[variant],
     sizes[size],
     className,

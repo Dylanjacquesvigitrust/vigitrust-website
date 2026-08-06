@@ -9,15 +9,15 @@ export function NewsletterCta() {
   const copy = newsletterForPath(pathname);
 
   return (
-    <section className="relative overflow-hidden navy-surface">
-      <div className="absolute inset-0 network-grid opacity-20" aria-hidden />
-      <div className="container-vt relative grid gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:px-10 lg:py-16">
+    <section className="border-t border-vt-border bg-vt-mist">
+      <div className="container-vt grid gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:px-10 lg:py-20">
         <div>
-          <h2 className="type-h2 text-balance text-white">{copy.title}</h2>
-          <p className="mt-3 max-w-xl text-vt-on-dark/85">{copy.body}</p>
+          <p className="type-eyebrow text-vt-red">Newsletter</p>
+          <h2 className="type-h2 mt-3 text-balance text-vt-ink">{copy.title}</h2>
+          <p className="mt-3 max-w-xl text-[1.0625rem] leading-relaxed text-vt-slate">{copy.body}</p>
         </div>
         <form
-          className="flex flex-col gap-3 sm:flex-row"
+          className="flex flex-col gap-2.5 sm:flex-row"
           action="mailto:info@vigitrust.com"
           method="get"
           aria-label="Newsletter signup"
@@ -30,11 +30,11 @@ export function NewsletterCta() {
             name="body"
             type="email"
             required
-            placeholder="Email"
-            className="h-11 flex-1 rounded-[6px] border-0 bg-vt-paper px-4 text-vt-ink placeholder:text-vt-muted"
+            placeholder="Work email"
+            className="input-field h-11 flex-1"
           />
-          <Button type="submit" size="lg">
-            Sign Up
+          <Button type="submit" size="lg" variant="navy">
+            Subscribe
           </Button>
         </form>
       </div>

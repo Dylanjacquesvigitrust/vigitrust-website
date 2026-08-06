@@ -1,14 +1,16 @@
 ﻿import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { KlaviyoScripts } from "@/components/analytics/klaviyo-scripts";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const sans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -39,12 +41,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} h-full`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">
+        <KlaviyoScripts />
         <CartProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-[4px] focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy"
           >
             Skip to content
           </a>

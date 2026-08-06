@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, Building2, Hotel, Shield, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
-import { SiteImage } from "@/components/ui/site-image";
 import { HeroOrbit } from "@/components/ui/visuals";
 import { home, testimonials } from "@/content/site";
 
@@ -11,32 +10,25 @@ const industryIcons = [Hotel, Users, Building2];
 export default function HomePage() {
   return (
     <>
-      <section className="relative overflow-hidden">
-        <SiteImage
-          src={home.hero.image}
-          alt=""
-          fill
-          priority
-          quality={75}
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,24,40,0.92)_0%,rgba(11,31,51,0.9)_55%,rgba(11,31,51,0.88)_100%)]" />
-        <div className="absolute inset-0 network-grid opacity-20" aria-hidden />
-        <div className="container-vt relative grid items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10 lg:px-10 lg:py-28">
+      <section className="relative overflow-hidden navy-surface">
+        <div className="absolute inset-0 network-grid opacity-50" aria-hidden />
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(ellipse_at_70%_40%,rgba(196,30,58,0.12),transparent_55%)] lg:block" aria-hidden />
+        <div className="container-vt relative grid items-center gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:px-10 lg:py-28">
           <div>
-            <h1 className="type-display tracking-[0.06em] text-white">{home.hero.title}</h1>
-            <div className="mt-6 max-w-xl space-y-3 type-body-lg text-white/95">
+            <p className="type-eyebrow text-vt-cyan">Integrated risk management</p>
+            <h1 className="type-display mt-4 tracking-[-0.045em] text-white">{home.hero.title}</h1>
+            <div className="mt-6 max-w-xl space-y-3 text-[1.0625rem] leading-relaxed text-vt-on-dark/85">
               {home.hero.body.map((p) => (
                 <p key={p}>{p}</p>
               ))}
             </div>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col gap-2.5 sm:flex-row sm:items-center">
               <Button href={home.hero.primaryCta.href} size="lg">
                 {home.hero.primaryCta.label}
               </Button>
               <Button href={home.hero.secondaryCta.href} variant="secondary" size="lg">
                 {home.hero.secondaryCta.label}
+                <ArrowRight className="size-4 opacity-80" aria-hidden />
               </Button>
             </div>
           </div>
@@ -46,38 +38,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad bg-vt-paper">
-        <div className="container-vt">
-          <SectionHeading eyebrow={home.about.eyebrow} title={home.about.title} />
-          <div className="mt-6 max-w-4xl space-y-4">
-            {home.about.paragraphs.map((p) => (
-              <p key={p.slice(0, 28)} className="type-body-lg text-vt-slate">
-                {p}
-              </p>
-            ))}
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {home.about.cards.map((card) => (
-              <article
-                key={card.title}
-                className="card-lift rounded-[10px] bg-vt-mist p-7 ring-1 ring-vt-border"
-              >
-                <h3 className="type-h3 text-vt-ink">{card.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-vt-slate">{card.body}</p>
-              </article>
-            ))}
-          </div>
+      <section className="border-b border-vt-border bg-vt-paper">
+        <div className="container-vt grid grid-cols-2 gap-px bg-vt-border sm:grid-cols-4">
+          {home.stats.map((stat) => (
+            <div key={stat.label} className="bg-vt-paper px-5 py-8 sm:px-6 sm:py-10">
+              <div className="text-2xl font-semibold tracking-[-0.03em] text-vt-navy sm:text-3xl">
+                {stat.value}
+              </div>
+              <div className="type-meta mt-1.5 text-vt-muted">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="px-5 sm:px-8 lg:px-10">
-        <div className="container-vt grid gap-6 rounded-[14px] bg-vt-navy p-6 shadow-[var(--shadow-soft)] sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
-          {home.stats.map((stat) => (
-            <div key={stat.label} className="text-center lg:text-left">
-              <div className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{stat.value}</div>
-              <div className="type-meta mt-1 text-vt-cyan">{stat.label}</div>
+      <section className="section-pad bg-vt-paper">
+        <div className="container-vt">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+            <SectionHeading eyebrow={home.about.eyebrow} title={home.about.title} />
+            <div className="space-y-5">
+              {home.about.paragraphs.map((p) => (
+                <p key={p.slice(0, 28)} className="text-[1.0625rem] leading-relaxed text-vt-slate">
+                  {p}
+                </p>
+              ))}
+              <div className="grid gap-0 border-t border-vt-border pt-8 sm:grid-cols-2 sm:gap-8">
+                {home.about.cards.map((card) => (
+                  <div key={card.title} className="border-b border-vt-border py-6 sm:border-0 sm:py-0">
+                    <h3 className="type-h3 text-vt-ink">{card.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-vt-muted">{card.body}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
@@ -88,16 +81,13 @@ export default function HomePage() {
             title={home.whyUs.title}
             align="center"
           />
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-[6px] border border-vt-border bg-vt-border lg:grid-cols-3">
             {home.whyUs.items.map((item, i) => {
               const Icon = industryIcons[i] ?? Users;
               return (
-                <article
-                  key={item.title}
-                  className="card-lift h-full rounded-[10px] bg-vt-paper p-7 ring-1 ring-vt-border"
-                >
-                  <span className="mb-5 inline-flex size-11 items-center justify-center rounded-full bg-vt-red-soft text-vt-red ring-1 ring-vt-border">
-                    <Icon className="size-5" aria-hidden />
+                <article key={item.title} className="bg-vt-paper p-8 sm:p-9">
+                  <span className="mb-5 inline-flex size-9 items-center justify-center rounded-[4px] border border-vt-border bg-vt-mist text-vt-navy">
+                    <Icon className="size-4" aria-hidden />
                   </span>
                   <h3 className="type-h3 text-vt-ink">{item.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-vt-slate">{item.body}</p>
@@ -110,17 +100,17 @@ export default function HomePage() {
 
       <section className="section-pad bg-vt-paper">
         <div className="container-vt">
-          <SectionHeading eyebrow="Testimonials" title="What Our Clients Say" />
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <SectionHeading eyebrow="Testimonials" title="What our clients say" />
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {testimonials.map((t) => (
               <blockquote
                 key={t.name}
-                className="flex h-full flex-col rounded-[10px] bg-vt-mist p-7 ring-1 ring-vt-border"
+                className="flex h-full flex-col border-l-2 border-vt-red pl-6 sm:pl-8"
               >
-                <p className="flex-1 leading-relaxed text-vt-ink">“{t.quote}”</p>
-                <footer className="mt-6 border-t border-vt-border pt-4">
-                  <div className="font-semibold text-vt-red">{t.name}</div>
-                  <div className="type-meta text-vt-muted">{t.role}</div>
+                <p className="flex-1 text-[1.0625rem] leading-relaxed text-vt-ink">“{t.quote}”</p>
+                <footer className="mt-6">
+                  <div className="text-sm font-semibold text-vt-navy">{t.name}</div>
+                  <div className="type-meta mt-0.5 text-vt-muted">{t.role}</div>
                 </footer>
               </blockquote>
             ))}
@@ -128,11 +118,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden navy-surface">
-        <div className="absolute inset-0 network-grid opacity-15" aria-hidden />
-        <div className="container-vt relative px-5 py-16 text-center sm:px-8 lg:px-10 lg:py-20">
+      <section className="navy-surface">
+        <div className="container-vt px-5 py-20 text-center sm:px-8 lg:px-10 lg:py-24">
           <h2 className="type-h2 text-white">{home.midCta.title}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-vt-on-dark/80">
             {home.midCta.body}
           </p>
           <div className="mt-8">
@@ -143,30 +132,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="solutions" className="section-pad bg-vt-mist">
+      <section id="solutions" className="section-pad bg-vt-paper">
         <div className="container-vt">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto_1.1fr] lg:items-center">
-            <SectionHeading
-              eyebrow={home.solutions.eyebrow}
-              title={home.solutions.title}
-            />
-            <div className="hidden h-24 w-px bg-vt-border lg:block" aria-hidden />
-            <p className="type-body-lg text-vt-slate">{home.solutions.body}</p>
+          <div className="max-w-2xl">
+            <SectionHeading eyebrow={home.solutions.eyebrow} title={home.solutions.title} />
+            <p className="mt-4 text-[1.0625rem] leading-relaxed text-vt-slate">{home.solutions.body}</p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 divide-y divide-vt-border border-y border-vt-border">
             {home.solutions.items.map((item) => (
               <Link
                 key={item.title}
                 href={item.href}
-                className="group card-lift flex h-full flex-col items-center rounded-[10px] bg-vt-paper px-6 py-10 text-center ring-1 ring-vt-border"
+                className="group flex items-center justify-between gap-6 py-6 transition hover:bg-vt-mist/80"
               >
-                <span className="mb-5 inline-flex size-14 items-center justify-center rounded-full bg-vt-red-soft text-vt-red ring-1 ring-vt-border">
-                  <Shield className="size-5" aria-hidden />
-                </span>
-                <h3 className="type-h3 text-vt-ink group-hover:text-vt-red">{item.title}</h3>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-vt-azure">
-                  Explore <ArrowRight className="size-3.5" aria-hidden />
-                </span>
+                <div className="flex items-center gap-4">
+                  <span className="inline-flex size-9 items-center justify-center rounded-[4px] border border-vt-border text-vt-navy transition group-hover:border-vt-red/30 group-hover:text-vt-red">
+                    <Shield className="size-4" aria-hidden />
+                  </span>
+                  <h3 className="type-h3 text-vt-ink group-hover:text-vt-navy">{item.title}</h3>
+                </div>
+                <ArrowRight className="size-4 text-vt-muted transition group-hover:translate-x-0.5 group-hover:text-vt-red" aria-hidden />
               </Link>
             ))}
           </div>

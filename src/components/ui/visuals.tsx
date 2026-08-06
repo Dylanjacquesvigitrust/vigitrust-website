@@ -19,7 +19,7 @@ export function ProductShot({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[14px] bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border",
+        "relative overflow-hidden rounded-[6px] bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border",
         className,
       )}
     >
@@ -39,35 +39,35 @@ export function ProductShot({
 
 export function HeroOrbit() {
   const satellites = [
-    { Icon: Activity, className: "left-[6%] top-[16%]" },
-    { Icon: UserRound, className: "right-[4%] top-[20%]" },
-    { Icon: Globe2, className: "left-[0%] bottom-[26%]" },
-    { Icon: Binary, className: "right-[8%] bottom-[18%]" },
+    { Icon: Activity, className: "left-[8%] top-[18%]" },
+    { Icon: UserRound, className: "right-[6%] top-[22%]" },
+    { Icon: Globe2, className: "left-[2%] bottom-[28%]" },
+    { Icon: Binary, className: "right-[10%] bottom-[20%]" },
   ];
 
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[480px]" aria-hidden>
-      <div className="absolute inset-[6%] rounded-full border border-dashed border-white/25" />
-      <div className="absolute inset-[18%] rounded-full border border-white/15" />
-      <div className="absolute inset-0 animate-[spin_48s_linear_infinite] motion-reduce:animate-none">
+    <div className="relative mx-auto aspect-square w-full max-w-[420px]" aria-hidden>
+      <div className="absolute inset-[8%] rounded-full border border-white/10" />
+      <div className="absolute inset-[20%] rounded-full border border-dashed border-white/15" />
+      <div className="absolute inset-0 animate-[spin_64s_linear_infinite] motion-reduce:animate-none">
         {satellites.map(({ Icon, className }) => (
           <span
             key={className}
-            className={`absolute grid size-12 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm ${className}`}
+            className={`absolute grid size-10 place-items-center rounded-[4px] border border-white/15 bg-white/5 text-white/90 backdrop-blur-[2px] ${className}`}
           >
-            <Icon className="size-5" />
+            <Icon className="size-4" strokeWidth={1.75} />
           </span>
         ))}
       </div>
-      <div className="absolute inset-[26%] grid place-items-center drop-shadow-[0_16px_36px_-12px_rgba(190,39,45,0.85)]">
+      <div className="absolute inset-[28%] grid place-items-center">
         <SiteImage
           src="/brand/vigitrust-icon.png"
           alt=""
-          width={320}
-          height={320}
+          width={280}
+          height={280}
           priority
           unoptimized
-          className="size-full object-contain"
+          className="size-full object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.35)]"
         />
       </div>
     </div>

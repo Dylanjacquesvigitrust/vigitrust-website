@@ -27,9 +27,9 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
   }, [course, details.skills, hasModules, moduleName]);
 
   return (
-    <aside className="card-lift sticky top-28 rounded-[12px] bg-vt-paper p-7 shadow-[var(--shadow-soft)] ring-1 ring-vt-border">
-      <p className="text-sm font-semibold uppercase tracking-wide text-vt-muted">Enroll</p>
-      <p className="mt-1 text-3xl font-bold text-vt-price">{selected.label}</p>
+    <aside className="sticky top-24 rounded-[6px] border border-vt-border bg-vt-paper p-6 shadow-[var(--shadow-sm)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-vt-muted">Enroll</p>
+      <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-vt-navy">{selected.label}</p>
       {hasModules ? (
         <p className="mt-1 text-sm text-vt-muted">Full range: {course.priceLabel}</p>
       ) : null}
@@ -43,7 +43,7 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
             id="module"
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
-            className="w-full rounded-[6px] bg-vt-mist px-3 py-2.5 text-vt-ink ring-1 ring-vt-border"
+            className="input-field"
           >
             {course.modules!.map((m) => (
               <option key={m.name} value={m.name}>
@@ -65,7 +65,7 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
         />
         <Link
           href="/checkout"
-          className="inline-flex w-full items-center justify-center rounded-[6px] border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy transition hover:bg-vt-mist"
+          className="inline-flex w-full items-center justify-center rounded-[4px] border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy transition hover:bg-vt-mist"
         >
           Go to checkout
         </Link>

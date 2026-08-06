@@ -1,30 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  /* Refined VigiTrust palette  -  brand DNA preserved, contrast elevated */
+  /* Primary: navy + white. Accent: brand red. Supporting blue for links. */
   --vt-red: #c41e3a;
   --vt-red-dark: #9e1830;
-  --vt-red-soft: #f8e9ec;
+  --vt-red-soft: #f6eef0;
   --vt-navy: #0b1f33;
-  --vt-navy-mid: #123a56;
-  --vt-azure: #1b4f72;
-  --vt-cyan: #7ba8b0;
-  --vt-ink: #0a1620;
-  --vt-slate: #334857;
-  --vt-muted: #4f6473;
-  --vt-border: #d2dce4;
-  --vt-mist: #f4f7f9;
+  --vt-navy-mid: #143049;
+  --vt-azure: #1a4b6d;
+  --vt-cyan: #6b8f99;
+  --vt-ink: #0b1f33;
+  --vt-slate: #3d5160;
+  --vt-muted: #5a6f7d;
+  --vt-border: #e2e8ee;
+  --vt-border-strong: #c5d0da;
+  --vt-mist: #f7f9fb;
   --vt-paper: #ffffff;
-  --vt-success: #1b7a4b;
-  --vt-price: #7a7f24;
-  --vt-on-dark: #f2f7f9;
-  --background: #f4f7f9;
-  --foreground: #0a1620;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --shadow-soft: 0 12px 40px -20px rgba(11, 31, 51, 0.28);
-  --ease: 180ms ease;
+  --vt-success: #1a6b45;
+  --vt-price: #0b1f33;
+  --vt-on-dark: #e8eef3;
+  --background: #ffffff;
+  --foreground: #0b1f33;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --shadow-xs: 0 1px 0 rgba(11, 31, 51, 0.04);
+  --shadow-sm: 0 1px 2px rgba(11, 31, 51, 0.06), 0 1px 3px rgba(11, 31, 51, 0.04);
+  --shadow-soft: 0 8px 24px -12px rgba(11, 31, 51, 0.18);
+  --ease: 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
@@ -42,12 +46,13 @@
   --color-vt-slate: var(--vt-slate);
   --color-vt-muted: var(--vt-muted);
   --color-vt-border: var(--vt-border);
+  --color-vt-border-strong: var(--vt-border-strong);
   --color-vt-mist: var(--vt-mist);
   --color-vt-paper: var(--vt-paper);
   --color-vt-success: var(--vt-success);
   --color-vt-price: var(--vt-price);
   --color-vt-on-dark: var(--vt-on-dark);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-plus-jakarta);
   --radius-lg: var(--radius-lg);
 }
 
@@ -63,20 +68,22 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    font-family: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--vt-red) 18%, white);
+    background: color-mix(in srgb, var(--vt-navy) 12%, white);
     color: var(--vt-navy);
   }
 
   :focus-visible {
     outline: 2px solid var(--vt-red);
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 
   a {
@@ -100,90 +107,123 @@
   }
 
   .type-display {
-    font-size: clamp(2.25rem, 4vw + 1rem, 3.75rem);
-    line-height: 1.1;
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.125rem, 3.2vw + 0.75rem, 3.5rem);
+    line-height: 1.08;
+    font-weight: 600;
+    letter-spacing: -0.04em;
   }
 
   .type-h2 {
-    font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+    font-size: clamp(1.625rem, 1.6vw + 0.85rem, 2.25rem);
     line-height: 1.15;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    letter-spacing: -0.03em;
   }
 
   .type-h3 {
-    font-size: clamp(1.25rem, 0.5vw + 1rem, 1.5rem);
-    line-height: 1.25;
+    font-size: clamp(1.125rem, 0.35vw + 1rem, 1.3125rem);
+    line-height: 1.3;
     font-weight: 600;
     letter-spacing: -0.02em;
   }
 
   .type-body-lg {
-    font-size: 1.1875rem;
-    line-height: 1.6;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
   }
 
   .type-meta {
     font-size: 0.8125rem;
     line-height: 1.45;
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   .type-eyebrow {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     line-height: 1.2;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
-  /* Back-compat alias used across pages */
   .brand-display {
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    letter-spacing: -0.03em;
   }
 
   .section-pad {
-    @apply px-5 py-16 sm:px-8 md:py-20 lg:px-10 lg:py-28;
+    @apply px-5 py-20 sm:px-8 md:py-24 lg:px-10 lg:py-28;
   }
 
   .container-vt {
-    @apply mx-auto w-full max-w-7xl;
+    @apply mx-auto w-full max-w-6xl;
   }
 
+  /* Subtle technical grid  -  low contrast, no neon */
   .network-grid {
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      rgba(123, 168, 176, 0.22) 1px,
-      transparent 0
-    );
-    background-size: 28px 28px;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
   .navy-surface {
-    background:
-      radial-gradient(ellipse 65% 50% at 10% 12%, rgba(123, 168, 176, 0.12), transparent 55%),
-      radial-gradient(ellipse 40% 35% at 95% 5%, rgba(196, 30, 58, 0.1), transparent 50%),
-      linear-gradient(155deg, #081828 0%, #0b1f33 45%, #123a56 100%);
+    background: var(--vt-navy);
   }
 
+  .surface-divider {
+    border-color: var(--vt-border);
+  }
+
+  .hairline {
+    box-shadow: inset 0 0 0 1px var(--vt-border);
+  }
+
+  .input-field {
+    @apply w-full rounded-[4px] border border-vt-border bg-vt-paper px-3 py-2.5 text-sm text-vt-ink placeholder:text-vt-muted transition;
+  }
+
+  .input-field:hover {
+    border-color: var(--vt-border-strong);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--vt-navy);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--vt-navy) 12%, transparent);
+  }
+
+  /* Interactive surfaces: border shift, not floaty cards */
   .card-lift {
     transition:
-      transform var(--ease),
+      border-color var(--ease),
+      background-color var(--ease),
       box-shadow var(--ease),
-      border-color var(--ease);
+      transform var(--ease);
   }
 
   .card-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-soft);
+    border-color: var(--vt-border-strong);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .card-lift:hover {
       transform: none;
     }
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition: background-size var(--ease-out);
+  }
+
+  .link-underline:hover {
+    background-size: 100% 1px;
   }
 }

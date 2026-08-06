@@ -13,11 +13,11 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[10px] bg-vt-success/10 p-6 text-vt-navy ring-1 ring-vt-success/30">
-        <h3 className="font-semibold">Thanks  -  message captured locally.</h3>
-        <p className="mt-2 text-sm">
+      <div className="rounded-[6px] border border-vt-success/25 bg-vt-success/5 p-6 text-vt-navy">
+        <h3 className="font-semibold tracking-[-0.01em]">Thanks  -  message captured locally.</h3>
+        <p className="mt-2 text-sm text-vt-slate">
           Wire this form to your CRM or email endpoint when you deploy. For now, email{" "}
-          <a className="underline" href="mailto:info@vigitrust.com">
+          <a className="font-medium text-vt-navy underline underline-offset-2" href="mailto:info@vigitrust.com">
             info@vigitrust.com
           </a>
           .
@@ -33,7 +33,7 @@ export function ContactForm() {
       <Field label="Email Address" name="email" type="email" required />
       <Field label="Phone Number" name="phone" type="tel" />
       <div className="sm:col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-vt-slate" htmlFor="message">
+        <label className="mb-1.5 block text-[13px] font-medium text-vt-slate" htmlFor="message">
           Message <span className="text-vt-red">*</span>
         </label>
         <textarea
@@ -41,12 +41,12 @@ export function ContactForm() {
           name="message"
           required
           rows={5}
-          className="w-full rounded-[6px] bg-vt-mist px-3 py-2.5 text-vt-ink ring-1 ring-vt-border placeholder:text-vt-muted focus:ring-2 focus:ring-vt-red"
+          className="input-field"
           placeholder="How can we help?"
         />
       </div>
       <div className="sm:col-span-2">
-        <Button type="submit" size="lg">
+        <Button type="submit" size="lg" variant="navy">
           Send message
         </Button>
       </div>
@@ -67,7 +67,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-vt-slate" htmlFor={name}>
+      <label className="mb-1.5 block text-[13px] font-medium text-vt-slate" htmlFor={name}>
         {label} {required ? <span className="text-vt-red">*</span> : null}
       </label>
       <input
@@ -75,7 +75,7 @@ function Field({
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-[6px] bg-vt-mist px-3 py-2.5 text-vt-ink ring-1 ring-vt-border placeholder:text-vt-muted focus:ring-2 focus:ring-vt-red"
+        className="input-field"
         placeholder={label}
       />
     </div>
