@@ -9,29 +9,38 @@ export function ProductShot({
   className,
   priority,
   contain,
+  quality = 75,
+  unoptimized,
+  width = 1200,
+  height = 614,
 }: {
   src: string;
   alt: string;
   className?: string;
   priority?: boolean;
   contain?: boolean;
+  quality?: number;
+  unoptimized?: boolean;
+  width?: number;
+  height?: number;
 }) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[6px] bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border",
+        "relative overflow-hidden rounded-2xl bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border",
         className,
       )}
     >
       <SiteImage
         src={src}
         alt={alt}
-        width={1200}
-        height={614}
+        width={width}
+        height={height}
         priority={priority}
-        quality={75}
+        quality={quality}
+        unoptimized={unoptimized}
         className={cn("h-auto w-full", contain ? "object-contain" : "object-cover object-top")}
-        sizes="(max-width:768px) 100vw, (max-width:1280px) 70vw, 900px"
+        sizes="(max-width:768px) 100vw, (max-width:1280px) 70vw, 1100px"
       />
     </div>
   );

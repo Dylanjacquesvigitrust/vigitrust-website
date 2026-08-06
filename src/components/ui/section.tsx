@@ -30,7 +30,7 @@ export function SectionHeading({
       {body ? (
         <p
           className={cn(
-            "mt-4 max-w-2xl text-[1.0625rem] leading-relaxed",
+            "mt-4 max-w-2xl type-body-lg",
             tone === "dark" ? "text-vt-on-dark/80" : "text-vt-slate",
             align === "center" && "mx-auto",
           )}
@@ -62,39 +62,32 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "relative overflow-hidden navy-surface",
-        compact ? "py-16 md:py-20" : "py-20 md:py-28",
+        "relative overflow-hidden hero-wash border-b border-vt-border",
+        compact ? "py-14 md:py-16" : "py-16 md:py-24",
       )}
     >
-      {image && !videoLabel ? (
-        <>
-          <SiteImage src={image} alt="" fill priority quality={75} className="object-cover opacity-30" sizes="100vw" />
-          <div className="absolute inset-0 bg-vt-navy/85" />
-        </>
-      ) : null}
-      <div className="absolute inset-0 network-grid opacity-40" aria-hidden />
       <div
         className={cn(
-          "container-vt relative px-5 sm:px-8 lg:px-10",
+          "container-wide relative px-5 sm:px-8 lg:px-10",
           (image || videoLabel) && "grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end",
         )}
       >
-        <div>
-          {eyebrow ? <p className="type-eyebrow mb-3 text-vt-cyan">{eyebrow}</p> : null}
-          <h1 className="type-display max-w-3xl text-balance text-white">{title}</h1>
-          {body ? <p className="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-vt-on-dark/80">{body}</p> : null}
+        <div className="max-w-3xl">
+          {eyebrow ? <p className="type-eyebrow mb-3 text-vt-red">{eyebrow}</p> : null}
+          <h1 className="type-display max-w-3xl text-balance text-vt-ink">{title}</h1>
+          {body ? <p className="mt-5 max-w-xl type-body-lg text-vt-slate">{body}</p> : null}
           {children ? <div className="mt-8">{children}</div> : null}
         </div>
         {videoLabel ? (
-          <div className="relative aspect-video overflow-hidden rounded-[6px] ring-1 ring-white/15">
+          <div className="relative aspect-video overflow-hidden rounded-2xl border border-vt-border bg-vt-paper shadow-[var(--shadow-md)]">
             {image ? (
               <SiteImage src={image} alt="" fill className="object-cover" sizes="(max-width:1024px) 100vw, 40vw" />
             ) : (
-              <div className="absolute inset-0 bg-vt-navy-mid" />
+              <div className="absolute inset-0 bg-vt-mist" />
             )}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-vt-navy/60 p-6 text-center">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-vt-navy/50 p-6 text-center">
               <span
-                className="grid size-12 place-items-center rounded-[4px] bg-vt-red text-white"
+                className="grid size-12 place-items-center rounded-xl bg-vt-red text-white"
                 aria-hidden
               >
                 <svg viewBox="0 0 24 24" className="size-5 translate-x-0.5" fill="currentColor">
@@ -124,7 +117,7 @@ export function MediaPlaceholder({
   return (
     <figure
       className={cn(
-        "relative overflow-hidden rounded-[6px] bg-vt-mist ring-1 ring-vt-border",
+        "relative overflow-hidden rounded-2xl bg-vt-mist ring-1 ring-vt-border",
         aspect === "video" ? "aspect-video" : "aspect-[4/3]",
         className,
       )}

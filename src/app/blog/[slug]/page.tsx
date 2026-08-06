@@ -48,8 +48,7 @@ export default async function BlogPostPage({ params }: Props) {
                   conversations, and customer programmes: operationalising GRC, strengthening
                   workforce awareness, and keeping evidence continuous rather than episodic.
                 </p>
-                <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-                  <Button href="/demo">Book A Demo</Button>
+                <div className="pt-2">
                   <Button href="/blog" variant="ghost">
                     Back to blog
                   </Button>

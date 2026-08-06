@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, Clock3, Star, Users } from "lucide-react";
+import { Check, Clock3, Users } from "lucide-react";
 import { CoursePurchasePanel } from "@/components/cart/course-purchase";
 import { SiteImage } from "@/components/ui/site-image";
 import { courseDetails, training } from "@/content/courses";
@@ -42,10 +42,6 @@ export default async function CoursePage({ params }: Props) {
             <h1 className="type-display mt-3 text-balance text-white">{course.title}</h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/90">{details.summary}</p>
             <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/85">
-              <span className="inline-flex items-center gap-1.5 font-semibold">
-                <Star className="size-4 fill-vt-red text-vt-red" aria-hidden />
-                {details.rating.toFixed(1)} course rating
-              </span>
               <span className="inline-flex items-center gap-1.5">
                 <Users className="size-4 text-vt-cyan" aria-hidden />
                 {details.learnersLabel}

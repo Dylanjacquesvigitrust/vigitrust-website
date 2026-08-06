@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock3, Star } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import { SiteImage } from "@/components/ui/site-image";
 import { courseDetails, training } from "@/content/courses";
 
@@ -15,15 +15,15 @@ export default function TrainingPage() {
 
   return (
     <>
-      <section className="border-b border-vt-border navy-surface">
-        <div className="container-vt px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
-          <p className="type-eyebrow text-vt-cyan">{training.hero.eyebrow}</p>
-          <h1 className="type-h2 mt-3 max-w-3xl text-white">{training.hero.title}</h1>
-          <p className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-vt-on-dark/80">
+      <section className="hero-wash border-b border-vt-border">
+        <div className="container-wide px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+          <p className="type-eyebrow text-vt-red">{training.hero.eyebrow}</p>
+          <h1 className="type-h2 mt-3 max-w-3xl text-vt-ink">{training.hero.title}</h1>
+          <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">
             {training.hero.body}
           </p>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-vt-cyan">
-            <strong className="text-white">{training.saaas.title}</strong>  -  {training.saaas.body}
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-vt-muted">
+            <strong className="text-vt-ink">{training.saaas.title}</strong>  -  {training.saaas.body}
           </p>
         </div>
       </section>
@@ -46,7 +46,7 @@ export default function TrainingPage() {
               return (
                 <article
                   key={course.slug}
-                  className="card-lift group flex h-full flex-col overflow-hidden rounded-[6px] border border-vt-border bg-vt-paper"
+                  className="card-lift group flex h-full flex-col overflow-hidden rounded-2xl border border-vt-border bg-vt-paper shadow-[var(--shadow-xs)]"
                 >
                   <Link
                     href={`/training/${course.slug}`}
@@ -60,7 +60,7 @@ export default function TrainingPage() {
                       className="object-cover transition duration-300 group-hover:scale-[1.02]"
                       sizes="(max-width:768px) 100vw, 33vw"
                     />
-                    <span className="absolute left-3 top-3 rounded-[3px] bg-vt-navy/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-white">
+                    <span className="absolute left-3 top-3 rounded-[6px] bg-vt-navy/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-white">
                       {details.category}
                     </span>
                   </Link>
@@ -82,7 +82,7 @@ export default function TrainingPage() {
                       {details.skills.slice(0, 3).map((skill) => (
                         <span
                           key={skill}
-                          className="rounded-[3px] border border-vt-border bg-vt-mist px-2 py-0.5 text-[11px] font-medium text-vt-azure"
+                          className="rounded-[6px] border border-vt-border bg-vt-mist px-2 py-0.5 text-[11px] font-medium text-vt-azure"
                         >
                           {skill}
                         </span>
@@ -90,10 +90,6 @@ export default function TrainingPage() {
                     </div>
 
                     <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-vt-border pt-4 text-xs text-vt-muted">
-                      <span className="inline-flex items-center gap-1 font-semibold text-vt-ink">
-                        <Star className="size-3 fill-vt-navy text-vt-navy" aria-hidden />
-                        {details.rating.toFixed(1)}
-                      </span>
                       <span className="inline-flex items-center gap-1">
                         <Clock3 className="size-3" aria-hidden />
                         {details.duration}
@@ -106,7 +102,7 @@ export default function TrainingPage() {
                       </p>
                       <Link
                         href={`/training/${course.slug}`}
-                        className="inline-flex h-9 items-center justify-center rounded-[4px] bg-vt-navy px-3 text-[13px] font-semibold text-white transition hover:bg-vt-navy-mid"
+                        className="inline-flex h-9 items-center justify-center rounded-[8px] bg-vt-navy px-3 text-[13px] font-semibold text-white transition duration-200 hover:bg-vt-navy-mid"
                       >
                         View course
                       </Link>

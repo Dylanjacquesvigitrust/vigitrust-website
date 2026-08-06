@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
-import { ProductShot } from "@/components/ui/visuals";
+import { bookingsUrl } from "@/content/layout";
 import { platform } from "@/content/site";
+import { withBasePath } from "@/lib/paths";
 
 export const metadata: Metadata = {
   title: "Assessment 360",
@@ -16,7 +17,7 @@ export default function Assessment360Page() {
   return (
     <>
       <PageHero eyebrow={content.eyebrow} title={content.title} body={content.body}>
-        <Button href="/demo" size="lg">
+        <Button href={bookingsUrl} size="lg">
           Book A Demo
         </Button>
       </PageHero>
@@ -37,13 +38,19 @@ export default function Assessment360Page() {
             ))}
           </div>
           <div className="mt-12">
-            <ProductShot
-              src={content.image}
-              alt="VigiOne Assessment 360 framework and builder overview"
-              className="mx-auto max-w-6xl"
-              priority
-              contain
-            />
+            {/* Native img avoids next/image resize blur on dense diagram art */}
+            <figure className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={withBasePath("/images/product/assessment-360.png")}
+                alt="VigiOne Assessment 360 framework and builder overview"
+                width={2400}
+                height={1598}
+                decoding="async"
+                fetchPriority="high"
+                className="h-auto w-full object-contain"
+              />
+            </figure>
           </div>
           <p className="mt-6 text-center text-sm font-semibold tracking-wide text-vt-azure">
             {content.tagline}
@@ -108,7 +115,7 @@ export default function Assessment360Page() {
             ))}
           </div>
           <div className="mt-10 flex justify-center">
-            <Button href="/demo" size="lg">
+            <Button href={bookingsUrl} size="lg">
               Book A Demo
             </Button>
           </div>

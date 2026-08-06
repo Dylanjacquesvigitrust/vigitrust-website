@@ -8,22 +8,14 @@ export const brand = {
   mark: "/brand/vigitrust-icon.png",
 } as const;
 
+/** Microsoft Bookings — all “Book a Demo” CTAs should use this. */
+export const bookingsUrl =
+  "https://outlook.office.com/book/VigiTrustScheduling@vigitrust.com/?ismsaljsauthenabled";
+
 export const navigation = {
   primary: [
     {
-      label: "Company",
-      href: "/about",
-      children: [
-        { label: "About VigiTrust", href: "/about", description: "Our mission and global reach" },
-        { label: "Events", href: "/events", description: "Summits, dinners, and community gatherings" },
-      ],
-    },
-    {
-      label: "Advisory Board",
-      href: "/advisory-board",
-    },
-    {
-      label: "VigiOne Platform",
+      label: "Solutions",
       href: "/platform",
       children: [
         { label: "Platform", href: "/platform", description: "Unified GRC for continuous compliance" },
@@ -62,16 +54,15 @@ export const navigation = {
       label: "Resources",
       href: "/resources",
       children: [
+        { label: "About VigiTrust", href: "/about", description: "Our mission and global reach" },
+        { label: "Events", href: "/events", description: "Summits, dinners, and community gatherings" },
+        { label: "Advisory Board", href: "/advisory-board", description: "Global cyber leaders and peer network" },
         { label: "Blog & News", href: "/blog", description: "Insights and announcements" },
         { label: "5 Pillars Framework", href: "/pillars-of-security", description: "Award-winning methodology" },
       ],
     },
-    {
-      label: "Contact",
-      href: "/contact",
-    },
   ],
-  cta: { label: "Book A Demo", href: "/demo" },
+  cta: { label: "Contact Us", href: "/contact" },
 };
 
 export const footer = {

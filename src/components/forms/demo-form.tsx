@@ -13,7 +13,7 @@ export function DemoForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[6px] border border-vt-success/25 bg-vt-success/5 p-6 text-vt-navy">
+      <div className="rounded-[8px] border border-vt-success/25 bg-vt-success/5 p-6 text-vt-navy">
         <h2 className="font-semibold tracking-[-0.01em]">Demo request captured.</h2>
         <p className="mt-2 text-sm text-vt-slate">
           Connect this form to your scheduling or CRM tool for production. Meanwhile email{" "}

@@ -30,7 +30,7 @@ export function AddToCartButton({
       <button
         type="button"
         className={cn(
-          "inline-flex items-center justify-center rounded-[4px] bg-vt-red px-4 py-2.5 text-sm font-semibold text-white transition duration-150 hover:bg-vt-red-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vt-red",
+          "inline-flex items-center justify-center rounded-[8px] bg-vt-red px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-vt-red-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vt-red",
           className,
         )}
         onClick={() => {

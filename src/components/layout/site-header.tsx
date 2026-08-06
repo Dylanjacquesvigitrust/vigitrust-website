@@ -30,17 +30,17 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 border-b border-vt-border bg-[color:var(--background)]/95 backdrop-blur-md">
       <div
         className={cn(
-          "border-b border-vt-border bg-vt-paper/90 backdrop-blur-md transition-[box-shadow] duration-200",
+          "transition-[box-shadow] duration-200",
           scrolled && "shadow-[var(--shadow-xs)]",
         )}
       >
-        <div className="container-vt flex h-14 items-center justify-between gap-4 px-5 sm:h-16 sm:px-8 lg:px-10">
-          <BrandLogo priority />
+        <div className="container-wide grid h-14 grid-cols-[auto_1fr_auto] items-center gap-4 px-5 sm:h-14 sm:px-8 lg:px-10">
+          <BrandLogo priority className="h-7 w-[148px] sm:h-8 sm:w-[168px]" />
 
-          <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
+          <nav className="hidden items-center justify-center gap-0.5 lg:flex" aria-label="Primary">
             {navigation.primary.map((item) => {
               const isOpen = activeMenu === item.label;
               const active =
@@ -57,27 +57,24 @@ export function SiteHeader() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "inline-flex items-center gap-1 px-2.5 py-2 text-[13px] font-medium text-vt-slate transition hover:text-vt-navy",
-                      active && "text-vt-navy",
+                      "inline-flex h-9 items-center gap-1 px-2.5 text-[13px] font-medium text-vt-slate transition duration-200 hover:text-vt-ink",
+                      active && "text-vt-ink",
                     )}
                     aria-expanded={item.children ? isOpen : undefined}
                     aria-haspopup={item.children ? "menu" : undefined}
                   >
                     {item.label}
-                    {item.children ? <ChevronDown className="size-3.5 opacity-50" aria-hidden /> : null}
+                    {item.children ? <ChevronDown className="size-3.5 opacity-45" aria-hidden /> : null}
                   </Link>
-                  {active ? (
-                    <span className="absolute inset-x-2.5 -bottom-px h-px bg-vt-red" aria-hidden />
-                  ) : null}
                   {item.children && isOpen ? (
-                    <div className="absolute left-0 top-full z-50 w-[20rem] pt-2" role="menu">
-                      <div className="overflow-hidden rounded-[6px] border border-vt-border bg-vt-paper p-1 shadow-[var(--shadow-soft)]">
+                    <div className="absolute left-1/2 top-full z-50 w-[20rem] -translate-x-1/2 pt-2" role="menu">
+                      <div className="overflow-hidden rounded-xl border border-vt-border bg-vt-paper p-1.5 shadow-[var(--shadow-soft)]">
                         {item.children.map((child) => (
                           <Link
                             key={child.href}
                             href={child.href}
                             role="menuitem"
-                            className="block rounded-[4px] px-3 py-2.5 transition hover:bg-vt-mist"
+                            className="block rounded-lg px-3 py-2.5 transition duration-200 hover:bg-vt-mist"
                           >
                             <div className="text-sm font-semibold text-vt-ink">{child.label}</div>
                             {"description" in child && child.description ? (
@@ -95,25 +92,30 @@ export function SiteHeader() {
             })}
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-end gap-2">
             <Link
               href="/checkout"
-              className="relative inline-flex rounded-[4px] p-2 text-vt-slate transition hover:bg-vt-mist hover:text-vt-navy"
+              className="relative inline-flex size-9 items-center justify-center rounded-lg text-vt-slate transition duration-200 hover:bg-vt-mist hover:text-vt-ink"
               aria-label={`Shopping cart${count ? `, ${count} items` : ""}`}
             >
-              <ShoppingCart className="size-[18px]" aria-hidden />
+              <ShoppingCart className="size-4" aria-hidden />
               {count > 0 ? (
-                <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-[3px] bg-vt-red px-1 text-[10px] font-bold leading-4 text-white">
+                <span className="absolute right-1 top-1 grid min-w-3.5 place-items-center rounded bg-vt-red px-0.5 text-[9px] font-bold leading-3 text-white">
                   {count}
                 </span>
               ) : null}
             </Link>
-            <Button href={navigation.cta.href} size="sm" className="hidden sm:inline-flex">
+            <Button
+              href={navigation.cta.href}
+              variant="header"
+              size="sm"
+              className="hidden h-8 px-3 text-[12px] font-semibold tracking-[-0.01em] sm:inline-flex"
+            >
               {navigation.cta.label}
             </Button>
             <button
               type="button"
-              className="inline-flex rounded-[4px] p-2 text-vt-navy transition hover:bg-vt-mist xl:hidden"
+              className="inline-flex size-9 items-center justify-center rounded-lg text-vt-ink transition duration-200 hover:bg-vt-mist lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "Close menu" : "Open menu"}
@@ -125,8 +127,8 @@ export function SiteHeader() {
         </div>
 
         {open ? (
-          <div id="mobile-nav" className="border-t border-vt-border bg-vt-paper xl:hidden">
-            <div className="container-vt space-y-1 px-5 py-4 sm:px-8">
+          <div id="mobile-nav" className="border-t border-vt-border bg-[color:var(--background)] lg:hidden">
+            <div className="container-wide space-y-1 px-5 py-4 sm:px-8">
               {navigation.primary.map((item) => (
                 <div key={item.label} className="border-b border-vt-border py-2 last:border-0">
                   <Link href={item.href} className="block py-1.5 text-[15px] font-semibold text-vt-ink">
@@ -136,14 +138,14 @@ export function SiteHeader() {
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block py-1.5 pl-3 text-sm text-vt-muted"
+                      className="block py-1.5 pl-3 text-sm text-vt-muted transition hover:text-vt-ink"
                     >
                       {child.label}
                     </Link>
                   ))}
                 </div>
               ))}
-              <Button href={navigation.cta.href} className="mt-3 w-full">
+              <Button href={navigation.cta.href} variant="header" className="mt-3 w-full" size="md">
                 {navigation.cta.label}
               </Button>
             </div>

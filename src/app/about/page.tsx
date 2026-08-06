@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
+import { bookingsUrl } from "@/content/layout";
 import { about, offices } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -14,10 +15,10 @@ export default function AboutPage() {
     <>
       <PageHero eyebrow={about.hero.eyebrow} title={about.hero.title} body={about.hero.body}>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button href="/demo" size="lg">
+          <Button href={bookingsUrl} size="lg">
             Book A Demo
           </Button>
-          <Button href="/advisory-board" variant="secondary" size="lg">
+          <Button href="/advisory-board" variant="ghost" size="lg">
             Advisory Board
           </Button>
         </div>

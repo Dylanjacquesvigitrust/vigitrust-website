@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
 import { ProductShot } from "@/components/ui/visuals";
+import { bookingsUrl } from "@/content/layout";
 import { platform } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -14,34 +15,32 @@ export const metadata: Metadata = {
 export default function PlatformPage() {
   return (
     <>
-      <section className="relative overflow-hidden navy-surface">
-        <div className="absolute inset-0 network-grid opacity-40" aria-hidden />
-        <div className="container-vt relative px-5 pb-12 pt-16 sm:px-8 lg:px-10 lg:pb-16 lg:pt-24">
-          <div className="max-w-3xl">
-            <p className="type-eyebrow mb-3 text-vt-cyan">{platform.overview.eyebrow}</p>
-            <h1 className="type-display text-balance text-white">{platform.overview.title}</h1>
-            <div className="mt-5 max-w-2xl space-y-3 text-[1.0625rem] leading-relaxed text-vt-on-dark/80">
+      <section className="hero-wash border-b border-vt-border">
+        <div className="container-wide px-5 pb-12 pt-16 sm:px-8 lg:px-10 lg:pb-16 lg:pt-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="type-eyebrow text-vt-red">{platform.overview.eyebrow}</p>
+            <h1 className="type-display mt-4 text-balance text-vt-ink">{platform.overview.title}</h1>
+            <div className="mx-auto mt-6 max-w-2xl space-y-3 type-body-lg text-vt-slate">
               {platform.overview.body.map((p) => (
                 <p key={p}>{p}</p>
               ))}
             </div>
-            <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
-              <Button href="/demo" size="lg">
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button href={bookingsUrl} size="lg">
                 Book A Demo
               </Button>
-              <Button href="/platform/organisations" variant="secondary" size="lg">
+              <Button href="/platform/organisations" variant="ghost" size="lg">
                 For Organisations
                 <ArrowRight className="size-4" aria-hidden />
               </Button>
             </div>
           </div>
 
-          <div className="mt-12 lg:mt-14">
+          <div className="mx-auto mt-14 max-w-5xl">
             <ProductShot
               src="/images/product/dashboard-1-sm.webp"
               alt="VigiOne platform dashboard"
               priority
-              className="mx-auto max-w-5xl"
             />
           </div>
         </div>
@@ -62,7 +61,7 @@ export default function PlatformPage() {
                 </p>
               ))}
             </div>
-            <div className="mt-8 border-l-2 border-vt-red bg-vt-mist/80 p-6 sm:p-7">
+            <div className="mt-8 rounded-2xl border border-vt-border border-l-[3px] border-l-vt-red bg-vt-mist p-6 sm:p-7">
               <h3 className="type-h3 text-vt-ink">{platform.complexity.calloutTitle}</h3>
               <p className="mt-3 text-sm leading-relaxed text-vt-slate">
                 {platform.complexity.calloutBody}
@@ -76,24 +75,24 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      <section className="navy-surface">
-        <div className="section-pad container-vt">
+      <section className="section-pad bg-vt-mist">
+        <div className="container-vt">
           <div className="max-w-3xl">
-            <h2 className="type-h2 text-white">{platform.bothSides.title}</h2>
-            <p className="mt-4 leading-relaxed text-vt-on-dark/80">{platform.bothSides.body}</p>
+            <h2 className="type-h2 text-vt-ink">{platform.bothSides.title}</h2>
+            <p className="mt-4 type-body-lg text-vt-slate">{platform.bothSides.body}</p>
           </div>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-[6px] border border-white/10 bg-white/10 md:grid-cols-2">
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
             {[platform.bothSides.organisations, platform.bothSides.assessors].map((card) => (
               <a
                 key={card.title}
                 href={card.href}
-                className="group block bg-vt-navy p-8 transition hover:bg-vt-navy-mid sm:p-9"
+                className="panel card-lift group block p-8 sm:p-9"
               >
-                <h3 className="type-h3 text-white">{card.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-vt-on-dark/75">{card.body}</p>
-                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                <h3 className="type-h3 text-vt-ink">{card.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-vt-slate">{card.body}</p>
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-vt-red">
                   Learn more
-                  <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5" aria-hidden />
+                  <ArrowRight className="size-3.5 transition duration-200 group-hover:translate-x-0.5" aria-hidden />
                 </span>
               </a>
             ))}
@@ -101,12 +100,22 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      <section className="section-pad bg-vt-mist">
+      <section className="section-pad bg-vt-paper">
         <div className="container-vt">
-          <SectionHeading title={platform.capabilities.title} align="center" />
-          <div className="mt-12 grid gap-px overflow-hidden rounded-[6px] border border-vt-border bg-vt-border lg:grid-cols-3">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <SectionHeading title={platform.capabilities.title} className="max-w-2xl" />
+            <div className="flex flex-col gap-2.5 sm:flex-row">
+              <Button href={bookingsUrl} size="md">
+                Book A Demo
+              </Button>
+              <Button href="/platform/assessment-360" variant="ghost" size="md">
+                Assessment 360
+              </Button>
+            </div>
+          </div>
+          <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {platform.capabilities.items.map((item) => (
-              <article key={item.title} className="bg-vt-paper p-8 text-left">
+              <article key={item.title} className="panel-quiet p-7 sm:p-8">
                 <h3 className="type-h3 text-vt-ink">{item.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-vt-slate">{item.body}</p>
               </article>
@@ -118,30 +127,19 @@ export default function PlatformPage() {
               alt="VigiOne eLearning and awareness modules"
             />
           </div>
-          <div className="mt-10 flex flex-col justify-center gap-2.5 sm:flex-row">
-            <Button href="/demo" size="lg">
-              Book A Demo
-            </Button>
-            <Button href="/platform/assessment-360" variant="ghost" size="lg">
-              Assessment 360
-            </Button>
-          </div>
         </div>
       </section>
 
-      <section className="section-pad bg-vt-paper">
+      <section className="section-pad bg-vt-mist">
         <div className="container-vt">
           <SectionHeading
             eyebrow="Modules"
             title="Everything required to run continuous compliance"
-            align="center"
+            className="max-w-2xl"
           />
-          <div className="mt-12 grid gap-0 border-t border-vt-border sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {platform.modules.map((mod) => (
-              <article
-                key={mod.name}
-                className="border-b border-vt-border p-6 sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0"
-              >
+              <article key={mod.name} className="panel p-6">
                 <h3 className="type-h3 text-vt-ink">{mod.name}</h3>
                 <ul className="mt-4 space-y-2">
                   {mod.items.map((item) => (
@@ -153,11 +151,11 @@ export default function PlatformPage() {
               </article>
             ))}
           </div>
-          <div className="mt-10 flex flex-wrap justify-center gap-2">
+          <div className="mt-10 flex flex-wrap gap-2">
             {platform.frameworks.map((f) => (
               <span
                 key={f}
-                className="rounded-[4px] border border-vt-border bg-vt-mist px-3 py-1.5 text-xs font-semibold text-vt-navy"
+                className="rounded-xl border border-vt-border bg-vt-paper px-3.5 py-2 text-xs font-semibold text-vt-navy"
               >
                 {f}
               </span>

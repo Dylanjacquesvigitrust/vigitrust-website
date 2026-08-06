@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
 import { ProductShot } from "@/components/ui/visuals";
+import { bookingsUrl } from "@/content/layout";
 import { platform } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function AssessorsPage() {
   return (
     <>
       <PageHero eyebrow={content.eyebrow} title={content.title} body={content.body}>
-        <Button href="/demo" size="lg">
+        <Button href={bookingsUrl} size="lg">
           Book A Demo
         </Button>
       </PageHero>

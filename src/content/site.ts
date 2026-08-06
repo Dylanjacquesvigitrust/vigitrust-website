@@ -3,8 +3,10 @@
  * See CONTENT_TRANSCRIPTION.md for source mapping.
  */
 
-export { brand, navigation, footer } from "./layout";
+export { brand, navigation, footer, bookingsUrl } from "./layout";
 export { training, type Course } from "./courses";
+
+import { bookingsUrl } from "./layout";
 
 export const offices = [
   {
@@ -35,7 +37,7 @@ export const home = {
       "Prepare for, validate & maintain continuous compliance.",
       "Award-winning SaaS helping organisations in 120+ countries strengthen governance, risk, and compliance with clarity and confidence.",
     ],
-    primaryCta: { label: "Book A Demo", href: "/demo" },
+    primaryCta: { label: "Book A Demo", href: bookingsUrl },
     secondaryCta: { label: "View Solutions", href: "/#solutions" },
     image: "/images/heroes/office-sm.webp",
   },
@@ -85,7 +87,7 @@ export const home = {
   midCta: {
     title: "Ready To Simplify Compliance?",
     body: "Book a free demo today and see how VigiTrust helps your organisation prepare for, validate & maintain continuous compliance.",
-    cta: { label: "Book A Demo", href: "/demo" },
+    cta: { label: "Book A Demo", href: bookingsUrl },
     image: "/images/heroes/team-sm.webp",
   },
   solutions: {
@@ -234,7 +236,7 @@ export const platform = {
       "Collect evidence against each control, apply scoring and maturity models with risk weighting, then report progress through live dashboards and export to PDF or Excel for boards, auditors, and clients.",
       "Whether you are running PCI DSS, ISO 27001, GDPR, NIST CSF, DORA, NIS2, vendor due diligence, or your own proprietary programme, Assessment 360 keeps every assessment on one connected platform.",
     ],
-    image: "/images/product/assessment-360-sm.webp",
+    image: "/images/product/assessment-360.png",
     tagline: "One Platform · Any Framework · Any Assessment",
     featuresTitle: "Assessment builder features",
     features: [
@@ -611,7 +613,7 @@ export const inPersonTraining = {
     title: "Instructor-led workshops for compliance teams",
     body: "Hands-on, facilitator-led sessions that translate framework requirements into operational practice. Delivered on-site, at VigiTrust hubs, or in virtual hybrid formats for distributed teams.",
     primaryCta: { label: "Request a workshop", href: "/contact?intent=in-person-training" },
-    secondaryCta: { label: "Book a demo", href: "/demo" },
+    secondaryCta: { label: "Book a demo", href: bookingsUrl },
   },
   workshops: {
     title: "Upcoming open workshops",
@@ -697,7 +699,7 @@ export const inPersonTraining = {
   },
   relatedLinks: [
     { label: "eLearning Catalogue", href: "/training", description: "Browse self-paced modules and add courses to your basket." },
-    { label: "Book a demo", href: "/demo", description: "See VigiOne and training integration in a live walkthrough." },
+    { label: "Book a demo", href: bookingsUrl, description: "See VigiOne and training integration in a live walkthrough." },
   ],
 };
 
@@ -897,7 +899,7 @@ export const pillars = {
   vigione: {
     title: "Is VigiOne for you?",
     body: "If you’re an enterprise organisation, VigiOne enables you to manage compliance in one place. It works just as well for smaller companies. VigiOne is modular, so you can focus on a single regulation or standard if that is all you need. It is designed to be versatile and straightforward to deploy.",
-    cta: { label: "Book A Demo", href: "/demo" },
+    cta: { label: "Book A Demo", href: bookingsUrl },
     secondaryCta: { label: "Explore VigiOne", href: "/platform" },
   },
 };

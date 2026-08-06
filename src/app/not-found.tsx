@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
+import { bookingsUrl } from "@/content/layout";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -16,7 +17,7 @@ export default function NotFound() {
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="/">Back home</Button>
-          <Button href="/demo" variant="ghost">
+          <Button href={bookingsUrl} variant="ghost">
             Book a Demo
           </Button>
         </div>

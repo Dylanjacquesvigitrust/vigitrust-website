@@ -27,35 +27,34 @@ const benefitIcons = [Calendar, MessageSquare, BookOpen, Users, Mic, Award];
 export default function AdvisoryBoardPage() {
   return (
     <>
-      <section className="relative overflow-hidden navy-surface py-16 md:py-24">
-        <div className="absolute inset-0 network-grid opacity-20" aria-hidden />
-        <div className="container-vt relative px-5 sm:px-8 lg:px-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-1.5 type-eyebrow text-vt-cyan">
+      <section className="relative overflow-hidden hero-wash border-b border-vt-border py-16 md:py-24">
+        <div className="container-wide relative px-5 sm:px-8 lg:px-10">
+          <span className="inline-flex items-center gap-2 rounded-xl border border-vt-border bg-vt-paper px-3.5 py-1.5 type-eyebrow text-vt-navy shadow-[var(--shadow-xs)]">
             <Globe className="size-3.5" aria-hidden />
             {advisory.hero.badge}
           </span>
 
-          <h1 className="type-display mt-6 max-w-4xl text-balance text-white">
+          <h1 className="type-display mt-6 max-w-4xl text-balance text-vt-ink">
             {advisory.hero.titleBefore}{" "}
             <span className="text-vt-red">{advisory.hero.titleAccent}</span>
           </h1>
 
-          <p className="mt-5 max-w-2xl type-body-lg text-vt-on-dark/90">{advisory.hero.lead}</p>
+          <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">{advisory.hero.lead}</p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button href={advisory.hero.primaryCta.href} size="lg">
               {advisory.hero.primaryCta.label}
             </Button>
-            <Button href={advisory.hero.secondaryCta.href} variant="secondary" size="lg">
+            <Button href={advisory.hero.secondaryCta.href} variant="ghost" size="lg">
               {advisory.hero.secondaryCta.label}
             </Button>
           </div>
 
-          <div className="mt-12 grid gap-4 border-t border-white/15 pt-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-4 border-t border-vt-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
             {advisory.hero.stats.map((stat) => (
               <div key={stat.label} className="flex items-center gap-3">
-                <span className="size-2 shrink-0 rounded-full bg-vt-red" aria-hidden />
-                <span className="text-sm font-medium text-vt-on-dark/85 sm:text-base">{stat.label}</span>
+                <span className="size-1.5 shrink-0 rounded-[2px] bg-vt-red" aria-hidden />
+                <span className="text-sm font-medium text-vt-slate sm:text-base">{stat.label}</span>
               </div>
             ))}
           </div>
@@ -154,7 +153,7 @@ export default function AdvisoryBoardPage() {
                     <h3 className="type-h3 text-vt-ink">{tier.name}</h3>
                     {tier.badge ? (
                       <span
-                        className={`shrink-0 rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide ${
+                        className={`shrink-0 rounded-[6px] px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide ${
                           tier.featured
                             ? "border border-vt-red/40 bg-vt-red-soft text-vt-red"
                             : "border border-vt-border bg-vt-mist text-vt-muted"
@@ -219,7 +218,7 @@ export default function AdvisoryBoardPage() {
         />
         <div className="container-vt relative">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-vt-border bg-vt-paper px-4 py-1.5 type-eyebrow text-vt-azure">
+            <span className="inline-flex items-center gap-2 rounded-[8px] border border-vt-border bg-vt-paper px-3.5 py-1.5 type-eyebrow text-vt-azure">
               <Globe className="size-3.5" aria-hidden />
               {advisory.globalParticipation.badge}
             </span>
@@ -279,7 +278,7 @@ export default function AdvisoryBoardPage() {
                 key={director.name}
                 className="card-lift rounded-[10px] bg-vt-paper p-6 ring-1 ring-vt-border"
               >
-                <div className="mb-4 flex size-14 items-center justify-center rounded-full border border-vt-border bg-vt-mist text-sm font-bold text-vt-azure">
+                <div className="mb-4 flex size-14 items-center justify-center rounded-[10px] border border-vt-border bg-vt-mist text-sm font-bold text-vt-azure">
                   {director.initials}
                 </div>
                 <h4 className="font-semibold text-vt-ink">{director.name}</h4>

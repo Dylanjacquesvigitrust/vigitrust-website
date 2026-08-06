@@ -1,13 +1,13 @@
 ﻿import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 import { KlaviyoScripts } from "@/components/analytics/klaviyo-scripts";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import "./globals.css";
 
-const sans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
+const sans = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
@@ -42,12 +42,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} h-full`}>
-      <body className="flex min-h-full flex-col font-sans antialiased">
+      <body className={`${sans.className} flex min-h-full flex-col antialiased`}>
         <KlaviyoScripts />
         <CartProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-[4px] focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy focus:shadow-[var(--shadow-md)]"
           >
             Skip to content
           </a>
