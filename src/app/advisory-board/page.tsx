@@ -11,6 +11,7 @@ import {
   Mic,
   Users,
 } from "lucide-react";
+import { CharteredAdvisorCheckoutButton } from "@/components/advisory/chartered-advisor-checkout-button";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
@@ -42,9 +43,9 @@ export default function AdvisoryBoardPage() {
           <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">{advisory.hero.lead}</p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button href={advisory.hero.primaryCta.href} size="lg">
+            <CharteredAdvisorCheckoutButton size="lg">
               {advisory.hero.primaryCta.label}
-            </Button>
+            </CharteredAdvisorCheckoutButton>
             <Button href={advisory.hero.secondaryCta.href} variant="ghost" size="lg">
               {advisory.hero.secondaryCta.label}
             </Button>
@@ -182,13 +183,22 @@ export default function AdvisoryBoardPage() {
                     ))}
                   </ul>
                   <div className="mt-8">
-                    <Button
-                      href={tier.cta.href}
-                      variant={tier.featured ? "primary" : "ghost"}
-                      className="w-full"
-                    >
-                      {tier.cta.label}
-                    </Button>
+                    {tier.id === "chartered" ? (
+                      <CharteredAdvisorCheckoutButton
+                        variant="primary"
+                        className="w-full"
+                      >
+                        {tier.cta.label}
+                      </CharteredAdvisorCheckoutButton>
+                    ) : (
+                      <Button
+                        href={tier.cta.href}
+                        variant={tier.featured ? "primary" : "ghost"}
+                        className="w-full"
+                      >
+                        {tier.cta.label}
+                      </Button>
+                    )}
                     {"globalNote" in tier && tier.globalNote ? (
                       <Link
                         href={tier.globalNote.href}
@@ -321,9 +331,9 @@ export default function AdvisoryBoardPage() {
           <h2 className="type-h2 text-balance text-vt-ink">{advisory.finalCta.title}</h2>
           <p className="mt-4 type-body-lg text-vt-muted">{advisory.finalCta.body}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={advisory.finalCta.primaryCta.href} size="lg">
+            <CharteredAdvisorCheckoutButton size="lg">
               {advisory.finalCta.primaryCta.label}
-            </Button>
+            </CharteredAdvisorCheckoutButton>
             <Button href={advisory.finalCta.secondaryCta.href} variant="ghost" size="lg">
               {advisory.finalCta.secondaryCta.label}
             </Button>

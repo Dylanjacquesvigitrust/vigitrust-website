@@ -7,16 +7,18 @@ export const runtime = "nodejs";
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_email ?? session.customer_details?.email ?? "unknown";
   const amount = session.amount_total != null ? session.amount_total / 100 : null;
+  const product = session.metadata?.product ?? "course-cart";
 
   console.info("[stripe webhook] checkout.session.completed", {
     sessionId: session.id,
+    product,
     email,
     amountEur: amount,
     paymentStatus: session.payment_status,
     metadata: session.metadata,
   });
 
-  // Fulfillment hook: grant LMS access, send confirmation email, persist order, etc.
+  // Fulfillment hook: grant LMS / Advisory membership access, email confirmation, etc.
 }
 
 export async function POST(request: Request) {
@@ -45,9 +47,11 @@ export async function POST(request: Request) {
 
   try {
     switch (event.type) {
-      case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        await handleCheckoutCompleted(session);
         break;
+      }
       default:
         console.info("[stripe webhook] unhandled event:", event.type);
     }
