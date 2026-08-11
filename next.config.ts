@@ -11,8 +11,8 @@ const isGithubPages = process.env.GITHUB_PAGES === "true" && Boolean(repoName);
 const basePath = isGithubPages ? `/${repoName}` : "";
 
 const nextConfig: NextConfig = {
-  // Static HTML export  -  required for GitHub Pages hosting.
-  output: "export",
+  // Static export only for GitHub Pages. Vercel uses serverless routes (Stripe API/webhooks).
+  ...(isGithubPages ? { output: "export" as const } : {}),
   trailingSlash: true,
   basePath,
   assetPrefix: basePath ? `${basePath}/` : undefined,

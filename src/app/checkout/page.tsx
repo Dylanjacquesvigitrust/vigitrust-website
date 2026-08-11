@@ -27,10 +27,11 @@ function CourseThumb({ slug, image, title }: { slug: string; image?: string; tit
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, vat, total, updateQuantity, removeItem, clear } = useCart();
+  const { items, subtotal, vat, total, updateQuantity, removeItem } = useCart();
   const [couponOpen, setCouponOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const empty = items.length === 0;
 
@@ -47,31 +48,51 @@ export default function CheckoutPage() {
     [items],
   );
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!agree || empty) return;
-    setSubmitted(true);
-    clear();
-  }
+    if (!agree || empty || loading) return;
 
-  if (submitted) {
-    return (
-      <section className="section-pad">
-        <div className="container-vt max-w-xl rounded-2xl bg-white p-8 text-center ring-1 ring-vt-border sm:p-12">
-          <h1 className="brand-display text-3xl text-vt-ink">Order received</h1>
-          <p className="mt-3 text-vt-muted">
-            Thanks  -  your purchase request was captured. In production this connects to Stripe /
-            your payment gateway. A specialist will also follow up at the email you provided.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button href="/training">Continue shopping</Button>
-            <Button href="/" variant="ghost">
-              Back home
-            </Button>
-          </div>
-        </div>
-      </section>
-    );
+    setLoading(true);
+    setError(null);
+
+    const form = new FormData(e.currentTarget);
+
+    try {
+      const response = await fetch(withBasePath("/api/checkout"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            slug: item.slug,
+            module: item.module,
+            quantity: item.quantity,
+          })),
+          customer: {
+            email: String(form.get("email") ?? ""),
+            phone: String(form.get("phone") ?? ""),
+            firstName: String(form.get("firstName") ?? ""),
+            lastName: String(form.get("lastName") ?? ""),
+            company: String(form.get("company") ?? "") || undefined,
+            country: String(form.get("country") ?? ""),
+            address: String(form.get("address") ?? ""),
+            city: String(form.get("city") ?? ""),
+            county: String(form.get("county") ?? "") || undefined,
+            postcode: String(form.get("postcode") ?? ""),
+          },
+        }),
+      });
+
+      const data = (await response.json()) as { url?: string; error?: string };
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start checkout.");
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Checkout failed. Please try again.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -208,13 +229,9 @@ export default function CheckoutPage() {
 
               <div className="rounded-2xl bg-white p-6 ring-1 ring-vt-border">
                 <h3 className="font-bold text-vt-ink">Payment</h3>
-                <label className="mt-4 flex items-center gap-3 text-sm text-vt-slate">
-                  <input type="radio" name="payment" defaultChecked className="size-4 accent-vt-red" />
-                  Credit / Debit Card
-                </label>
-                <p className="mt-3 text-xs text-vt-muted">
-                  Card capture is simulated in this build. Connect Stripe (or your gateway) for live
-                  charges. Test mode reference from staging: card 4242 4242 4242 4242.
+                <p className="mt-3 text-sm text-vt-slate">
+                  You will be redirected to Stripe to pay securely by card. Test card:{" "}
+                  <span className="font-mono text-vt-ink">4242 4242 4242 4242</span>.
                 </p>
                 <label className="mt-5 flex items-start gap-3 text-sm text-vt-slate">
                   <input
@@ -231,8 +248,13 @@ export default function CheckoutPage() {
                     </Link>
                   </span>
                 </label>
-                <Button type="submit" size="lg" className="mt-6 w-full" disabled={!agree}>
-                  Place order
+                {error ? (
+                  <p className="mt-4 rounded-lg border border-vt-red/30 bg-vt-red-soft px-3 py-2 text-sm text-vt-red">
+                    {error}
+                  </p>
+                ) : null}
+                <Button type="submit" size="lg" className="mt-6 w-full" disabled={!agree || loading}>
+                  {loading ? "Redirecting to Stripe…" : "Pay with Stripe"}
                 </Button>
                 <button
                   type="button"
