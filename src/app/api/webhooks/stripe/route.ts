@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { isDatabaseConfigured } from "@/lib/db";
+import { createRenewalCodeFromCheckoutSession } from "@/lib/renewal-codes";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -18,7 +20,24 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     metadata: session.metadata,
   });
 
-  // Fulfillment hook: grant LMS / Advisory membership access, email confirmation, etc.
+  if (session.payment_status !== "paid") {
+    console.info("[stripe webhook] skipping renewal code — payment not paid yet", session.id);
+    return;
+  }
+
+  if (!isDatabaseConfigured()) {
+    console.error("[stripe webhook] DATABASE_URL is not configured — renewal code not created.");
+    return;
+  }
+
+  const renewalCode = await createRenewalCodeFromCheckoutSession(session);
+
+  console.info("[stripe webhook] renewal code ready", {
+    sessionId: session.id,
+    renewalCodeId: renewalCode.id,
+    code: renewalCode.code,
+    status: renewalCode.status,
+  });
 }
 
 export async function POST(request: Request) {

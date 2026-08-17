@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RenewalCodeStatus {
+  unused
+  used
+  expired
+}
+
+model RenewalCode {
+  id                      String            @id @default(cuid())
+  code                    String            @unique
+  stripeCheckoutSessionId String            @unique
+  stripePaymentIntentId   String?           @unique
+  customerEmail           String
+  status                  RenewalCodeStatus @default(unused)
+  externalReferenceId     String?
+  productType             String?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+
+  @@index([customerEmail])
+  @@index([code])
+  @@index([externalReferenceId])
+  @@index([status])
+  @@index([createdAt])
+}
