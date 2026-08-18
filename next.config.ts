@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   // Static export only for GitHub Pages. Vercel uses serverless routes (Stripe API/webhooks).
   ...(isGithubPages ? { output: "export" as const } : {}),
   trailingSlash: true,
+  // Stripe (and other webhooks) POST without a trailing slash and will not follow 308s.
+  skipTrailingSlashRedirect: true,
   basePath,
   assetPrefix: basePath ? `${basePath}/` : undefined,
   // Used by withBasePath() for public/ image URLs (next/image leaves these unprefixed when unoptimized).
