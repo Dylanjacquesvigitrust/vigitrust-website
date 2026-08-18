@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getRenewalCodeByCheckoutSessionId, serializeRenewalCode } from "@/lib/renewal-codes";
+import {
+  createRenewalCodeFromCheckoutSession,
+  getRenewalCodeByCheckoutSessionId,
+  serializeRenewalCode,
+} from "@/lib/renewal-codes";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
 
@@ -25,16 +29,22 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Renewal codes are not configured." }, { status: 503 });
     }
 
-    const record = await getRenewalCodeByCheckoutSessionId(sessionId);
+    let record = await getRenewalCodeByCheckoutSessionId(sessionId);
 
+    // Fallback if the webhook was delayed or failed — idempotent create.
     if (!record) {
-      return NextResponse.json(
-        {
-          error: "Renewal code not found yet. It may take a moment after payment.",
-          pending: true,
-        },
-        { status: 404 },
-      );
+      try {
+        record = await createRenewalCodeFromCheckoutSession(session);
+      } catch (error) {
+        console.error("[checkout session] renewal code create failed:", error);
+        return NextResponse.json(
+          {
+            error: "Renewal code not found yet. It may take a moment after payment.",
+            pending: true,
+          },
+          { status: 404 },
+        );
+      }
     }
 
     return NextResponse.json({
