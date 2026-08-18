@@ -1,41 +1,58 @@
 import { spawn } from "node:child_process";
 
-const databaseUrl =
-  process.env.POSTGRES_URL_NON_POOLING ||
-  process.env.DATABASE_URL_UNPOOLED ||
-  process.env.DIRECT_URL ||
-  process.env.DATABASE_URL ||
-  process.env.POSTGRES_PRISMA_URL ||
-  process.env.POSTGRES_URL;
+function pickDatabaseUrl() {
+  return (
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.DIRECT_URL ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL
+  );
+}
+
+/** Neon pooled hosts are `ep-xxx-pooler.region.aws.neon.tech` and block advisory locks. */
+function toDirectUrl(url) {
+  try {
+    const parsed = new URL(url);
+    parsed.hostname = parsed.hostname.replace("-pooler.", ".");
+    parsed.searchParams.delete("pgbouncer");
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
+const databaseUrl = pickDatabaseUrl();
 
 if (!databaseUrl) {
   console.warn("[migrate] No database URL set; skipping prisma migrate deploy.");
   process.exit(0);
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const directUrl = toDirectUrl(databaseUrl);
+console.log(
+  `[migrate] using ${directUrl.includes("-pooler.") ? "pooled" : "direct"} database host`,
+);
 
 function migrate() {
   return new Promise((resolve) => {
     const child = spawn("npx", ["prisma", "migrate", "deploy"], {
       stdio: "inherit",
       shell: true,
-      env: { ...process.env, DATABASE_URL: databaseUrl },
+      env: {
+        ...process.env,
+        DATABASE_URL: directUrl,
+        // Serverless/pooler Postgres cannot hold Prisma's advisory lock.
+        PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK: "1",
+      },
     });
     child.on("close", (code) => resolve(code ?? 1));
   });
 }
 
-for (let attempt = 1; attempt <= 3; attempt += 1) {
-  console.log(`[migrate] prisma migrate deploy (attempt ${attempt}/3)`);
-  const code = await migrate();
-  if (code === 0) process.exit(0);
-  if (attempt < 3) {
-    console.warn("[migrate] retrying after advisory lock / connection timeout…");
-    await sleep(5000);
-  }
+const code = await migrate();
+if (code !== 0) {
+  console.error("[migrate] prisma migrate deploy failed.");
+  process.exit(code);
 }
-
-process.exit(1);
