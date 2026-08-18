@@ -1,4 +1,4 @@
-import { randomBytes } from "crypto";
+import { randomBytes, randomUUID } from "crypto";
 import { Prisma, type RenewalCode, RenewalCodeStatus } from "@prisma/client";
 import type Stripe from "stripe";
 import { prisma } from "@/lib/db";
@@ -87,6 +87,73 @@ export async function createRenewalCodeFromCheckoutSession(
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
         const raced = await findExistingRenewalCode(session, paymentIntent);
         if (raced) return raced;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw new Error("Could not generate a unique renewal code.");
+}
+
+export type ManualRenewalCodeInput = {
+  customerEmail: string;
+  externalReferenceId?: string | null;
+  code?: string | null;
+  productType?: string | null;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+};
+
+function normalizeManualCode(value: string): string {
+  return value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+}
+
+export async function createManualRenewalCode(
+  input: ManualRenewalCodeInput,
+): Promise<RenewalCode> {
+  const email = input.customerEmail.trim();
+  if (!email || !email.includes("@")) {
+    throw new Error("A valid customer email is required.");
+  }
+
+  const requestedCode = input.code?.trim() ? normalizeManualCode(input.code) : null;
+  if (requestedCode && requestedCode.length !== CODE_LENGTH) {
+    throw new Error("Manual codes must be 16 letters or numbers.");
+  }
+
+  const stripeCheckoutSessionId =
+    input.stripeCheckoutSessionId?.trim() || `manual_${randomUUID()}`;
+  const stripePaymentIntentId = input.stripePaymentIntentId?.trim() || null;
+
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const code = requestedCode ?? generateRenewalCodeValue();
+    try {
+      return await prisma.renewalCode.create({
+        data: {
+          code,
+          stripeCheckoutSessionId,
+          stripePaymentIntentId,
+          customerEmail: email,
+          productType: input.productType?.trim() || "manual",
+          externalReferenceId: input.externalReferenceId?.trim() || null,
+          status: RenewalCodeStatus.unused,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        const target = Array.isArray(error.meta?.target)
+          ? error.meta.target.join(",")
+          : String(error.meta?.target ?? "");
+        if (target.includes("stripeCheckoutSessionId")) {
+          throw new Error("That Stripe checkout session already has a renewal code.");
+        }
+        if (target.includes("stripePaymentIntentId")) {
+          throw new Error("That Stripe payment already has a renewal code.");
+        }
+        if (requestedCode) {
+          throw new Error("That renewal code already exists.");
+        }
         continue;
       }
       throw error;

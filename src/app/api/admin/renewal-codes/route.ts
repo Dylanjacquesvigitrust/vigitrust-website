@@ -2,7 +2,11 @@ import { RenewalCodeStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-auth";
 import { isDatabaseConfigured } from "@/lib/db";
-import { searchRenewalCodes, serializeRenewalCode } from "@/lib/renewal-codes";
+import {
+  createManualRenewalCode,
+  searchRenewalCodes,
+  serializeRenewalCode,
+} from "@/lib/renewal-codes";
 
 export const runtime = "nodejs";
 
@@ -33,5 +37,50 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("[admin renewal-codes] search failed:", error);
     return NextResponse.json({ error: "Could not load renewal codes." }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const unauthorized = await requireAdminApi();
+  if (unauthorized) return unauthorized;
+
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
+  }
+
+  let body: {
+    customerEmail?: string;
+    externalReferenceId?: string | null;
+    code?: string | null;
+    productType?: string | null;
+    stripeCheckoutSessionId?: string | null;
+    stripePaymentIntentId?: string | null;
+  };
+
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  try {
+    const created = await createManualRenewalCode({
+      customerEmail: body.customerEmail ?? "",
+      externalReferenceId: body.externalReferenceId,
+      code: body.code,
+      productType: body.productType,
+      stripeCheckoutSessionId: body.stripeCheckoutSessionId,
+      stripePaymentIntentId: body.stripePaymentIntentId,
+    });
+    return NextResponse.json({ code: serializeRenewalCode(created) }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not create renewal code.";
+    const status = message.includes("already") || message.includes("required") || message.includes("16")
+      ? 400
+      : 500;
+    if (status === 500) {
+      console.error("[admin renewal-codes] create failed:", error);
+    }
+    return NextResponse.json({ error: message }, { status });
   }
 }

@@ -25,6 +25,11 @@ export function RenewalCodesAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [newEmail, setNewEmail] = useState("");
+  const [newExternalId, setNewExternalId] = useState("");
+  const [newCode, setNewCode] = useState("");
   const [drafts, setDrafts] = useState<
     Record<string, { externalReferenceId: string; status: RenewalCodeRecord["status"] }>
   >({});
@@ -122,13 +127,107 @@ export function RenewalCodesAdmin() {
     }
   }
 
+  async function createCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setCreating(true);
+    setCreateError(null);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/admin/renewal-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail: newEmail.trim(),
+          externalReferenceId: newExternalId.trim() || null,
+          code: newCode.trim() || null,
+        }),
+      });
+
+      const data = (await response.json()) as {
+        code?: RenewalCodeRecord;
+        error?: string;
+      };
+
+      if (!response.ok || !data.code) {
+        setCreateError(data.error ?? "Could not create renewal code.");
+        return;
+      }
+
+      setNewEmail("");
+      setNewExternalId("");
+      setNewCode("");
+      await loadCodes();
+    } catch {
+      setCreateError("Could not create renewal code.");
+    } finally {
+      setCreating(false);
+    }
+  }
+
   async function signOut() {
     await fetch("/api/admin/login", { method: "DELETE" });
-    window.location.href = "/admin/login";
+    window.location.href = "/login";
   }
 
   return (
     <div className="space-y-6">
+      <form
+        onSubmit={createCode}
+        className="grid gap-3 rounded-2xl bg-white p-4 ring-1 ring-vt-border sm:grid-cols-2 lg:grid-cols-4"
+      >
+        <div className="sm:col-span-2 lg:col-span-4">
+          <p className="text-sm font-semibold text-vt-ink">Add a code manually</p>
+          <p className="mt-1 text-xs text-vt-muted">
+            Leave the code blank to auto-generate a 16-character code. Stripe payments still
+            create codes automatically.
+          </p>
+        </div>
+        <label className="text-left">
+          <span className="text-xs font-semibold uppercase tracking-wider text-vt-muted">
+            Customer email
+          </span>
+          <input
+            type="email"
+            required
+            value={newEmail}
+            onChange={(event) => setNewEmail(event.target.value)}
+            placeholder="customer@email.com"
+            className="mt-1.5 w-full rounded-lg border border-vt-border px-3 py-2 text-sm outline-none ring-vt-navy/20 focus:ring-2"
+          />
+        </label>
+        <label className="text-left">
+          <span className="text-xs font-semibold uppercase tracking-wider text-vt-muted">
+            External reference ID
+          </span>
+          <input
+            value={newExternalId}
+            onChange={(event) => setNewExternalId(event.target.value)}
+            placeholder="Optional"
+            className="mt-1.5 w-full rounded-lg border border-vt-border px-3 py-2 text-sm outline-none ring-vt-navy/20 focus:ring-2"
+          />
+        </label>
+        <label className="text-left">
+          <span className="text-xs font-semibold uppercase tracking-wider text-vt-muted">
+            Renewal code
+          </span>
+          <input
+            value={newCode}
+            onChange={(event) => setNewCode(event.target.value)}
+            placeholder="Blank = auto"
+            className="mt-1.5 w-full rounded-lg border border-vt-border px-3 py-2 text-sm outline-none ring-vt-navy/20 focus:ring-2"
+          />
+        </label>
+        <div className="flex items-end">
+          <Button type="submit" disabled={creating} className="w-full">
+            {creating ? "Adding…" : "Add code"}
+          </Button>
+        </div>
+        {createError ? (
+          <p className="sm:col-span-2 lg:col-span-4 text-sm text-vt-red">{createError}</p>
+        ) : null}
+      </form>
+
       <form
         onSubmit={onSearch}
         className="flex flex-col gap-3 rounded-2xl bg-white p-4 ring-1 ring-vt-border sm:flex-row sm:items-end"
@@ -217,7 +316,11 @@ export function RenewalCodesAdmin() {
                         <p className="mt-1 text-xs text-vt-muted">{code.productType}</p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-4 font-mono text-xs">{code.stripeCheckoutSessionId}</td>
+                    <td className="px-4 py-4 font-mono text-xs">
+                      {code.stripeCheckoutSessionId.startsWith("manual_")
+                        ? "Manual"
+                        : code.stripeCheckoutSessionId}
+                    </td>
                     <td className="px-4 py-4 font-mono text-xs">
                       {code.stripePaymentIntentId ?? "—"}
                     </td>

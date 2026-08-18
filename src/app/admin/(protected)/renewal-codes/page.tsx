@@ -8,8 +8,9 @@ export default function AdminRenewalCodesPage() {
           <p className="type-eyebrow text-vt-red">Admin</p>
           <h1 className="brand-display mt-2 text-3xl text-vt-ink">Renewal codes</h1>
           <p className="mt-2 max-w-2xl text-sm text-vt-muted">
-            Search generated renewal codes, view Stripe references, and attach external
-            renewal/reference IDs for the other platform.
+            Codes are created automatically after a successful Stripe payment. You can also
+            add one manually, search records, and attach the external renewal/reference ID
+            used on the other platform.
           </p>
         </div>
         <RenewalCodesAdmin />

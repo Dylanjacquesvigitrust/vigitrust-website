@@ -1,45 +1,35 @@
 import { NextResponse } from "next/server";
-import { ADMIN_COOKIE, getAdminToken } from "@/lib/admin-auth";
+import {
+  clearAdminSessionCookie,
+  credentialsMatch,
+  setAdminSessionCookie,
+} from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const expected = getAdminToken();
-  if (!expected) {
-    return NextResponse.json({ error: "Admin access is not configured." }, { status: 503 });
-  }
+  let username = "";
+  let password = "";
 
-  let token: string | undefined;
   try {
-    const body = (await request.json()) as { token?: string };
-    token = body.token?.trim();
+    const body = (await request.json()) as { username?: string; password?: string; token?: string };
+    username = body.username?.trim() ?? "";
+    password = body.password ?? body.token ?? "";
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  if (!token || token !== expected) {
-    return NextResponse.json({ error: "Invalid access token." }, { status: 401 });
+  if (!username || !password || !credentialsMatch(username, password)) {
+    return NextResponse.json({ error: "Invalid username or password." }, { status: 401 });
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(ADMIN_COOKIE, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  setAdminSessionCookie(response);
   return response;
 }
 
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(ADMIN_COOKIE, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
+  clearAdminSessionCookie(response);
   return response;
 }
