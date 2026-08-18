@@ -1,14 +1,16 @@
 import { Prisma } from "@prisma/client";
 import { training, type Course } from "@/content/courses";
-import { blog, events } from "@/content/site";
+import { blog, events, inPersonTraining } from "@/content/site";
 import { isDatabaseConfigured, prisma } from "@/lib/db";
 import {
   slugify,
   type BlogPost,
   type CmsEvent,
   type CmsKind,
+  type CmsWorkshop,
   type Course as CmsCourse,
 } from "@/lib/cms-types";
+import { saveImageOverride } from "@/lib/site-images";
 
 type CmsRow = {
   kind: string;
@@ -28,6 +30,10 @@ const seedEvents: CmsEvent[] = events.pastEvents.map((event) => ({
 }));
 
 const seedCourses: Course[] = training.courses;
+
+const seedWorkshops: CmsWorkshop[] = inPersonTraining.workshops.items.map((item) => ({
+  ...item,
+}));
 
 function asRecord(value: Prisma.JsonValue): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -103,6 +109,7 @@ function parseEvent(payload: Prisma.JsonValue, slug: string): CmsEvent | null {
     theme: typeof data.theme === "string" && data.theme.trim() ? data.theme : null,
     category: data.category === "Networking" ? "Networking" : "Advisory",
     timing: data.timing === "upcoming" ? "upcoming" : "past",
+    image: typeof data.image === "string" && data.image.trim() ? data.image : undefined,
   };
 }
 
@@ -133,6 +140,29 @@ function parseCourse(payload: Prisma.JsonValue, slug: string): Course | null {
   };
 }
 
+function parseWorkshop(payload: Prisma.JsonValue, slug: string): CmsWorkshop | null {
+  const data = asRecord(payload);
+  const title = String(data.title ?? "").trim();
+  if (!title) return null;
+  const topics = Array.isArray(data.topics)
+    ? data.topics.map((topic) => String(topic).trim()).filter(Boolean)
+    : String(data.topics ?? "")
+        .split(",")
+        .map((topic) => topic.trim())
+        .filter(Boolean);
+  return {
+    id: slug,
+    title,
+    city: String(data.city ?? "").trim() || "TBC",
+    format: String(data.format ?? "In-person"),
+    dates: String(data.dates ?? ""),
+    duration: String(data.duration ?? ""),
+    seats: String(data.seats ?? ""),
+    topics,
+    image: typeof data.image === "string" && data.image.trim() ? data.image : undefined,
+  };
+}
+
 export async function getPublishedPosts(): Promise<BlogPost[]> {
   const rows = await loadRows("post");
   return mergeItems(seedPosts, rows, (post) => post.slug, parsePost).sort(
@@ -160,22 +190,26 @@ export async function getPublishedCourse(slug: string): Promise<Course | null> {
   return courses.find((course) => course.slug === slug) ?? null;
 }
 
+export async function getPublishedWorkshops(): Promise<CmsWorkshop[]> {
+  const rows = await loadRows("workshop");
+  return mergeItems(seedWorkshops, rows, (workshop) => workshop.id, parseWorkshop);
+}
+
 function seedHas(kind: CmsKind, slug: string): boolean {
   if (kind === "post") return seedPosts.some((item) => item.slug === slug);
   if (kind === "event") return seedEvents.some((item) => item.id === slug);
+  if (kind === "workshop") return seedWorkshops.some((item) => item.id === slug);
   return seedCourses.some((item) => item.slug === slug);
 }
 
-export async function createCmsItem(kind: CmsKind, payload: Record<string, unknown>) {
+export function cmsImageSlot(kind: CmsKind, slug: string): string {
+  return `/cms/${kind}/${slug}`;
+}
+
+export async function createCmsItem(kind: CmsKind, payload: Record<string, unknown>, file?: File) {
   const slug =
     String(payload.slug ?? payload.id ?? "").trim() || slugify(String(payload.title ?? ""));
   if (!slug) throw new Error("A title is required.");
-
-  let parsed: BlogPost | CmsEvent | Course | null = null;
-  if (kind === "post") parsed = parsePost(payload as Prisma.JsonValue, slug);
-  if (kind === "event") parsed = parseEvent(payload as Prisma.JsonValue, slug);
-  if (kind === "course") parsed = parseCourse(payload as Prisma.JsonValue, slug);
-  if (!parsed) throw new Error("That item is missing required fields.");
 
   const existing = await prisma.cmsEntry.findUnique({
     where: { kind_slug: { kind, slug } },
@@ -183,6 +217,19 @@ export async function createCmsItem(kind: CmsKind, payload: Record<string, unkno
   if (existing?.status === "published" || (!existing && seedHas(kind, slug))) {
     throw new Error("An item with that name already exists.");
   }
+
+  if (file) {
+    const slot = cmsImageSlot(kind, slug);
+    await saveImageOverride(slot, file);
+    payload = { ...payload, image: slot };
+  }
+
+  let parsed: BlogPost | CmsEvent | Course | CmsWorkshop | null = null;
+  if (kind === "post") parsed = parsePost(payload as Prisma.JsonValue, slug);
+  if (kind === "event") parsed = parseEvent(payload as Prisma.JsonValue, slug);
+  if (kind === "course") parsed = parseCourse(payload as Prisma.JsonValue, slug);
+  if (kind === "workshop") parsed = parseWorkshop(payload as Prisma.JsonValue, slug);
+  if (!parsed) throw new Error("That item is missing required fields.");
 
   return prisma.cmsEntry.upsert({
     where: { kind_slug: { kind, slug } },

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Calendar, MapPin } from "lucide-react";
 import { AdminRemoveButton } from "@/components/admin/content-forms";
+import { SiteImage } from "@/components/ui/site-image";
 
 export type PastEvent = {
   id: string;
@@ -11,6 +12,7 @@ export type PastEvent = {
   location: string;
   theme: string | null;
   category: string;
+  image?: string;
 };
 
 export function EventsFilter({
@@ -64,6 +66,11 @@ export function EventsFilter({
               </span>
             </div>
             <div className="p-6 sm:p-8">
+              {event.image ? (
+                <div className="relative mb-4 aspect-[16/9] overflow-hidden rounded-lg">
+                  <SiteImage src={event.image} alt="" fill className="object-cover" sizes="640px" />
+                </div>
+              ) : null}
               <div className="flex flex-wrap items-center gap-3">
                 <span className="rounded-[4px] bg-vt-red-soft px-2.5 py-1 text-xs font-semibold text-vt-red">
                   {event.category}

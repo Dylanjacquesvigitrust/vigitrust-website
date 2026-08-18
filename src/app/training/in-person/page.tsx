@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check, Clock, MapPin, Users } from "lucide-react";
+import { AdminAddWorkshopForm, AdminRemoveButton } from "@/components/admin/content-forms";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
+import { getPublishedWorkshops } from "@/lib/cms";
 import { inPersonTraining } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -10,7 +13,8 @@ export const metadata: Metadata = {
   description: inPersonTraining.hero.body,
 };
 
-export default function InPersonTrainingPage() {
+export default async function InPersonTrainingPage() {
+  const workshops = await getPublishedWorkshops();
   return (
     <>
       <section className="relative overflow-hidden navy-surface py-16 md:py-24">
@@ -38,12 +42,28 @@ export default function InPersonTrainingPage() {
             title={inPersonTraining.workshops.title}
             body={inPersonTraining.workshops.body}
           />
+          <div className="mt-8">
+            <AdminAddWorkshopForm />
+          </div>
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            {inPersonTraining.workshops.items.map((workshop) => (
+            {workshops.map((workshop) => (
               <article
                 key={workshop.id}
-                className="card-lift flex h-full flex-col rounded-[12px] bg-vt-paper p-8 ring-1 ring-vt-border"
+                className="card-lift relative flex h-full flex-col overflow-hidden rounded-[12px] bg-vt-paper ring-1 ring-vt-border"
               >
+                <AdminRemoveButton kind="workshop" slug={workshop.id} label={workshop.title} />
+                {workshop.image ? (
+                  <div className="relative aspect-[16/9]">
+                    <SiteImage
+                      src={workshop.image}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="(max-width:1024px) 100vw, 50vw"
+                    />
+                  </div>
+                ) : null}
+                <div className="flex flex-1 flex-col p-8">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-vt-mist px-3 py-1 text-xs font-semibold text-vt-azure">
                     <MapPin className="size-3.5" aria-hidden />
@@ -77,6 +97,7 @@ export default function InPersonTrainingPage() {
                   <Button href="/contact?intent=in-person-training" variant="ghost" size="sm">
                     Reserve a seat
                   </Button>
+                </div>
                 </div>
               </article>
             ))}

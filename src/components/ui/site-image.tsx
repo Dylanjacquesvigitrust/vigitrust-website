@@ -3,7 +3,7 @@
 import Image, { type ImageProps } from "next/image";
 import { useRef, useState } from "react";
 import { useAdmin } from "@/components/admin/admin-provider";
-import { normalizeImageSlot } from "@/lib/image-slots";
+import { mediaUrlForSlot, normalizeImageSlot } from "@/lib/image-slots";
 import { withBasePath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +48,7 @@ function AdminImageControls({
 
   return (
     <span className="pointer-events-none absolute inset-0 z-20">
-      <span className="pointer-events-auto absolute right-2 top-2 flex gap-1 opacity-100 sm:opacity-0 sm:transition sm:group-hover/admin-img:opacity-100">
+      <span className="pointer-events-auto absolute left-2 top-2 flex gap-1 opacity-100 sm:opacity-0 sm:transition sm:group-hover/admin-img:opacity-100">
         <button
           type="button"
           disabled={busy}
@@ -84,7 +84,9 @@ export function SiteImage({ src, alt, className, fill, unoptimized, ...props }: 
   const { isAdmin, overrides } = useAdmin();
   const slot = normalizeImageSlot(src);
   const overrideSrc = overrides[slot];
-  const resolved = overrideSrc ?? withBasePath(src);
+  const resolved =
+    overrideSrc ??
+    (slot.startsWith("/cms/") ? mediaUrlForSlot(slot) : withBasePath(src));
   const editable = isAdmin && slot.startsWith("/");
 
   const image = (
@@ -92,7 +94,7 @@ export function SiteImage({ src, alt, className, fill, unoptimized, ...props }: 
       src={resolved}
       alt={alt}
       fill={fill}
-      unoptimized={unoptimized || Boolean(overrideSrc)}
+      unoptimized={unoptimized || Boolean(overrideSrc) || slot.startsWith("/cms/")}
       className={className}
       {...props}
     />

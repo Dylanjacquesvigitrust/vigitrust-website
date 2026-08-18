@@ -1,6 +1,6 @@
 import type { Course } from "@/content/courses";
 
-export type CmsKind = "post" | "event" | "course";
+export type CmsKind = "post" | "event" | "course" | "workshop";
 
 export type BlogPost = {
   slug: string;
@@ -20,6 +20,19 @@ export type CmsEvent = {
   theme: string | null;
   category: "Advisory" | "Networking";
   timing: "upcoming" | "past";
+  image?: string;
+};
+
+export type CmsWorkshop = {
+  id: string;
+  city: string;
+  format: string;
+  title: string;
+  dates: string;
+  duration: string;
+  seats: string;
+  topics: string[];
+  image?: string;
 };
 
 export function slugify(value: string): string {
@@ -33,7 +46,7 @@ export function slugify(value: string): string {
 }
 
 export function isCmsKind(value: string): value is CmsKind {
-  return value === "post" || value === "event" || value === "course";
+  return value === "post" || value === "event" || value === "course" || value === "workshop";
 }
 
 export type { Course };

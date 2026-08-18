@@ -4,6 +4,7 @@ import { ArrowRight, Bell } from "lucide-react";
 import { AdminAddEventForm, AdminRemoveButton } from "@/components/admin/content-forms";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
+import { SiteImage } from "@/components/ui/site-image";
 import { getPublishedEvents } from "@/lib/cms";
 import { events } from "@/content/site";
 import { EventsFilter } from "./events-filter";
@@ -50,14 +51,21 @@ export default async function EventsPage() {
               ) : (
                 <div className="mt-5 space-y-4">
                   {upcomingEvents.map((event) => (
-                    <article key={event.id} className="relative rounded-xl bg-white/8 p-4 ring-1 ring-white/12">
+                    <article key={event.id} className="relative overflow-hidden rounded-xl bg-white/8 ring-1 ring-white/12">
                       <AdminRemoveButton kind="event" slug={event.id} label={event.title} />
+                      {event.image ? (
+                        <div className="relative aspect-[16/9]">
+                          <SiteImage src={event.image} alt="" fill className="object-cover" sizes="480px" />
+                        </div>
+                      ) : null}
+                      <div className="p-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.12em] text-vt-cyan">
                         {event.dateLabel}
                       </p>
                       <h3 className="mt-2 text-lg font-semibold text-white">{event.title}</h3>
                       <p className="mt-1 text-sm text-vt-on-dark/80">{event.location}</p>
                       {event.theme ? <p className="mt-2 text-sm text-vt-cyan">{event.theme}</p> : null}
+                      </div>
                     </article>
                   ))}
                 </div>
