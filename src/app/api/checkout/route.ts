@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid checkout payload." }, { status: 400 });
     }
 
-    const cart = validateCart(body.items);
+    const cart = await validateCart(body.items);
     const stripe = getStripe();
     const siteUrl = getSiteUrl();
 

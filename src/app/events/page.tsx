@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Bell } from "lucide-react";
+import { AdminAddEventForm, AdminRemoveButton } from "@/components/admin/content-forms";
 import { Button } from "@/components/ui/button";
 import { PageHero, SectionHeading } from "@/components/ui/section";
+import { getPublishedEvents } from "@/lib/cms";
 import { events } from "@/content/site";
 import { EventsFilter } from "./events-filter";
 
@@ -11,7 +13,10 @@ export const metadata: Metadata = {
   description: events.hero.body,
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const allEvents = await getPublishedEvents();
+  const upcomingEvents = allEvents.filter((event) => event.timing === "upcoming");
+  const pastEvents = allEvents.filter((event) => event.timing !== "upcoming");
   return (
     <>
       <PageHero
@@ -30,13 +35,33 @@ export default function EventsPage() {
       </PageHero>
 
       <section className="section-pad">
-        <div className="container-vt grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-stretch">
+        <div className="container-vt">
+          <AdminAddEventForm />
+          <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-stretch">
           <div className="relative overflow-hidden rounded-[16px] navy-surface p-8 sm:p-10">
             <div className="absolute inset-0 network-grid opacity-15" aria-hidden />
             <div className="relative">
               <p className="type-eyebrow text-vt-cyan">{events.upcoming.title}</p>
-              <h2 className="type-h2 mt-3 text-white">{events.upcoming.emptyTitle}</h2>
-              <p className="mt-4 max-w-md text-vt-on-dark/85">{events.upcoming.emptyBody}</p>
+              {upcomingEvents.length === 0 ? (
+                <>
+                  <h2 className="type-h2 mt-3 text-white">{events.upcoming.emptyTitle}</h2>
+                  <p className="mt-4 max-w-md text-vt-on-dark/85">{events.upcoming.emptyBody}</p>
+                </>
+              ) : (
+                <div className="mt-5 space-y-4">
+                  {upcomingEvents.map((event) => (
+                    <article key={event.id} className="relative rounded-xl bg-white/8 p-4 ring-1 ring-white/12">
+                      <AdminRemoveButton kind="event" slug={event.id} label={event.title} />
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-vt-cyan">
+                        {event.dateLabel}
+                      </p>
+                      <h3 className="mt-2 text-lg font-semibold text-white">{event.title}</h3>
+                      <p className="mt-1 text-sm text-vt-on-dark/80">{event.location}</p>
+                      {event.theme ? <p className="mt-2 text-sm text-vt-cyan">{event.theme}</p> : null}
+                    </article>
+                  ))}
+                </div>
+              )}
               <div className="mt-8">
                 <Button href={events.upcoming.cta.href} size="lg">
                   <Bell className="size-4" aria-hidden />
@@ -60,6 +85,7 @@ export default function EventsPage() {
               </article>
             ))}
           </div>
+          </div>
         </div>
       </section>
 
@@ -70,7 +96,7 @@ export default function EventsPage() {
             title="Past events"
             body="A record of recent advisory summits and networking gatherings from the VigiTrust community."
           />
-          <EventsFilter filters={events.filters} pastEvents={events.pastEvents} />
+          <EventsFilter filters={events.filters} pastEvents={pastEvents} />
         </div>
       </section>
 

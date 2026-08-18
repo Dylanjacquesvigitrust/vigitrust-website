@@ -1,4 +1,5 @@
-import { training, type Course } from "@/content/courses";
+import { getPublishedCourses } from "@/lib/cms";
+import { type Course } from "@/content/courses";
 
 export const VAT_RATE = 0.23;
 
@@ -55,17 +56,19 @@ function courseUnitPrice(course: Course, moduleName?: string): number {
 }
 
 /** Recompute cart totals server-side so client prices cannot be tampered with. */
-export function validateCart(items: CheckoutLineItem[]): ValidatedCart {
+export async function validateCart(items: CheckoutLineItem[]): Promise<ValidatedCart> {
   if (!items.length) {
     throw new Error("Your basket is empty.");
   }
+
+  const courses = await getPublishedCourses();
 
   const lines: ValidatedCartLine[] = items.map((item) => {
     if (!item.slug || item.quantity < 1 || item.quantity > 99) {
       throw new Error("Invalid basket item.");
     }
 
-    const course = training.courses.find((c) => c.slug === item.slug);
+    const course = courses.find((c) => c.slug === item.slug);
     if (!course) {
       throw new Error(`Unknown course: ${item.slug}`);
     }

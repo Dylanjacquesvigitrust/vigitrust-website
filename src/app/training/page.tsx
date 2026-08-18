@@ -1,7 +1,9 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { Clock3 } from "lucide-react";
+import { AdminAddCourseForm, AdminRemoveButton } from "@/components/admin/content-forms";
 import { SiteImage } from "@/components/ui/site-image";
+import { getPublishedCourses } from "@/lib/cms";
 import { courseDetails, training } from "@/content/courses";
 
 export const metadata: Metadata = {
@@ -10,8 +12,8 @@ export const metadata: Metadata = {
     "Browse VigiTrust eLearning courses  -  GDPR, PCI, HIPAA, Secure Coding, phishing awareness and 200+ learning modules.",
 };
 
-export default function TrainingPage() {
-  const courses = training.courses;
+export default async function TrainingPage() {
+  const courses = await getPublishedCourses();
 
   return (
     <>
@@ -40,14 +42,16 @@ export default function TrainingPage() {
             </p>
           </div>
 
+          <AdminAddCourseForm />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {courses.map((course) => {
               const details = courseDetails(course);
               return (
                 <article
                   key={course.slug}
-                  className="card-lift group flex h-full flex-col overflow-hidden rounded-2xl border border-vt-border bg-vt-paper shadow-[var(--shadow-xs)]"
+                  className="card-lift group relative flex h-full flex-col overflow-hidden rounded-2xl border border-vt-border bg-vt-paper shadow-[var(--shadow-xs)]"
                 >
+                  <AdminRemoveButton kind="course" slug={course.slug} label={course.title} />
                   <Link
                     href={`/training/${course.slug}`}
                     className="relative block aspect-[16/9] overflow-hidden bg-vt-mist"

@@ -2,10 +2,12 @@
 import { Instrument_Sans } from "next/font/google";
 import { KlaviyoScripts } from "@/components/analytics/klaviyo-scripts";
 import { CartProvider } from "@/components/cart/cart-provider";
+import { CatalogProvider } from "@/components/catalog/catalog-provider";
 import { AdminProvider } from "@/components/admin/admin-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getPublishedCourses } from "@/lib/cms";
 import { listImageOverrideUrls } from "@/lib/site-images";
 import "./globals.css";
 
@@ -43,17 +45,19 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [isAdmin, imageOverrides] = await Promise.all([
+  const [isAdmin, imageOverrides, courses] = await Promise.all([
     isAdminAuthenticated(),
     listImageOverrideUrls(),
+    getPublishedCourses(),
   ]);
 
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} h-full`}>
       <body className={`${sans.className} flex min-h-full flex-col antialiased`}>
         <KlaviyoScripts />
-        <CartProvider>
-          <AdminProvider isAdmin={isAdmin} initialOverrides={imageOverrides}>
+        <CatalogProvider courses={courses}>
+          <CartProvider>
+            <AdminProvider isAdmin={isAdmin} initialOverrides={imageOverrides}>
             <a
               href="#main"
               className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy focus:shadow-[var(--shadow-md)]"
@@ -67,6 +71,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <SiteFooter />
           </AdminProvider>
         </CartProvider>
+        </CatalogProvider>
       </body>
     </html>
   );

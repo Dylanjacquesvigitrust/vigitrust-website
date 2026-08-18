@@ -38,3 +38,16 @@ model SiteImageOverride {
   data        Bytes
   updatedAt   DateTime @updatedAt
 }
+
+model CmsEntry {
+  id        String   @id @default(cuid())
+  kind      String
+  slug      String
+  status    String   @default("published")
+  payload   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, slug])
+  @@index([kind, status])
+}

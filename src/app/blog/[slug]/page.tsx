@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHero, Reveal } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
+import { getPublishedPost } from "@/lib/cms";
 import { blog } from "@/content/site";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return blog.posts.map((post) => ({ slug: post.slug }));
@@ -13,14 +16,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blog.posts.find((p) => p.slug === slug);
+  const post = await getPublishedPost(slug);
   if (!post) return { title: "Article" };
   return { title: post.title, description: post.excerpt };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = blog.posts.find((p) => p.slug === slug);
+  const post = await getPublishedPost(slug);
   if (!post) notFound();
 
   return (
@@ -42,12 +45,18 @@ export default async function BlogPostPage({ params }: Props) {
                 <SiteImage src={post.image} alt="" fill className="object-cover" sizes="768px" />
               </div>
               <div className="space-y-5 p-8 text-vt-slate sm:p-10">
-                <p>{post.excerpt}</p>
-                <p>
-                  This article reflects themes covered across VigiTrust’s news, Advisory Board
-                  conversations, and customer programmes: operationalising GRC, strengthening
-                  workforce awareness, and keeping evidence continuous rather than episodic.
-                </p>
+                {(post.body ?? post.excerpt)
+                  .split(/\n{2,}/)
+                  .map((paragraph) => (
+                    <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+                  ))}
+                {!post.body ? (
+                  <p>
+                    This article reflects themes covered across VigiTrust’s news, Advisory Board
+                    conversations, and customer programmes: operationalising GRC, strengthening
+                    workforce awareness, and keeping evidence continuous rather than episodic.
+                  </p>
+                ) : null}
                 <div className="pt-2">
                   <Button href="/blog" variant="ghost">
                     Back to blog

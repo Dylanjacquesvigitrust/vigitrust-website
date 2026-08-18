@@ -9,7 +9,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { training, type Course } from "@/content/courses";
+import { useCatalog } from "@/components/catalog/catalog-provider";
+import { type Course } from "@/content/courses";
 
 export type CartItem = {
   slug: string;
@@ -57,6 +58,7 @@ function coursePrice(course: Course, moduleName?: string): { price: number; labe
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { courses } = useCatalog();
   const [items, setItems] = useState<CartItem[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -68,7 +70,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // Refresh images/titles from catalogue so stale localStorage paths never break checkout.
         setItems(
           parsed.map((item) => {
-            const course = training.courses.find((c) => c.slug === item.slug);
+            const course = courses.find((c) => c.slug === item.slug);
             if (!course) return item;
             return {
               ...item,
@@ -82,7 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
     setReady(true);
-  }, []);
+  }, [courses]);
 
   useEffect(() => {
     if (!ready) return;
@@ -91,7 +93,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (slug: string, opts?: { module?: string; price?: number; priceLabel?: string }) => {
-      const course = training.courses.find((c) => c.slug === slug);
+      const course = courses.find((c) => c.slug === slug);
       if (!course) return;
       const priced = coursePrice(course, opts?.module);
       const price = opts?.price ?? priced.price;
@@ -120,7 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         ];
       });
     },
-    [],
+    [courses],
   );
 
   const removeItem = useCallback((slug: string, module?: string) => {

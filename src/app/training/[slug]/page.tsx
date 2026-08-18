@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 import { Check, Clock3, Users } from "lucide-react";
 import { CoursePurchasePanel } from "@/components/cart/course-purchase";
 import { SiteImage } from "@/components/ui/site-image";
+import { getPublishedCourse } from "@/lib/cms";
 import { courseDetails, training } from "@/content/courses";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return training.courses.map((course) => ({ slug: course.slug }));
@@ -14,14 +17,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const course = training.courses.find((c) => c.slug === slug);
+  const course = await getPublishedCourse(slug);
   if (!course) return { title: "Course" };
   return { title: course.title, description: course.summary };
 }
 
 export default async function CoursePage({ params }: Props) {
   const { slug } = await params;
-  const course = training.courses.find((c) => c.slug === slug);
+  const course = await getPublishedCourse(slug);
   if (!course) notFound();
   const details = courseDetails(course);
 

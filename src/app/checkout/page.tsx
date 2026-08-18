@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { formatEuro, useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
 import { SiteImage } from "@/components/ui/site-image";
-import { training } from "@/content/courses";
+import { useCatalog } from "@/components/catalog/catalog-provider";
 import { withBasePath } from "@/lib/paths";
 
 function CourseThumb({ slug, image, title }: { slug: string; image?: string; title: string }) {
-  const courseImage = training.courses.find((c) => c.slug === slug)?.image;
+  const { courses } = useCatalog();
+  const courseImage = courses.find((c) => c.slug === slug)?.image;
   const src = courseImage || image || "/images/courses/quiz.webp";
 
   return (
@@ -27,6 +28,7 @@ function CourseThumb({ slug, image, title }: { slug: string; image?: string; tit
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, vat, total, updateQuantity, removeItem } = useCart();
+  const { courses } = useCatalog();
   const [couponOpen, setCouponOpen] = useState(false);
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,14 +39,14 @@ export default function CheckoutPage() {
   const orderLines = useMemo(
     () =>
       items.map((i) => {
-        const course = training.courses.find((c) => c.slug === i.slug);
+        const course = courses.find((c) => c.slug === i.slug);
         return {
           ...i,
           image: course?.image ?? i.image,
           lineTotal: i.price * i.quantity,
         };
       }),
-    [items],
+    [courses, items],
   );
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {

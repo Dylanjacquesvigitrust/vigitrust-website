@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, MapPin } from "lucide-react";
+import { AdminRemoveButton } from "@/components/admin/content-forms";
 
 export type PastEvent = {
   id: string;
@@ -51,8 +52,9 @@ export function EventsFilter({
         {filtered.map((event) => (
           <article
             key={event.id}
-            className="grid overflow-hidden rounded-[14px] bg-vt-paper ring-1 ring-vt-border md:grid-cols-[7.5rem_1fr]"
+            className="relative grid overflow-hidden rounded-[14px] bg-vt-paper ring-1 ring-vt-border md:grid-cols-[7.5rem_1fr]"
           >
+            <AdminRemoveButton kind="event" slug={event.id} label={event.title} />
             <div className="flex flex-row items-center gap-3 bg-vt-navy px-5 py-4 text-white md:flex-col md:items-start md:justify-center md:px-6 md:py-8">
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-vt-cyan">
                 {event.dateLabel.split(" ")[0]}
