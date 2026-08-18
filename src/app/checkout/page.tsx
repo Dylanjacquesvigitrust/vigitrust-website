@@ -5,22 +5,21 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatEuro, useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
+import { SiteImage } from "@/components/ui/site-image";
 import { training } from "@/content/courses";
 import { withBasePath } from "@/lib/paths";
 
 function CourseThumb({ slug, image, title }: { slug: string; image?: string; title: string }) {
   const courseImage = training.courses.find((c) => c.slug === slug)?.image;
-  const src = withBasePath(courseImage || image || "/images/courses/quiz.webp");
+  const src = courseImage || image || "/images/courses/quiz.webp";
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <SiteImage
       src={src}
       alt={title}
       width={64}
       height={64}
       className="size-full object-cover"
-      loading="lazy"
     />
   );
 }

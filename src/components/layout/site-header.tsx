@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, ShoppingCart, X } from "lucide-react";
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { useAdmin } from "@/components/admin/admin-provider";
 import { navigation } from "@/content/layout";
 import { useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const pathname = usePathname();
   const { count } = useCart();
+  const { isAdmin } = useAdmin();
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -93,6 +95,14 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center justify-end gap-2">
+            {isAdmin ? (
+              <Link
+                href="/admin/renewal-codes"
+                className="inline-flex h-8 items-center rounded-md bg-vt-navy px-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white"
+              >
+                Admin
+              </Link>
+            ) : null}
             <Link
               href="/checkout"
               className="relative inline-flex size-9 items-center justify-center rounded-lg text-vt-slate transition duration-200 hover:bg-vt-mist hover:text-vt-ink"
@@ -145,6 +155,14 @@ export function SiteHeader() {
                   ))}
                 </div>
               ))}
+              {isAdmin ? (
+                <Link
+                  href="/admin/renewal-codes"
+                  className="mt-3 inline-flex h-10 items-center justify-center rounded-lg bg-vt-navy px-3 text-sm font-semibold text-white"
+                >
+                  Admin
+                </Link>
+              ) : null}
               <Button href={navigation.cta.href} variant="header" className="mt-3 w-full" size="md">
                 {navigation.cta.label}
               </Button>

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const ADMIN_COOKIE = "renewal_admin";
-export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 7;
+export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 
 const DEFAULT_ADMIN_USERNAME = "admin";
 const DEFAULT_ADMIN_PASSWORD = "systemadmin#23";

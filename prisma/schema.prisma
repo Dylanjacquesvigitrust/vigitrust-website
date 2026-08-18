@@ -31,3 +31,10 @@ model RenewalCode {
   @@index([status])
   @@index([createdAt])
 }
+
+model SiteImageOverride {
+  slot        String   @id
+  contentType String
+  data        Bytes
+  updatedAt   DateTime @updatedAt
+}

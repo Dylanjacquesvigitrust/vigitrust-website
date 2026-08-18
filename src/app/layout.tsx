@@ -2,8 +2,11 @@
 import { Instrument_Sans } from "next/font/google";
 import { KlaviyoScripts } from "@/components/analytics/klaviyo-scripts";
 import { CartProvider } from "@/components/cart/cart-provider";
+import { AdminProvider } from "@/components/admin/admin-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { listImageOverrideUrls } from "@/lib/site-images";
 import "./globals.css";
 
 const sans = Instrument_Sans({
@@ -39,23 +42,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const [isAdmin, imageOverrides] = await Promise.all([
+    isAdminAuthenticated(),
+    listImageOverrideUrls(),
+  ]);
+
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} h-full`}>
       <body className={`${sans.className} flex min-h-full flex-col antialiased`}>
         <KlaviyoScripts />
         <CartProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy focus:shadow-[var(--shadow-md)]"
-          >
-            Skip to content
-          </a>
-          <SiteHeader />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
+          <AdminProvider isAdmin={isAdmin} initialOverrides={imageOverrides}>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-vt-paper focus:px-4 focus:py-2 focus:text-vt-navy focus:shadow-[var(--shadow-md)]"
+            >
+              Skip to content
+            </a>
+            <SiteHeader />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+          </AdminProvider>
         </CartProvider>
       </body>
     </html>
