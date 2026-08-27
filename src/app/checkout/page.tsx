@@ -132,14 +132,21 @@ export default function CheckoutPage() {
                     id="country"
                     name="country"
                     required
-                    defaultValue="Ireland"
+                    defaultValue="IE"
                     className="w-full rounded-md bg-[#f3f3f3] px-3 py-2.5 text-vt-ink ring-1 ring-vt-border"
                   >
-                    <option>Ireland</option>
-                    <option>United Kingdom</option>
-                    <option>France</option>
-                    <option>United States</option>
-                    <option>Other</option>
+                    <option value="IE">Ireland</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="FR">France</option>
+                    <option value="DE">Germany</option>
+                    <option value="ES">Spain</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="BE">Belgium</option>
+                    <option value="IT">Italy</option>
+                    <option value="PT">Portugal</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
                   </select>
                 </div>
                 <div className="sm:col-span-2">
