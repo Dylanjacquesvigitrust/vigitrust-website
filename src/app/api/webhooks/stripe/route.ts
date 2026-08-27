@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { sendCourseAccessEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
-/**
- * Renewal-code generation is temporarily disabled while Stripe Tax + catalog
- * prices are rolled out. Webhook still verifies events and logs purchases.
- */
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const email = session.customer_email ?? session.customer_details?.email ?? "unknown";
+  const email = session.customer_email ?? session.customer_details?.email ?? null;
   const amount = session.amount_total != null ? session.amount_total / 100 : null;
   const tax = session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null;
   const product = session.metadata?.product ?? "course-cart";
@@ -23,6 +20,26 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     paymentStatus: session.payment_status,
     metadata: session.metadata,
   });
+
+  if (session.payment_status !== "paid" || !email) {
+    return;
+  }
+
+  const cartSlugs = session.metadata?.cart_slugs ?? "";
+  if (!cartSlugs) {
+    return;
+  }
+
+  const result = await sendCourseAccessEmail({
+    to: email,
+    firstName: session.metadata?.customer_first_name,
+    cartSlugs,
+    orderRef: session.id,
+  });
+
+  if (!result.sent) {
+    console.warn("[stripe webhook] course email not sent:", result.reason);
+  }
 }
 
 export async function POST(request: Request) {

@@ -55,8 +55,8 @@ function SuccessContent() {
         <h1 className="brand-display mt-3 text-3xl text-vt-ink">Thank you for your order</h1>
         <p className="mt-3 text-vt-muted">
           Your payment was processed securely by Stripe
-          {confirmed && email ? `, and a receipt will be sent to ${email}` : ""}. Access details
-          will follow by email from the VigiTrust team.
+          {confirmed && email ? `. We have sent your course access link to ${email}` : ""}.
+          Please check your inbox (and spam folder) for the email from VigiTrust.
         </p>
 
         {sessionId ? (

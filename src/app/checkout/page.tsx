@@ -7,6 +7,7 @@ import { formatEuro, useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
 import { SiteImage } from "@/components/ui/site-image";
 import { useCatalog } from "@/components/catalog/catalog-provider";
+import { CHECKOUT_COUNTRIES } from "@/lib/countries";
 import { withBasePath } from "@/lib/paths";
 
 function CourseThumb({ slug, image, title }: { slug: string; image?: string; title: string }) {
@@ -135,18 +136,11 @@ export default function CheckoutPage() {
                     defaultValue="IE"
                     className="w-full rounded-md bg-[#f3f3f3] px-3 py-2.5 text-vt-ink ring-1 ring-vt-border"
                   >
-                    <option value="IE">Ireland</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
-                    <option value="ES">Spain</option>
-                    <option value="NL">Netherlands</option>
-                    <option value="BE">Belgium</option>
-                    <option value="IT">Italy</option>
-                    <option value="PT">Portugal</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="AU">Australia</option>
+                    {CHECKOUT_COUNTRIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="sm:col-span-2">
@@ -208,7 +202,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-base">
                     <dt className="font-bold text-vt-ink">Total due today</dt>
-                    <dd className="font-bold text-vt-ink">{formatEuro(total)}+</dd>
+                    <dd className="font-bold text-vt-ink">{formatEuro(total)} + VAT</dd>
                   </div>
                 </dl>
                 <p className="mt-2 text-xs text-vt-muted">

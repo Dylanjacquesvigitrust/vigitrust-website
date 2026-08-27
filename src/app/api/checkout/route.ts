@@ -101,6 +101,8 @@ export async function POST(request: Request) {
         address: "auto",
         name: "auto",
       },
+      // Card only — hides iDEAL, Wero, and other auto payment methods.
+      payment_method_types: ["card"],
       line_items: lineItems,
       automatic_tax: { enabled: true },
       billing_address_collection: "required",
