@@ -27,7 +27,7 @@ function CourseThumb({ slug, image, title }: { slug: string; image?: string; tit
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, vat, total, updateQuantity, removeItem } = useCart();
+  const { items, subtotal, total, updateQuantity, removeItem } = useCart();
   const { courses } = useCatalog();
   const [couponOpen, setCouponOpen] = useState(false);
   const [agree, setAgree] = useState(false);
@@ -192,18 +192,21 @@ export default function CheckoutPage() {
                 </ul>
                 <dl className="mt-4 space-y-2 border-t border-vt-border pt-4 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-vt-muted">Subtotal</dt>
+                    <dt className="text-vt-muted">Subtotal (ex-VAT)</dt>
                     <dd className="font-semibold">{formatEuro(subtotal)}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-vt-muted">VAT (23%)</dt>
-                    <dd className="font-semibold">{formatEuro(vat)}</dd>
+                    <dt className="text-vt-muted">VAT</dt>
+                    <dd className="font-semibold text-vt-muted">Calculated at checkout</dd>
                   </div>
                   <div className="flex justify-between text-base">
-                    <dt className="font-bold text-vt-ink">Total</dt>
-                    <dd className="font-bold text-vt-ink">{formatEuro(total)}</dd>
+                    <dt className="font-bold text-vt-ink">Total due today</dt>
+                    <dd className="font-bold text-vt-ink">{formatEuro(total)}+</dd>
                   </div>
                 </dl>
+                <p className="mt-2 text-xs text-vt-muted">
+                  Final VAT is applied by Stripe Tax based on your billing address.
+                </p>
               </div>
 
               <div className="rounded-2xl border border-dashed border-vt-border bg-white p-5">

@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { isDatabaseConfigured } from "@/lib/db";
-import { createRenewalCodeFromCheckoutSession } from "@/lib/renewal-codes";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
+/**
+ * Renewal-code generation is temporarily disabled while Stripe Tax + catalog
+ * prices are rolled out. Webhook still verifies events and logs purchases.
+ */
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_email ?? session.customer_details?.email ?? "unknown";
   const amount = session.amount_total != null ? session.amount_total / 100 : null;
+  const tax = session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null;
   const product = session.metadata?.product ?? "course-cart";
 
   console.info("[stripe webhook] checkout.session.completed", {
@@ -16,27 +19,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     product,
     email,
     amountEur: amount,
+    taxEur: tax,
     paymentStatus: session.payment_status,
     metadata: session.metadata,
-  });
-
-  if (session.payment_status !== "paid") {
-    console.info("[stripe webhook] skipping renewal code — payment not paid yet", session.id);
-    return;
-  }
-
-  if (!isDatabaseConfigured()) {
-    console.error("[stripe webhook] DATABASE_URL is not configured — renewal code not created.");
-    return;
-  }
-
-  const renewalCode = await createRenewalCodeFromCheckoutSession(session);
-
-  console.info("[stripe webhook] renewal code ready", {
-    sessionId: session.id,
-    renewalCodeId: renewalCode.id,
-    code: renewalCode.code,
-    status: renewalCode.status,
   });
 }
 

@@ -25,8 +25,8 @@ export type CartItem = {
 type CartContextValue = {
   items: CartItem[];
   count: number;
+  /** Ex-VAT subtotal. Tax is calculated by Stripe Tax at checkout. */
   subtotal: number;
-  vat: number;
   total: number;
   addItem: (slug: string, opts?: { module?: string; price?: number; priceLabel?: string }) => void;
   removeItem: (slug: string, module?: string) => void;
@@ -36,7 +36,6 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "vigitrust-cart-v1";
-const VAT_RATE = 0.23;
 
 function coursePrice(course: Course, moduleName?: string): { price: number; label: string } {
   if (moduleName && course.modules) {
@@ -149,8 +148,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [items],
   );
-  const vat = useMemo(() => Math.round(subtotal * VAT_RATE * 100) / 100, [subtotal]);
-  const total = useMemo(() => Math.round((subtotal + vat) * 100) / 100, [subtotal, vat]);
+  // Payable total is finalised by Stripe Tax at checkout (regional VAT).
+  const total = subtotal;
   const count = useMemo(() => items.reduce((n, i) => n + i.quantity, 0), [items]);
 
   const value = useMemo(
@@ -158,14 +157,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       items,
       count,
       subtotal,
-      vat,
       total,
       addItem,
       removeItem,
       updateQuantity,
       clear,
     }),
-    [items, count, subtotal, vat, total, addItem, removeItem, updateQuantity, clear],
+    [items, count, subtotal, total, addItem, removeItem, updateQuantity, clear],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

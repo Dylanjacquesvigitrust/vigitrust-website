@@ -42,38 +42,40 @@ export async function POST(request: Request) {
     const stripe = getStripe();
     const siteUrl = getSiteUrl();
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cart.lines.map((line) => ({
-      price_data: {
-        currency: "eur",
-        unit_amount: eurosToCents(line.unitPrice),
-        product_data: {
-          name: line.title,
-          metadata: {
-            slug: line.slug,
-            module: line.module ?? "",
-          },
-        },
-      },
-      quantity: line.quantity,
-    }));
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cart.lines.map((line) => {
+      if (line.stripePriceId) {
+        return {
+          price: line.stripePriceId,
+          quantity: line.quantity,
+        };
+      }
 
-    if (cart.vat > 0) {
-      lineItems.push({
+      return {
         price_data: {
           currency: "eur",
-          unit_amount: eurosToCents(cart.vat),
+          unit_amount: eurosToCents(line.unitPrice),
+          tax_behavior: "exclusive",
           product_data: {
-            name: "VAT (23%)",
+            name: line.title,
+            tax_code: "txcd_10000000",
+            metadata: {
+              slug: line.slug,
+              module: line.module ?? "",
+            },
           },
         },
-        quantity: 1,
-      });
-    }
+        quantity: line.quantity,
+      };
+    });
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: body.customer.email.trim(),
       line_items: lineItems,
+      automatic_tax: { enabled: true },
+      billing_address_collection: "required",
+      tax_id_collection: { enabled: true },
+      customer_creation: "always",
       success_url: `${siteUrl}/checkout/success/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/checkout/`,
       metadata: {
@@ -89,8 +91,7 @@ export async function POST(request: Request) {
         cart_slugs: cart.lines.map((l) => l.slug).join(","),
         cart_summary: cart.lines.map((l) => `${l.slug}:${l.quantity}`).join("|"),
         subtotal_eur: String(cart.subtotal),
-        vat_eur: String(cart.vat),
-        total_eur: String(cart.total),
+        tax: "stripe_tax",
       },
       phone_number_collection: { enabled: false },
     });

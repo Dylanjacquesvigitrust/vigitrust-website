@@ -19,14 +19,21 @@ export async function POST() {
           price_data: {
             currency: "eur",
             unit_amount: eurosToCents(CHARTERED_ADVISOR_PRICE_EUR),
+            tax_behavior: "exclusive",
             product_data: {
               name: "Chartered Advisor Membership",
-              description: "Annual VigiTrust Global Advisory Board membership — summit access, webinars, roundtables, and peer network.",
+              description:
+                "Annual VigiTrust Global Advisory Board membership — summit access, webinars, roundtables, and peer network.",
+              tax_code: "txcd_10000000",
             },
           },
           quantity: 1,
         },
       ],
+      automatic_tax: { enabled: true },
+      billing_address_collection: "required",
+      tax_id_collection: { enabled: true },
+      customer_creation: "always",
       success_url: `${siteUrl}/checkout/success/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/advisory-board/#membership`,
       metadata: {
@@ -34,6 +41,7 @@ export async function POST() {
         product_name: "Chartered Advisor Membership",
         amount_eur: String(CHARTERED_ADVISOR_PRICE_EUR),
         period: "annual",
+        tax: "stripe_tax",
       },
       allow_promotion_codes: true,
     });

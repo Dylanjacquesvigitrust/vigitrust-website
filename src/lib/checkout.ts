@@ -1,7 +1,6 @@
 import { getPublishedCourses } from "@/lib/cms";
 import { type Course } from "@/content/courses";
-
-export const VAT_RATE = 0.23;
+import { getStripePriceIdForSlug } from "@/lib/stripe-catalog";
 
 export type CheckoutLineItem = {
   slug: string;
@@ -27,15 +26,17 @@ export type ValidatedCartLine = {
   module?: string;
   title: string;
   quantity: number;
+  /** Display / fallback unit price in EUR (ex-VAT). */
   unitPrice: number;
   lineTotal: number;
+  /** When set, Checkout charges this Stripe Price instead of price_data. */
+  stripePriceId?: string;
 };
 
 export type ValidatedCart = {
   lines: ValidatedCartLine[];
+  /** Ex-VAT subtotal for display / metadata. */
   subtotal: number;
-  vat: number;
-  total: number;
 };
 
 function courseUnitPrice(course: Course, moduleName?: string): number {
@@ -55,7 +56,7 @@ function courseUnitPrice(course: Course, moduleName?: string): number {
   return 0;
 }
 
-/** Recompute cart totals server-side so client prices cannot be tampered with. */
+/** Recompute cart lines server-side so client prices cannot be tampered with. */
 export async function validateCart(items: CheckoutLineItem[]): Promise<ValidatedCart> {
   if (!items.length) {
     throw new Error("Your basket is empty.");
@@ -73,8 +74,11 @@ export async function validateCart(items: CheckoutLineItem[]): Promise<Validated
       throw new Error(`Unknown course: ${item.slug}`);
     }
 
+    const stripePriceId = getStripePriceIdForSlug(item.slug);
     const unitPrice = courseUnitPrice(course, item.module);
-    if (unitPrice <= 0) {
+
+    // Catalog-priced courses are charged via Stripe Price ID (amount comes from Stripe).
+    if (!stripePriceId && unitPrice <= 0) {
       throw new Error(`Pricing is not available for ${course.title}.`);
     }
 
@@ -87,14 +91,13 @@ export async function validateCart(items: CheckoutLineItem[]): Promise<Validated
       quantity: item.quantity,
       unitPrice,
       lineTotal: Math.round(unitPrice * item.quantity * 100) / 100,
+      stripePriceId,
     };
   });
 
   const subtotal = Math.round(lines.reduce((sum, l) => sum + l.lineTotal, 0) * 100) / 100;
-  const vat = Math.round(subtotal * VAT_RATE * 100) / 100;
-  const total = Math.round((subtotal + vat) * 100) / 100;
 
-  return { lines, subtotal, vat, total };
+  return { lines, subtotal };
 }
 
 export function eurosToCents(amount: number): number {

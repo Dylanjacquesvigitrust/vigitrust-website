@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
-import {
-  createRenewalCodeFromCheckoutSession,
-  getRenewalCodeByCheckoutSessionId,
-  serializeRenewalCode,
-} from "@/lib/renewal-codes";
-import { isDatabaseConfigured } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
+/** Confirms a paid Checkout Session. Renewal codes are temporarily disabled. */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const sessionId = searchParams.get("session_id")?.trim();
@@ -25,31 +20,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Payment not completed." }, { status: 403 });
     }
 
-    if (!isDatabaseConfigured()) {
-      return NextResponse.json({ error: "Renewal codes are not configured." }, { status: 503 });
-    }
-
-    let record = await getRenewalCodeByCheckoutSessionId(sessionId);
-
-    // Fallback if the webhook was delayed or failed — idempotent create.
-    if (!record) {
-      try {
-        record = await createRenewalCodeFromCheckoutSession(session);
-      } catch (error) {
-        console.error("[checkout session] renewal code create failed:", error);
-        return NextResponse.json(
-          {
-            error: "Renewal code not found yet. It may take a moment after payment.",
-            pending: true,
-          },
-          { status: 404 },
-        );
-      }
-    }
-
     return NextResponse.json({
-      renewalCode: serializeRenewalCode(record),
+      paid: true,
       email: session.customer_email ?? session.customer_details?.email ?? null,
+      amountTotal: session.amount_total != null ? session.amount_total / 100 : null,
+      amountTax: session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null,
+      currency: session.currency,
     });
   } catch (error) {
     console.error("[checkout session] failed:", error);
