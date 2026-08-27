@@ -128,6 +128,7 @@ export async function sendCourseAccessEmail(params: {
     return { sent: false, reason: "RESEND_API_KEY not configured." };
   }
 
+  const to = params.to.trim().toLowerCase();
   const firstName = params.firstName?.trim() || "there";
   const subject =
     courses.length === 1
@@ -136,7 +137,7 @@ export async function sendCourseAccessEmail(params: {
 
   const { error } = await resend.emails.send({
     from: getFromAddress(),
-    to: params.to,
+    to,
     subject,
     html: buildEmailHtml({
       firstName,
@@ -150,6 +151,6 @@ export async function sendCourseAccessEmail(params: {
     return { sent: false, reason: error.message };
   }
 
-  console.info("[email] Course access email sent", { to: params.to, courses: courses.map((c) => c.slug) });
+  console.info("[email] Course access email sent", { to, courses: courses.map((c) => c.slug) });
   return { sent: true };
 }
