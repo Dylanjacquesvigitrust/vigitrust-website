@@ -4,6 +4,7 @@ import { requireManagerApi } from "@/lib/manager-auth";
 import {
   addEmployeeToCourse,
   getCustomerCourseSummaries,
+  resendEmployeeAssignmentAccess,
   retryFailedAssignment,
   syncCustomerTrainingStatus,
 } from "@/lib/training-employees";
@@ -65,6 +66,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
     return NextResponse.json({ ok: true, assignmentId: result.assignmentId });
+  }
+
+  if (body.action === "resend-email" && body.assignmentId) {
+    const result = await resendEmployeeAssignmentAccess(
+      auth.session.customerId,
+      body.assignmentId,
+    );
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+    return NextResponse.json({ ok: true });
   }
 
   if (!body.courseSlug || !body.firstName || !body.lastName || !body.email) {

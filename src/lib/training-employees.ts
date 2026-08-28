@@ -24,6 +24,8 @@ export type AddEmployeeResult =
   | { ok: true; assignmentId: string; employeeId: string }
   | { ok: false; error: string };
 
+export type ResendEmployeeResult = { ok: true } | { ok: false; error: string };
+
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
@@ -320,6 +322,117 @@ export async function retryFailedAssignment(
       where: { id: assignmentId },
       data: { status: AssignmentStatus.failed, provisioningError: message },
     });
+    return { ok: false, error: message };
+  }
+}
+
+/** Resend training access emails and re-trigger Reach invite if the learner has no account yet. */
+export async function resendEmployeeAssignmentAccess(
+  customerId: string,
+  assignmentId: string,
+): Promise<ResendEmployeeResult> {
+  const assignment = await prisma.trainingAssignment.findFirst({
+    where: {
+      id: assignmentId,
+      customerId,
+      status: AssignmentStatus.assigned,
+    },
+    include: {
+      employee: true,
+      allocation: true,
+    },
+  });
+
+  if (!assignment) {
+    return { ok: false, error: "Assignment not found or not active." };
+  }
+
+  if (!assignment.allocation.reachGroupId || !assignment.allocation.reachGroupName) {
+    return { ok: false, error: "Reach group is not configured for this assignment." };
+  }
+
+  const product = getTrainingProductBySlug(assignment.courseSlug);
+  if (!product) {
+    return { ok: false, error: "Unknown training course." };
+  }
+
+  if (!isReachConfigured()) {
+    return { ok: false, error: "Reach 360 is not configured." };
+  }
+
+  const email = assignment.employee.email;
+  const firstName = assignment.employee.firstName;
+  const lastName = assignment.employee.lastName;
+  let reachUserId = assignment.reachUserId ?? assignment.employee.reachUserId;
+  let reachInvitationId = assignment.reachInvitationId;
+
+  try {
+    const existing = reachUserId ? { id: reachUserId } : await findUserByEmail(email);
+
+    if (existing) {
+      reachUserId = existing.id;
+      await addUserToGroup(assignment.allocation.reachGroupId, existing.id);
+      await enrollUserInCourse(product.reachCourseId, existing.id);
+      await prisma.employee.update({
+        where: { id: assignment.employeeId },
+        data: { reachUserId: existing.id },
+      });
+    } else {
+      try {
+        const invitation = await inviteUser({
+          email,
+          firstName,
+          lastName,
+          groups: [assignment.allocation.reachGroupName],
+        });
+        reachInvitationId = invitation.id;
+      } catch (error) {
+        if (error instanceof ReachApiError && error.code === "user_exists") {
+          const user = await findUserByEmail(email);
+          if (user) {
+            reachUserId = user.id;
+            await addUserToGroup(assignment.allocation.reachGroupId, user.id);
+            await enrollUserInCourse(product.reachCourseId, user.id);
+            await prisma.employee.update({
+              where: { id: assignment.employeeId },
+              data: { reachUserId: user.id },
+            });
+          } else {
+            throw error;
+          }
+        } else if (!(error instanceof ReachApiError && error.code === "invite_pending")) {
+          throw error;
+        }
+      }
+    }
+
+    await prisma.trainingAssignment.update({
+      where: { id: assignmentId },
+      data: {
+        reachUserId,
+        reachInvitationId,
+        provisioningError: null,
+      },
+    });
+
+    const emailResult = await sendEmployeeTrainingAssignedEmail({
+      to: email,
+      firstName,
+      courseTitle: product.title,
+      reachPortalUrl: getReachLearnerPortalUrl(),
+      isNewInvite: !reachUserId,
+    });
+
+    if (!emailResult.sent) {
+      return {
+        ok: false,
+        error: emailResult.reason ?? "Could not send the training email.",
+      };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to resend training access.";
     return { ok: false, error: message };
   }
 }

@@ -32,6 +32,8 @@ export default function ManagerDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -88,6 +90,26 @@ export default function ManagerDashboardPage() {
     }
   }
 
+  async function onResendEmail(assignmentId: string) {
+    setError(null);
+    setSuccessMessage(null);
+    setResendingId(assignmentId);
+    try {
+      const res = await fetch(withBasePath("/api/manager/dashboard"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "resend-email", assignmentId }),
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Failed to resend email.");
+      setSuccessMessage("Training access email sent.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to resend email.");
+    } finally {
+      setResendingId(null);
+    }
+  }
+
   async function onRetry(assignmentId: string) {
     setError(null);
     const res = await fetch(withBasePath("/api/manager/dashboard"), {
@@ -128,6 +150,12 @@ export default function ManagerDashboardPage() {
         {error ? (
           <p className="mt-4 rounded-lg border border-vt-red/30 bg-vt-red-soft px-3 py-2 text-sm text-vt-red">
             {error}
+          </p>
+        ) : null}
+
+        {successMessage ? (
+          <p className="mt-4 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
+            {successMessage}
           </p>
         ) : null}
 
@@ -270,15 +298,27 @@ export default function ManagerDashboardPage() {
                           : ""}
                       </td>
                       <td className="py-3">
-                        {e.licenceStatus === "failed" ? (
-                          <button
-                            type="button"
-                            className="text-sm font-semibold text-vt-red hover:underline"
-                            onClick={() => void onRetry(e.id)}
-                          >
-                            Retry
-                          </button>
-                        ) : null}
+                        <div className="flex flex-col gap-1">
+                          {e.licenceStatus === "assigned" ? (
+                            <button
+                              type="button"
+                              className="text-left text-sm font-semibold text-vt-red hover:underline disabled:opacity-50"
+                              disabled={resendingId === e.id}
+                              onClick={() => void onResendEmail(e.id)}
+                            >
+                              {resendingId === e.id ? "Sending…" : "Resend email"}
+                            </button>
+                          ) : null}
+                          {e.licenceStatus === "failed" ? (
+                            <button
+                              type="button"
+                              className="text-left text-sm font-semibold text-vt-red hover:underline"
+                              onClick={() => void onRetry(e.id)}
+                            >
+                              Retry
+                            </button>
+                          ) : null}
+                        </div>
                         {e.provisioningError ? (
                           <p className="mt-1 text-xs text-vt-muted">{e.provisioningError}</p>
                         ) : null}
