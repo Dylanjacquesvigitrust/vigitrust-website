@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { sendCourseAccessEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
+import { provisionTrainingPurchase } from "@/lib/training-provision";
 
 export const runtime = "nodejs";
 
@@ -9,26 +10,31 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_email ?? session.customer_details?.email ?? null;
   const amount = session.amount_total != null ? session.amount_total / 100 : null;
   const tax = session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null;
-  const product = session.metadata?.product ?? "course-cart";
 
   console.info("[stripe webhook] checkout.session.completed", {
     sessionId: session.id,
-    product,
     email,
     amountEur: amount,
     taxEur: tax,
     paymentStatus: session.payment_status,
-    metadata: session.metadata,
   });
 
-  if (session.payment_status !== "paid" || !email) {
+  if (session.payment_status !== "paid") {
+    return;
+  }
+
+  const training = await provisionTrainingPurchase(session);
+
+  if (training.processed) {
+    console.info("[stripe webhook] training licences provisioned", {
+      sessionId: session.id,
+      purchaseId: training.purchaseId,
+    });
     return;
   }
 
   const cartSlugs = session.metadata?.cart_slugs ?? "";
-  if (!cartSlugs) {
-    return;
-  }
+  if (!cartSlugs || !email) return;
 
   const result = await sendCourseAccessEmail({
     to: email,

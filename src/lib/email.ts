@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { getCourseAccessForSlug } from "@/lib/stripe-catalog";
+import { isTrainingLicenceSlug } from "@/lib/training-products";
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY?.trim();
@@ -28,12 +28,118 @@ export function resolvePurchasedCourses(cartSlugs: string): PurchaseEmailCourse[
 
   const courses: PurchaseEmailCourse[] = [];
   for (const slug of slugs) {
-    const access = getCourseAccessForSlug(slug);
-    if (access) {
-      courses.push({ slug, title: access.title, url: access.url });
-    }
+    // Licence-controlled courses use manager setup — no generic Reach link.
+    if (isTrainingLicenceSlug(slug)) continue;
   }
   return courses;
+}
+
+export async function sendManagerSetupEmail(params: {
+  to: string;
+  firstName?: string;
+  inviteToken: string;
+  courses: Array<{ title: string; quantity: number }>;
+  orderRef: string;
+}): Promise<{ sent: boolean; reason?: string }> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping manager setup email.");
+    return { sent: false, reason: "RESEND_API_KEY not configured." };
+  }
+
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const setupUrl = `${siteUrl}/manager/setup/?token=${encodeURIComponent(params.inviteToken)}`;
+  const to = params.to.trim().toLowerCase();
+  const name = params.firstName?.trim() || "there";
+
+  const courseLines = params.courses
+    .map((c) => `<li>${escapeHtml(c.title)} — ${c.quantity} licence${c.quantity === 1 ? "" : "s"}</li>`)
+    .join("");
+
+  const html = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
+<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
+<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
+<tr><td>
+<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
+<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">Your training licences are ready</h1>
+<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
+Hi ${escapeHtml(name)}, thank you for your purchase. Set up your manager account to assign training to your team.
+</p>
+<ul style="margin:14px 0 0;padding-left:20px;color:#334155;font-size:15px;">${courseLines}</ul>
+<p style="margin:20px 0 0;">
+<a href="${escapeHtml(setupUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Set up your manager account</a>
+</p>
+<p style="margin:14px 0 0;font-size:12px;color:#5b6777;word-break:break-all;">${escapeHtml(setupUrl)}</p>
+<p style="margin:18px 0 0;font-size:13px;color:#5b6777;">Order reference: ${escapeHtml(params.orderRef)}</p>
+</td></tr></table></td></tr></table></body></html>`;
+
+  const { error } = await resend.emails.send({
+    from: getFromAddress(),
+    to,
+    subject: "Your training licences are ready — set up your manager account",
+    html,
+  });
+
+  if (error) {
+    console.error("[email] Manager setup send failed:", error);
+    return { sent: false, reason: error.message };
+  }
+  console.info("[email] Manager setup email sent", { to });
+  return { sent: true };
+}
+
+export async function sendManagerLicencesAddedEmail(params: {
+  to: string;
+  firstName?: string;
+  courses: Array<{ title: string; quantity: number }>;
+  orderRef: string;
+}): Promise<{ sent: boolean; reason?: string }> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping licences added email.");
+    return { sent: false, reason: "RESEND_API_KEY not configured." };
+  }
+
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const dashboardUrl = `${siteUrl}/manager/`;
+  const to = params.to.trim().toLowerCase();
+  const name = params.firstName?.trim() || "there";
+
+  const courseLines = params.courses
+    .map((c) => `<li>${escapeHtml(c.title)} — ${c.quantity} licence${c.quantity === 1 ? "" : "s"}</li>`)
+    .join("");
+
+  const html = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
+<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
+<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
+<tr><td>
+<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
+<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">Additional training licences added</h1>
+<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
+Hi ${escapeHtml(name)}, your recent purchase has been added to your account.
+</p>
+<ul style="margin:14px 0 0;padding-left:20px;color:#334155;font-size:15px;">${courseLines}</ul>
+<p style="margin:20px 0 0;">
+<a href="${escapeHtml(dashboardUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Open manager dashboard</a>
+</p>
+<p style="margin:18px 0 0;font-size:13px;color:#5b6777;">Order reference: ${escapeHtml(params.orderRef)}</p>
+</td></tr></table></td></tr></table></body></html>`;
+
+  const { error } = await resend.emails.send({
+    from: getFromAddress(),
+    to,
+    subject: "Additional training licences added to your account",
+    html,
+  });
+
+  if (error) {
+    console.error("[email] Licences added send failed:", error);
+    return { sent: false, reason: error.message };
+  }
+  console.info("[email] Licences added email sent", { to });
+  return { sent: true };
 }
 
 function escapeHtml(value: string) {

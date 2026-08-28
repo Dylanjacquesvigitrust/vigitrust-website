@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
+import { parseTrainingLineItems } from "@/lib/training-provision";
 
 export const runtime = "nodejs";
 
@@ -20,12 +21,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Payment not completed." }, { status: 403 });
     }
 
+    const trainingLines = await parseTrainingLineItems(sessionId);
+
     return NextResponse.json({
       paid: true,
       email: session.customer_email ?? session.customer_details?.email ?? null,
       amountTotal: session.amount_total != null ? session.amount_total / 100 : null,
       amountTax: session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null,
       currency: session.currency,
+      isTrainingLicence: trainingLines.length > 0,
     });
   } catch (error) {
     console.error("[checkout session] failed:", error);

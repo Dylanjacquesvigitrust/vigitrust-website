@@ -12,6 +12,7 @@ function SuccessContent() {
   const { clear } = useCart();
   const [confirmed, setConfirmed] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [isTrainingLicence, setIsTrainingLicence] = useState(false);
 
   useEffect(() => {
     if (sessionId) {
@@ -32,10 +33,12 @@ function SuccessContent() {
         const data = (await response.json()) as {
           paid?: boolean;
           email?: string | null;
+          isTrainingLicence?: boolean;
         };
         if (!cancelled && response.ok && data.paid) {
           setConfirmed(true);
           setEmail(data.email ?? null);
+          setIsTrainingLicence(Boolean(data.isTrainingLicence));
         }
       } catch {
         // Success page still shows a thank-you even if confirmation fetch fails.
@@ -55,8 +58,12 @@ function SuccessContent() {
         <h1 className="brand-display mt-3 text-3xl text-vt-ink">Thank you for your order</h1>
         <p className="mt-3 text-vt-muted">
           Your payment was processed securely by Stripe
-          {confirmed && email ? `. We have sent your course access link to ${email}` : ""}.
-          Please check your inbox (and spam folder) for the email from VigiTrust.
+          {confirmed && email && isTrainingLicence
+            ? `. We have sent manager account setup instructions to ${email}`
+            : confirmed && email
+              ? `. We have sent your course access link to ${email}`
+              : ""}
+          . Please check your inbox (and spam folder) for the email from VigiTrust.
         </p>
 
         {sessionId ? (

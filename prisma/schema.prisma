@@ -13,6 +13,31 @@ enum RenewalCodeStatus {
   expired
 }
 
+enum ManagerAccountStatus {
+  pending
+  active
+}
+
+enum ProvisioningStatus {
+  pending
+  provisioning
+  provisioned
+  failed
+}
+
+enum AssignmentStatus {
+  reserved
+  assigned
+  failed
+  released
+}
+
+enum TrainingStatus {
+  not_started
+  in_progress
+  completed
+}
+
 model RenewalCode {
   id                      String            @id @default(cuid())
   code                    String            @unique
@@ -50,4 +75,149 @@ model CmsEntry {
 
   @@unique([kind, slug])
   @@index([kind, status])
+}
+
+// --- Training licence system ---
+
+model Customer {
+  id               String   @id @default(cuid())
+  companyName      String?
+  billingEmail     String
+  stripeCustomerId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  managers           ManagerAccount[]
+  purchases          TrainingPurchase[]
+  licenceAllocations CourseLicenceAllocation[]
+  employees          Employee[]
+  reachGroups        ReachGroupMapping[]
+
+  @@index([billingEmail])
+}
+
+model ManagerAccount {
+  id              String               @id @default(cuid())
+  customerId      String
+  email           String               @unique
+  passwordHash    String?
+  firstName       String?
+  lastName        String?
+  inviteToken     String?              @unique
+  inviteExpiresAt DateTime?
+  status          ManagerAccountStatus @default(pending)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([inviteToken])
+}
+
+model TrainingPurchase {
+  id                      String   @id @default(cuid())
+  customerId              String
+  stripeCheckoutSessionId String   @unique
+  stripePaymentIntentId   String?  @unique
+  amountTotal             Int?
+  currency                String   @default("eur")
+  purchaserEmail          String
+  purchaserFirstName      String?
+  purchaserLastName       String?
+  status                  String   @default("paid")
+  purchasedAt             DateTime @default(now())
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  customer    Customer                  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  allocations CourseLicenceAllocation[]
+
+  @@index([customerId])
+  @@index([purchasedAt])
+}
+
+model CourseLicenceAllocation {
+  id                 String             @id @default(cuid())
+  customerId         String
+  purchaseId         String
+  courseSlug         String
+  courseTitle        String
+  reachCourseId      String
+  reachGroupId       String?
+  reachGroupName     String?
+  quantityPurchased  Int
+  quantityAssigned   Int                @default(0)
+  provisioningStatus ProvisioningStatus @default(pending)
+  provisioningError  String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  customer    Customer             @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  purchase    TrainingPurchase     @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  assignments TrainingAssignment[]
+
+  @@index([customerId, courseSlug])
+  @@index([purchaseId])
+  @@index([reachGroupId])
+}
+
+model ReachGroupMapping {
+  id             String   @id @default(cuid())
+  customerId     String
+  courseSlug     String
+  reachGroupId   String
+  reachGroupName String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, courseSlug])
+  @@index([reachGroupId])
+}
+
+model Employee {
+  id          String   @id @default(cuid())
+  customerId  String
+  firstName   String
+  lastName    String
+  email       String
+  reachUserId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customer    Customer             @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  assignments TrainingAssignment[]
+
+  @@unique([customerId, email])
+  @@index([email])
+  @@index([reachUserId])
+}
+
+model TrainingAssignment {
+  id                String           @id @default(cuid())
+  customerId        String
+  employeeId        String
+  allocationId      String
+  courseSlug        String
+  reachInvitationId String?
+  reachUserId       String?
+  status            AssignmentStatus @default(reserved)
+  trainingStatus    TrainingStatus   @default(not_started)
+  progressPercent   Int?
+  completedAt       DateTime?
+  provisioningError String?
+  assignedAt        DateTime?
+  lastSyncedAt      DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  employee   Employee              @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  allocation CourseLicenceAllocation @relation(fields: [allocationId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId])
+  @@index([allocationId])
+  @@index([courseSlug])
+  @@index([customerId])
 }
