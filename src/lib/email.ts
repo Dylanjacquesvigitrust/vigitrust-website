@@ -142,6 +142,59 @@ Hi ${escapeHtml(name)}, your recent purchase has been added to your account.
   return { sent: true };
 }
 
+export async function sendEmployeeTrainingAssignedEmail(params: {
+  to: string;
+  firstName: string;
+  courseTitle: string;
+  reachPortalUrl: string;
+  isNewInvite: boolean;
+}): Promise<{ sent: boolean; reason?: string }> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping employee training email.");
+    return { sent: false, reason: "RESEND_API_KEY not configured." };
+  }
+
+  const to = params.to.trim().toLowerCase();
+  const name = params.firstName.trim() || "there";
+  const accessNote = params.isNewInvite
+    ? "You should also receive a Reach 360 invitation email — use that link to create your account, or sign in below if you already have one."
+    : "Sign in to Reach 360 with your existing account to start the course.";
+
+  const html = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
+<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
+<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
+<tr><td>
+<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
+<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">You have been assigned training</h1>
+<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
+Hi ${escapeHtml(name)}, your manager has assigned you to <strong>${escapeHtml(params.courseTitle)}</strong>.
+</p>
+<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
+${escapeHtml(accessNote)}
+</p>
+<p style="margin:20px 0 0;">
+<a href="${escapeHtml(params.reachPortalUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Open Reach 360 training</a>
+</p>
+<p style="margin:14px 0 0;font-size:12px;color:#5b6777;word-break:break-all;">${escapeHtml(params.reachPortalUrl)}</p>
+</td></tr></table></td></tr></table></body></html>`;
+
+  const { error } = await resend.emails.send({
+    from: getFromAddress(),
+    to,
+    subject: `You have been assigned: ${params.courseTitle}`,
+    html,
+  });
+
+  if (error) {
+    console.error("[email] Employee training send failed:", error);
+    return { sent: false, reason: error.message };
+  }
+  console.info("[email] Employee training email sent", { to });
+  return { sent: true };
+}
+
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")

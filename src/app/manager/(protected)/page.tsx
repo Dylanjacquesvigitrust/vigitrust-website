@@ -27,6 +27,7 @@ type EmployeeRow = {
 export default function ManagerDashboardPage() {
   const [courses, setCourses] = useState<CourseSummary[]>([]);
   const [employees, setEmployees] = useState<EmployeeRow[]>([]);
+  const [reachPortalUrl, setReachPortalUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -39,11 +40,13 @@ export default function ManagerDashboardPage() {
       const data = (await res.json()) as {
         courses?: CourseSummary[];
         employees?: EmployeeRow[];
+        reachPortalUrl?: string;
         error?: string;
       };
       if (!res.ok) throw new Error(data.error ?? "Failed to load dashboard.");
       setCourses(data.courses ?? []);
       setEmployees(data.employees ?? []);
+      setReachPortalUrl(data.reachPortalUrl ?? "");
       if (!selectedCourse && data.courses?.length) {
         setSelectedCourse(data.courses[0].courseSlug);
       }
@@ -127,6 +130,23 @@ export default function ManagerDashboardPage() {
             {error}
           </p>
         ) : null}
+
+        <div className="mt-6 rounded-2xl border border-vt-border bg-vt-mist/60 p-4 text-sm text-vt-muted">
+          <p className="font-semibold text-vt-ink">How employees access training</p>
+          <p className="mt-2">
+            This portal is for <strong>managers only</strong> — to assign licences and track progress.
+            Employees do not log in here. When you add an employee, they receive an email with a link to{" "}
+            <strong>Reach 360</strong> where they take the course.
+          </p>
+          {reachPortalUrl ? (
+            <p className="mt-2">
+              Employee training portal:{" "}
+              <a href={reachPortalUrl} className="font-semibold text-vt-red hover:underline" target="_blank" rel="noreferrer">
+                {reachPortalUrl}
+              </a>
+            </p>
+          ) : null}
+        </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           {courses.map((c) => (

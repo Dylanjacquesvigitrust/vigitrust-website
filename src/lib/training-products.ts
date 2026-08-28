@@ -44,3 +44,11 @@ export function buildReachGroupName(companyName: string | null | undefined, cour
   const company = companyName?.trim() || "Customer";
   return `${company} – ${courseTitle}`;
 }
+
+/** Reach learner login portal — employees access assigned courses here. */
+export function getReachLearnerPortalUrl(): string {
+  return (
+    process.env.REACH360_LEARNER_PORTAL_URL?.trim() ||
+    "https://vigitrust-9067.reach360.com"
+  ).replace(/\/$/, "");
+}

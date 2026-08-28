@@ -111,13 +111,17 @@ export async function findUserByEmail(email: string): Promise<ReachUser | null> 
 
 export async function createGroup(name: string): Promise<ReachGroup> {
   const data = await reachRequest<{ group?: ReachGroup } & ReachGroup>("POST", "/groups", {
-    name,
+    group: { name },
   });
   return (data.group ?? data) as ReachGroup;
 }
 
 export async function enrollGroupInCourse(courseId: string, groupId: string): Promise<void> {
   await reachRequest("PUT", `/courses/${courseId}/groups/${groupId}`);
+}
+
+export async function enrollUserInCourse(courseId: string, userId: string): Promise<void> {
+  await reachRequest("PUT", `/courses/${courseId}/users/${userId}`);
 }
 
 export async function addUserToGroup(groupId: string, userId: string): Promise<void> {
@@ -131,10 +135,12 @@ export async function inviteUser(params: {
   groups: string[];
 }): Promise<ReachInvitation> {
   const data = await reachRequest<{ invitation?: ReachInvitation }>("POST", "/invitations", {
-    email: params.email.toLowerCase(),
-    firstName: params.firstName,
-    lastName: params.lastName,
-    groups: params.groups,
+    invitation: {
+      email: params.email.toLowerCase(),
+      firstName: params.firstName,
+      lastName: params.lastName,
+      groups: params.groups,
+    },
   });
   return (data.invitation ?? data) as ReachInvitation;
 }

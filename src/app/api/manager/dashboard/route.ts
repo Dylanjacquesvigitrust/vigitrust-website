@@ -7,6 +7,7 @@ import {
   retryFailedAssignment,
   syncCustomerTrainingStatus,
 } from "@/lib/training-employees";
+import { getReachLearnerPortalUrl } from "@/lib/training-products";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,7 @@ export async function GET() {
 
   return NextResponse.json({
     manager: auth.session,
+    reachPortalUrl: getReachLearnerPortalUrl(),
     courses: summaries,
     employees: employees.map((a) => ({
       id: a.id,

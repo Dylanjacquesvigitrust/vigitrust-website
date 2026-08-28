@@ -2,13 +2,15 @@ import { AssignmentStatus, TrainingStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import {
   addUserToGroup,
+  enrollUserInCourse,
   findUserByEmail,
   inviteUser,
   isReachConfigured,
   mapReachTrainingStatus,
   ReachApiError,
 } from "@/lib/reach360";
-import { getTrainingProductBySlug } from "@/lib/training-products";
+import { getReachLearnerPortalUrl, getTrainingProductBySlug } from "@/lib/training-products";
+import { sendEmployeeTrainingAssignedEmail } from "@/lib/email";
 
 export type AddEmployeeInput = {
   customerId: string;
@@ -67,9 +69,15 @@ async function provisionEmployeeInReach(params: {
   lastName: string;
   reachGroupId: string;
   reachGroupName: string;
+  courseSlug: string;
 }): Promise<void> {
-  const { employeeId, assignmentId, allocationId, email, firstName, lastName, reachGroupId, reachGroupName } =
+  const { employeeId, assignmentId, allocationId, email, firstName, lastName, reachGroupId, reachGroupName, courseSlug } =
     params;
+
+  const product = getTrainingProductBySlug(courseSlug);
+  if (!product) {
+    throw new ReachApiError(`Unknown course: ${courseSlug}`, 0);
+  }
 
   try {
     if (!isReachConfigured()) {
@@ -83,6 +91,7 @@ async function provisionEmployeeInReach(params: {
     if (existing) {
       reachUserId = existing.id;
       await addUserToGroup(reachGroupId, existing.id);
+      await enrollUserInCourse(product.reachCourseId, existing.id);
       await prisma.employee.update({
         where: { id: employeeId },
         data: { reachUserId: existing.id },
@@ -102,6 +111,7 @@ async function provisionEmployeeInReach(params: {
           if (user) {
             reachUserId = user.id;
             await addUserToGroup(reachGroupId, user.id);
+            await enrollUserInCourse(product.reachCourseId, user.id);
             await prisma.employee.update({
               where: { id: employeeId },
               data: { reachUserId: user.id },
@@ -134,6 +144,14 @@ async function provisionEmployeeInReach(params: {
         data: { quantityAssigned: { increment: 1 } },
       }),
     ]);
+
+    await sendEmployeeTrainingAssignedEmail({
+      to: email,
+      firstName,
+      courseTitle: product.title,
+      reachPortalUrl: getReachLearnerPortalUrl(),
+      isNewInvite: !reachUserId,
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Reach provisioning failed.";
     await prisma.trainingAssignment.update({
@@ -240,6 +258,7 @@ export async function addEmployeeToCourse(input: AddEmployeeInput): Promise<AddE
       lastName,
       reachGroupId: allocation.reachGroupId,
       reachGroupName: allocation.reachGroupName,
+      courseSlug: input.courseSlug,
     });
     return { ok: true, assignmentId: result.assignment.id, employeeId: result.employee.id };
   } catch (error) {
@@ -292,6 +311,7 @@ export async function retryFailedAssignment(
       lastName: assignment.employee.lastName,
       reachGroupId: assignment.allocation.reachGroupId,
       reachGroupName: assignment.allocation.reachGroupName,
+      courseSlug: assignment.courseSlug,
     });
     return { ok: true, assignmentId: assignment.id, employeeId: assignment.employeeId };
   } catch (error) {
