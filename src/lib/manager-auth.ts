@@ -225,5 +225,10 @@ export async function resendManagerSetupEmail(
     return { ok: false, error: emailResult.reason ?? "Could not send setup email." };
   }
 
+  await prisma.managerAccount.update({
+    where: { id: manager.id },
+    data: { setupEmailSentAt: new Date() },
+  });
+
   return { ok: true };
 }

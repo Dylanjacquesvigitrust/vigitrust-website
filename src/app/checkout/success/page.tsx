@@ -13,6 +13,8 @@ function SuccessContent() {
   const [confirmed, setConfirmed] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
   const [isTrainingLicence, setIsTrainingLicence] = useState(false);
+  const [managerEmailSent, setManagerEmailSent] = useState(false);
+  const [managerEmailError, setManagerEmailError] = useState<string | null>(null);
 
   useEffect(() => {
     if (sessionId) {
@@ -34,11 +36,15 @@ function SuccessContent() {
           paid?: boolean;
           email?: string | null;
           isTrainingLicence?: boolean;
+          managerEmailSent?: boolean;
+          managerEmailError?: string | null;
         };
         if (!cancelled && response.ok && data.paid) {
           setConfirmed(true);
           setEmail(data.email ?? null);
           setIsTrainingLicence(Boolean(data.isTrainingLicence));
+          setManagerEmailSent(Boolean(data.managerEmailSent));
+          setManagerEmailError(data.managerEmailError ?? null);
         }
       } catch {
         // Success page still shows a thank-you even if confirmation fetch fails.
@@ -58,12 +64,27 @@ function SuccessContent() {
         <h1 className="brand-display mt-3 text-3xl text-vt-ink">Thank you for your order</h1>
         <p className="mt-3 text-vt-muted">
           Your payment was processed securely by Stripe
-          {confirmed && email && isTrainingLicence
+          {confirmed && email && isTrainingLicence && managerEmailSent
             ? `. We have sent manager account setup instructions to ${email}`
-            : confirmed && email
-              ? `. We have sent your course access link to ${email}`
-              : ""}
-          . Please check your inbox (and spam folder) for the email from VigiTrust.
+            : confirmed && email && isTrainingLicence
+              ? `. Your licences are ready`
+              : confirmed && email
+                ? `. We have sent your course access link to ${email}`
+                : ""}
+          .
+          {confirmed && isTrainingLicence && !managerEmailSent ? (
+            <>
+              {" "}
+              We could not confirm the setup email was sent
+              {managerEmailError ? ` (${managerEmailError})` : ""}. Please use{" "}
+              <a href="/manager/login/" className="font-semibold text-vt-red hover:underline">
+                Manager login → Resend setup email
+              </a>
+              .
+            </>
+          ) : confirmed ? (
+            <> Please check your inbox (and spam folder) for the email from VigiTrust.</>
+          ) : null}
         </p>
 
         {sessionId ? (
