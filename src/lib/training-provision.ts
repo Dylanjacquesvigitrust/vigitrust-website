@@ -42,6 +42,27 @@ function purchaserEmail(session: Stripe.Checkout.Session): string {
     .toLowerCase();
 }
 
+async function resolvePurchaserEmail(session: Stripe.Checkout.Session): Promise<string> {
+  const direct = purchaserEmail(session);
+  if (direct) return direct;
+
+  const customerId =
+    typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
+  if (!customerId) return "";
+
+  try {
+    const stripe = getStripe();
+    const customer = await stripe.customers.retrieve(customerId);
+    if (!customer.deleted && typeof customer.email === "string" && customer.email.trim()) {
+      return customer.email.trim().toLowerCase();
+    }
+  } catch (error) {
+    console.warn("[training-provision] Could not load Stripe customer email", customerId, error);
+  }
+
+  return "";
+}
+
 function generateInviteToken(): string {
   return randomBytes(32).toString("hex");
 }
@@ -163,7 +184,7 @@ export async function provisionTrainingPurchase(
     return { processed: false };
   }
 
-  const email = purchaserEmail(session);
+  const email = await resolvePurchaserEmail(session);
   if (!email) {
     console.warn("[training-provision] No purchaser email on session", session.id);
     return { processed: false };
@@ -271,6 +292,15 @@ export async function provisionTrainingPurchase(
         where: { id: manager.id },
         data: { customerId: customer.id },
       });
+    } else if (manager.status === "pending" && !manager.inviteToken) {
+      const inviteToken = generateInviteToken();
+      manager = await tx.managerAccount.update({
+        where: { id: manager.id },
+        data: {
+          inviteToken,
+          inviteExpiresAt: new Date(Date.now() + INVITE_TTL_MS),
+        },
+      });
     }
 
     return { trainingPurchase, customer, manager, isNewManager: manager.status === "pending" };
@@ -296,7 +326,7 @@ export async function provisionTrainingPurchase(
   });
 
   if (managerRecord?.inviteToken && managerRecord.status === "pending") {
-    await sendManagerSetupEmail({
+    const emailResult = await sendManagerSetupEmail({
       to: email,
       firstName: managerRecord.firstName ?? firstName ?? undefined,
       inviteToken: managerRecord.inviteToken,
@@ -306,8 +336,11 @@ export async function provisionTrainingPurchase(
       })),
       orderRef: session.id,
     });
+    if (!emailResult.sent) {
+      console.error("[training-provision] Manager setup email failed:", emailResult.reason, { email });
+    }
   } else if (managerRecord?.status === "active") {
-    await sendManagerLicencesAddedEmail({
+    const emailResult = await sendManagerLicencesAddedEmail({
       to: email,
       firstName: managerRecord.firstName ?? firstName ?? undefined,
       courses: trainingLines.map((l) => ({
@@ -316,6 +349,9 @@ export async function provisionTrainingPurchase(
       })),
       orderRef: session.id,
     });
+    if (!emailResult.sent) {
+      console.error("[training-provision] Licences added email failed:", emailResult.reason, { email });
+    }
   }
 
   console.info("[training-provision] Complete", {

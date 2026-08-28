@@ -110,6 +110,7 @@ export async function POST(request: Request) {
       success_url: `${siteUrl}/checkout/success/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/checkout/`,
       metadata: {
+        customer_email: body.customer.email.trim().toLowerCase(),
         customer_first_name: body.customer.firstName.trim(),
         customer_last_name: body.customer.lastName.trim(),
         customer_phone: body.customer.phone.trim(),
