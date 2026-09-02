@@ -300,27 +300,6 @@ export default function AdvisoryBoardPage() {
         </div>
       </section>
 
-      <section className="border-y border-vt-border bg-vt-mist section-pad">
-        <div className="container-vt">
-          <SectionHeading title="What Members Say" align="center" />
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {advisory.testimonials.map((t) => (
-              <blockquote
-                key={t.name}
-                className="card-lift flex h-full flex-col rounded-[10px] bg-vt-paper p-8 ring-1 ring-vt-border"
-              >
-                <p className="flex-1 leading-relaxed text-vt-muted">&ldquo;{t.quote}&rdquo;</p>
-                <footer className="mt-6 border-t border-vt-border pt-4">
-                  <div className="font-semibold text-vt-ink">{t.name}</div>
-                  <div className="text-sm text-vt-muted">{t.title}</div>
-                  <div className="type-meta mt-0.5 text-vt-muted/80">{t.org}</div>
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="relative overflow-hidden section-pad">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(123,168,176,0.2),transparent)]"

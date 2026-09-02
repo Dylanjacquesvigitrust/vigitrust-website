@@ -3,12 +3,10 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { useCart } from "@/components/cart/cart-provider";
 import { courseDetails, type Course } from "@/content/courses";
 
 export function CoursePurchasePanel({ course }: { course: Course }) {
   const details = courseDetails(course);
-  const { count } = useCart();
   const hasModules = Boolean(course.modules?.length);
   const [moduleName, setModuleName] = useState(course.modules?.[0]?.name ?? "");
 
@@ -65,14 +63,12 @@ export function CoursePurchasePanel({ course }: { course: Course }) {
           priceLabel={selected.label}
           className="w-full"
         />
-        {count > 0 ? (
-          <Link
-            href="/checkout"
-            className="inline-flex w-full items-center justify-center rounded-[8px] border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy transition duration-200 hover:bg-vt-mist"
-          >
-            Go to checkout
-          </Link>
-        ) : null}
+        <Link
+          href="/checkout"
+          className="inline-flex w-full items-center justify-center rounded-[8px] border border-vt-border px-4 py-2.5 text-sm font-semibold text-vt-navy transition duration-200 hover:bg-vt-mist"
+        >
+          Go to checkout
+        </Link>
       </div>
 
       <ul className="mt-6 space-y-2 border-t border-vt-border pt-5 text-sm text-vt-slate">

@@ -22,14 +22,9 @@ export default function PillarsOfSecurityPage() {
   return (
     <>
       <PageHero eyebrow={pillars.hero.eyebrow} title={pillars.hero.title} body={pillars.hero.body}>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Button href={pillars.about.secondaryCta.href} size="lg">
-            {pillars.about.secondaryCta.label}
-          </Button>
-          <Button href={pillars.about.primaryCta.href} variant="secondary" size="lg">
-            Download brochure
-          </Button>
-        </div>
+        <Button href={pillars.about.surveyCta.href} size="lg">
+          {pillars.about.surveyCta.label}
+        </Button>
       </PageHero>
 
       <section className="section-pad bg-vt-paper">
@@ -42,11 +37,8 @@ export default function PillarsOfSecurityPage() {
               </p>
             ))}
           </div>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button href={pillars.about.primaryCta.href}>{pillars.about.primaryCta.label}</Button>
-            <Button href={pillars.about.secondaryCta.href} variant="ghost">
-              {pillars.about.secondaryCta.label}
-            </Button>
+          <div className="mt-8">
+            <Button href={pillars.about.surveyCta.href}>{pillars.about.surveyCta.label}</Button>
           </div>
         </div>
       </section>

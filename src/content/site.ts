@@ -520,29 +520,6 @@ export const advisory = {
       { initials: "AO", name: "Amara Okonkwo", role: "Regional Director, Africa", region: "Africa" },
     ],
   },
-  testimonials: [
-    {
-      quote:
-        "The Advisory Board has become an essential part of my professional network. The calibre of peers and the quality of strategic dialogue is unmatched in our industry.",
-      name: "Catherine Walsh",
-      title: "Chief Information Security Officer",
-      org: "Global Financial Services",
-    },
-    {
-      quote:
-        "Access to regulatory insight and peer perspectives across jurisdictions has directly informed our governance framework. This is executive intelligence at its finest.",
-      name: "Rajesh Mehta",
-      title: "VP, Risk & Compliance",
-      org: "Multinational Technology Group",
-    },
-    {
-      quote:
-        "The roundtables provide a rare space for candid exchange among leaders who understand the complexity of modern cyber risk. I leave every session with actionable perspective.",
-      name: "Elena Kowalski",
-      title: "Group CISO",
-      org: "European Insurance Conglomerate",
-    },
-  ],
   finalCta: {
     title: "Ready to Join the Conversation Shaping Cybersecurity Governance?",
     body: "Take your place among the world's most respected cyber, risk and compliance leaders.",
@@ -811,19 +788,15 @@ export const pillars = {
       "The Framework accommodates escalating cybersecurity threats as organisations increasingly move towards cloud-based platforms. Its flexibility also makes it easy to apply to changes in regulation, such as the introduction of the GDPR in May 2018.",
       "In recognition of this, VigiTrust was named Leading Integrated Risk Management Solution Provider of the Year, Republic of Ireland 2020 for the 5 Pillars of Security Framework™ by Acquisition International.",
     ],
-    primaryCta: {
-      label: "The 5 Pillars of Security™ Brochure",
-      href: "https://vigitrust.com/document-library/the-5-pillars-of-security-brochure/",
-    },
-    secondaryCta: {
-      label: "Take Five Pillars of Security Survey Now",
-      href: "https://vigitrust.com/5-pillars-of-security/summary/summary.php",
+    surveyCta: {
+      label: "Take the 5 Pillars of Security Survey",
+      href: "/contact?intent=5-pillars-survey",
     },
   },
   book: {
     title: "The Cyber Elephant in the Boardroom",
     body: "Mathieu Gorge’s book is aimed at board members, C-Suite, and key decision-makers faced with cyber accountability challenges. It is based on the award-winning 5 Pillars of Security Framework™: a simple, effective, industry-agnostic, timeless methodology allowing enterprises and small businesses to map cybersecurity risks, implement a cybersecurity strategy, and demonstrate cyber accountability to regulators, governing bodies, and law enforcement agencies.",
-    href: "https://vigitrust.com/news/the-cyber-elephant-in-the-boardroom-written-by-our-ceo-mathieu-gorge-is-out-today/",
+    href: "https://mathieugorge.com/book/",
     cta: "Learn more about the book",
   },
   help: {
