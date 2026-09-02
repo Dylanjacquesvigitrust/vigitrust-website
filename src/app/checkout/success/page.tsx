@@ -57,12 +57,13 @@ function SuccessContent() {
         <p className="type-eyebrow text-vt-red">Payment complete</p>
         <h1 className="brand-display mt-3 text-3xl text-vt-ink">Thank you for your order</h1>
         <p className="mt-3 text-vt-muted">
-          Your payment was processed securely by Stripe.
-          {confirmed && isBulkOrder
-            ? " A member of the VigiTrust team will be in touch shortly to provide your course access and walk you through how to get started."
-            : confirmed && email
-              ? ` We have sent your course access link to ${email}. Please check your inbox (and spam folder).`
-              : ""}
+          {confirmed
+            ? isBulkOrder
+              ? "Your payment was made successfully. A member of the VigiTrust team will be in touch shortly to provide your course access and walk you through how to get started."
+              : email
+                ? `Your payment was made successfully. We have sent your course access link to ${email}. Please check your inbox (and spam folder).`
+                : "Your payment was made successfully."
+            : "Confirming your payment…"}
         </p>
 
         {sessionId ? (

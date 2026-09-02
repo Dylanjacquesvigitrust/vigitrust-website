@@ -87,7 +87,7 @@ export const training = {
       image: "/images/courses/gdpr.webp",
       level: "Fundamentals",
       category: "Privacy",
-      duration: "60 mins",
+      duration: "30 mins",
       topics: ["GDPR principles", "Lawful basis", "Data subject rights", "Breach awareness"],
       skills: ["GDPR principles", "Lawful basis", "Data subject rights", "Breach awareness"],
       learningOutcomes: [
@@ -98,7 +98,7 @@ export const training = {
       ],
       audience: "All staff who process EU personal data, plus managers and privacy champions.",
       rating: 4.8,
-      learnersLabel: "18,000+ learners",
+      learnersLabel: "8,000+ learners",
     },
     {
       slug: "payment-card-security-pci",
@@ -113,7 +113,7 @@ export const training = {
       image: "/images/courses/pci.webp",
       level: "Introduction",
       category: "Payment Security",
-      duration: "45-60 mins",
+      duration: "30 mins",
       topics: [
         "Why payment security matters",
         "Cardholder data basics",
@@ -134,6 +134,7 @@ export const training = {
       ],
       audience: "Retail, hospitality, finance, and operations teams in card-accepting businesses.",
       rating: 4.7,
+      learnersLabel: "1,400+ learners",
     },
     {
       slug: "introduction-to-pci-dss",
@@ -148,7 +149,7 @@ export const training = {
       image: "/images/courses/pci.webp",
       level: "Introduction",
       category: "Payment Security",
-      duration: "60-90 mins",
+      duration: "1 hr",
       topics: [
         "What PCI DSS is and why it exists",
         "Cardholder data and the CDE",
@@ -170,6 +171,7 @@ export const training = {
       audience:
         "Compliance, operations, retail, hospitality, and IT teams supporting card-accepting businesses.",
       rating: 4.8,
+      learnersLabel: "13,000+ learners",
     },
     {
       slug: "cybersecurity-fundamentals",
@@ -184,7 +186,7 @@ export const training = {
       image: "/images/courses/cloud.webp",
       level: "Fundamentals",
       category: "Cybersecurity",
-      duration: "12 short lessons",
+      duration: "45 mins",
       topics: [
         "Everyday security threats",
         "Protecting information and systems",
@@ -205,6 +207,7 @@ export const training = {
       ],
       audience: "All employees responsible for protecting organisational information and systems.",
       rating: 4.7,
+      learnersLabel: "550+ learners",
     },
     {
       slug: "secure-coding",
@@ -219,7 +222,7 @@ export const training = {
       image: "/images/courses/coding.webp",
       level: "Intermediate",
       category: "Application Security",
-      duration: "2 hours",
+      duration: "30 mins",
       topics: ["OWASP Top Ten", "Code Injection", "XSS", "CSRF", "Secure SDLC"],
       skills: ["OWASP Top 10", "Secure SDLC", "Injection prevention", "XSS / CSRF controls"],
       learningOutcomes: [
@@ -230,6 +233,7 @@ export const training = {
       ],
       audience: "Software engineers, QA, and technical product owners.",
       rating: 4.6,
+      learnersLabel: "450+ learners",
     },
   ] satisfies Course[],
 };
