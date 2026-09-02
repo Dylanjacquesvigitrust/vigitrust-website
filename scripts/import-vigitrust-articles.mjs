@@ -248,7 +248,9 @@ async function localizeCover(featuredRemote, slug) {
   const dir = path.join(imageRoot, slug);
   await fs.mkdir(dir, { recursive: true });
   // Prefer a reasonably sized WP derivative when present; fall back to original.
-  const candidates = [absolute, preferFullSize(absolute)];
+  const candidates = [preferFullSize(absolute), absolute].filter(
+    (url, index, all) => all.indexOf(url) === index,
+  );
   let lastErr;
   for (const tryUrl of candidates) {
     try {
@@ -277,10 +279,12 @@ function rewriteBodyImages(html) {
       rewritten.push(part);
       continue;
     }
-    const absolute = absolutizeVigiUrl(src);
     let tag = part.replace(/\bsrc=["'][^"']+["']/i, `src="${absolute}"`);
     tag = tag.replace(/\bsrcset=["'][^"']*["']/i, "");
     tag = tag.replace(/\bsizes=["'][^"']*["']/i, "");
+    tag = tag.replace(/\bwidth=["'][^"']*["']/i, "");
+    tag = tag.replace(/\bheight=["'][^"']*["']/i, "");
+    tag = tag.replace(/\bstyle=["'][^"']*["']/i, "");
     if (!/\bclass=/i.test(tag)) tag = tag.replace("<img", '<img class="article-image"');
     else tag = tag.replace(/\bclass=["']([^"']*)["']/i, 'class="$1 article-image"');
     if (!/\bloading=/i.test(tag)) tag = tag.replace("<img", '<img loading="lazy"');

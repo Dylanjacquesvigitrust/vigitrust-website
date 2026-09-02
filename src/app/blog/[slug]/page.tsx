@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHero, Reveal } from "@/components/ui/section";
-import { SiteImage } from "@/components/ui/site-image";
 import { getPublishedPost, getPublishedPosts } from "@/lib/cms";
+import { withBasePath } from "@/lib/paths";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -41,8 +41,14 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="container-vt max-w-3xl">
           <Reveal>
             <article className="overflow-hidden rounded-2xl bg-white ring-1 ring-vt-border">
-              <div className="relative aspect-[16/9]">
-                <SiteImage src={post.image} alt="" fill className="object-cover" sizes="768px" />
+              <div className="bg-vt-mist px-4 py-6 sm:px-8">
+                {/* Native dimensions — never stretch/crop cover art into a fixed ratio */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={withBasePath(post.image)}
+                  alt=""
+                  className="mx-auto h-auto w-auto max-w-full"
+                />
               </div>
               <div className="p-8 sm:p-10">
                 {post.bodyHtml ? (

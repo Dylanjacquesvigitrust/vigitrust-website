@@ -59,13 +59,13 @@ export default async function BlogPage({ searchParams }: Props) {
                 className="group card-lift relative flex h-full flex-col overflow-hidden rounded-[10px] bg-vt-paper ring-1 ring-vt-border"
               >
                 <AdminRemoveButton kind="post" slug={post.slug} label={post.title} />
-                <div className="relative aspect-[16/10]">
+                <div className="relative flex aspect-[16/10] items-center justify-center bg-vt-mist">
                   <SiteImage
                     src={post.image}
                     alt=""
                     fill
-                    quality={70}
-                    className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                    quality={90}
+                    className="object-contain p-2 transition duration-300 group-hover:scale-[1.01]"
                     sizes="(max-width:768px) 100vw, 33vw"
                   />
                 </div>
