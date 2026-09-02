@@ -1,12 +1,25 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import {
+  resolveOrderLines,
+  sendBulkOrderOpsEmail,
+  sendCourseAccessEmail,
+  totalOrderQuantity,
+} from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
-import { provisionTrainingPurchase } from "@/lib/training-provision";
 
 export const runtime = "nodejs";
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const email = session.customer_email ?? session.customer_details?.email ?? null;
+  const email = (
+    session.customer_email ??
+    session.customer_details?.email ??
+    session.metadata?.customer_email ??
+    ""
+  )
+    .trim()
+    .toLowerCase();
+
   const amount = session.amount_total != null ? session.amount_total / 100 : null;
   const tax = session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null;
 
@@ -22,14 +35,50 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  const training = await provisionTrainingPurchase(session);
+  if (!email) {
+    console.warn("[stripe webhook] No customer email on session", session.id);
+    return;
+  }
 
-  if (training.processed) {
-    console.info("[stripe webhook] training licences provisioned", {
-      sessionId: session.id,
-      purchaseId: training.purchaseId,
-      managerStatus: training.managerStatus,
+  const lines = await resolveOrderLines({
+    cartSummary: session.metadata?.cart_summary,
+    cartSlugs: session.metadata?.cart_slugs,
+  });
+
+  if (!lines.length) {
+    console.warn("[stripe webhook] No cart lines on session", session.id);
+    return;
+  }
+
+  const totalQty = totalOrderQuantity(lines);
+
+  if (totalQty === 1) {
+    const result = await sendCourseAccessEmail({
+      to: email,
+      firstName: session.metadata?.customer_first_name,
+      lines,
+      orderRef: session.id,
     });
+    if (!result.sent) {
+      console.warn("[stripe webhook] course email not sent:", result.reason);
+    }
+    return;
+  }
+
+  const result = await sendBulkOrderOpsEmail({
+    lines,
+    orderRef: session.id,
+    customerEmail: email,
+    firstName: session.metadata?.customer_first_name,
+    lastName: session.metadata?.customer_last_name,
+    company: session.metadata?.customer_company,
+    phone: session.metadata?.customer_phone,
+    amountTotal: session.amount_total,
+    currency: session.currency,
+  });
+
+  if (!result.sent) {
+    console.warn("[stripe webhook] ops bulk email not sent:", result.reason);
   }
 }
 

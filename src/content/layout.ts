@@ -78,7 +78,6 @@ export const footer = {
         { label: "Advisory Board", href: "/advisory-board" },
         { label: "Events", href: "/events" },
         { label: "Contact Us", href: "/contact" },
-        { label: "Manager login", href: "/manager/login" },
       ],
     },
     {

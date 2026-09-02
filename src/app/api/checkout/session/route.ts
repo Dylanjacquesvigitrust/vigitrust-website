@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
+import { resolveOrderLines, totalOrderQuantity } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
-import { parseTrainingLineItems, provisionTrainingPurchase } from "@/lib/training-provision";
 
 export const runtime = "nodejs";
 
-/** Confirms a paid Checkout Session and idempotently provisions training licences. */
+/** Confirms a paid Checkout Session for the success page. */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const sessionId = searchParams.get("session_id")?.trim();
@@ -21,25 +21,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Payment not completed." }, { status: 403 });
     }
 
-    const trainingLines = await parseTrainingLineItems(sessionId, session);
-    const provision = await provisionTrainingPurchase(session);
-
-    const email =
-      session.customer_email ??
-      session.customer_details?.email ??
-      session.metadata?.customer_email ??
-      null;
+    const lines = await resolveOrderLines({
+      cartSummary: session.metadata?.cart_summary,
+      cartSlugs: session.metadata?.cart_slugs,
+    });
+    const totalQty = totalOrderQuantity(lines);
 
     return NextResponse.json({
       paid: true,
-      email,
+      email: session.customer_email ?? session.customer_details?.email ?? null,
       amountTotal: session.amount_total != null ? session.amount_total / 100 : null,
       amountTax: session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null,
       currency: session.currency,
-      isTrainingLicence: trainingLines.length > 0 || provision.processed,
-      managerStatus: provision.managerStatus ?? null,
-      managerSetupUrl: provision.managerSetupUrl ?? null,
-      managerLoginUrl: provision.managerLoginUrl ?? null,
+      isBulkOrder: totalQty > 1,
     });
   } catch (error) {
     console.error("[checkout session] failed:", error);

@@ -1,5 +1,8 @@
 import { Resend } from "resend";
-import { isTrainingLicenceSlug } from "@/lib/training-products";
+import { training } from "@/content/courses";
+
+const OPS_ORDER_EMAIL =
+  process.env.OPS_ORDER_EMAIL?.trim().toLowerCase() || "dylan.jacques@vigitrust.com";
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY?.trim();
@@ -14,187 +17,6 @@ function getFromAddress(): string {
   );
 }
 
-export type PurchaseEmailCourse = {
-  slug: string;
-  title: string;
-  url: string;
-};
-
-export function resolvePurchasedCourses(cartSlugs: string): PurchaseEmailCourse[] {
-  const slugs = cartSlugs
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  const courses: PurchaseEmailCourse[] = [];
-  for (const slug of slugs) {
-    // Licence-controlled courses use manager setup — no generic Reach link.
-    if (isTrainingLicenceSlug(slug)) continue;
-  }
-  return courses;
-}
-
-export async function sendManagerSetupEmail(params: {
-  to: string;
-  firstName?: string;
-  inviteToken: string;
-  courses: Array<{ title: string; quantity: number }>;
-  orderRef: string;
-}): Promise<{ sent: boolean; reason?: string }> {
-  const resend = getResend();
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set — skipping manager setup email.");
-    return { sent: false, reason: "RESEND_API_KEY not configured." };
-  }
-
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  const setupUrl = `${siteUrl}/manager/setup/?token=${encodeURIComponent(params.inviteToken)}`;
-  const to = params.to.trim().toLowerCase();
-  const name = params.firstName?.trim() || "there";
-
-  const courseLines = params.courses
-    .map((c) => `<li>${escapeHtml(c.title)} — ${c.quantity} licence${c.quantity === 1 ? "" : "s"}</li>`)
-    .join("");
-
-  const html = `<!DOCTYPE html>
-<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
-<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
-<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
-<tr><td>
-<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
-<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">Your training licences are ready</h1>
-<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
-Hi ${escapeHtml(name)}, thank you for your purchase. Set up your manager account to assign training to your team.
-</p>
-<ul style="margin:14px 0 0;padding-left:20px;color:#334155;font-size:15px;">${courseLines}</ul>
-<p style="margin:20px 0 0;">
-<a href="${escapeHtml(setupUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Set up your manager account</a>
-</p>
-<p style="margin:14px 0 0;font-size:12px;color:#5b6777;word-break:break-all;">${escapeHtml(setupUrl)}</p>
-<p style="margin:18px 0 0;font-size:13px;color:#5b6777;">Order reference: ${escapeHtml(params.orderRef)}</p>
-</td></tr></table></td></tr></table></body></html>`;
-
-  const { error } = await resend.emails.send({
-    from: getFromAddress(),
-    to,
-    subject: "Your training licences are ready — set up your manager account",
-    html,
-  });
-
-  if (error) {
-    console.error("[email] Manager setup send failed:", error);
-    return { sent: false, reason: error.message };
-  }
-  console.info("[email] Manager setup email sent", { to });
-  return { sent: true };
-}
-
-export async function sendManagerLicencesAddedEmail(params: {
-  to: string;
-  firstName?: string;
-  courses: Array<{ title: string; quantity: number }>;
-  orderRef: string;
-}): Promise<{ sent: boolean; reason?: string }> {
-  const resend = getResend();
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set — skipping licences added email.");
-    return { sent: false, reason: "RESEND_API_KEY not configured." };
-  }
-
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  const dashboardUrl = `${siteUrl}/manager/`;
-  const to = params.to.trim().toLowerCase();
-  const name = params.firstName?.trim() || "there";
-
-  const courseLines = params.courses
-    .map((c) => `<li>${escapeHtml(c.title)} — ${c.quantity} licence${c.quantity === 1 ? "" : "s"}</li>`)
-    .join("");
-
-  const html = `<!DOCTYPE html>
-<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
-<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
-<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
-<tr><td>
-<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
-<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">Additional training licences added</h1>
-<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
-Hi ${escapeHtml(name)}, your recent purchase has been added to your account.
-</p>
-<ul style="margin:14px 0 0;padding-left:20px;color:#334155;font-size:15px;">${courseLines}</ul>
-<p style="margin:20px 0 0;">
-<a href="${escapeHtml(dashboardUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Open manager dashboard</a>
-</p>
-<p style="margin:18px 0 0;font-size:13px;color:#5b6777;">Order reference: ${escapeHtml(params.orderRef)}</p>
-</td></tr></table></td></tr></table></body></html>`;
-
-  const { error } = await resend.emails.send({
-    from: getFromAddress(),
-    to,
-    subject: "Additional training licences added to your account",
-    html,
-  });
-
-  if (error) {
-    console.error("[email] Licences added send failed:", error);
-    return { sent: false, reason: error.message };
-  }
-  console.info("[email] Licences added email sent", { to });
-  return { sent: true };
-}
-
-export async function sendEmployeeTrainingAssignedEmail(params: {
-  to: string;
-  firstName: string;
-  courseTitle: string;
-  reachPortalUrl: string;
-  isNewInvite: boolean;
-}): Promise<{ sent: boolean; reason?: string }> {
-  const resend = getResend();
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set — skipping employee training email.");
-    return { sent: false, reason: "RESEND_API_KEY not configured." };
-  }
-
-  const to = params.to.trim().toLowerCase();
-  const name = params.firstName.trim() || "there";
-  const accessNote = params.isNewInvite
-    ? "You should also receive a Reach 360 invitation email — use that link to create your account, or sign in below if you already have one."
-    : "Sign in to Reach 360 with your existing account to start the course.";
-
-  const html = `<!DOCTYPE html>
-<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
-<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
-<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
-<tr><td>
-<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust</p>
-<h1 style="margin:10px 0 0;font-size:24px;color:#0b1f3a;">You have been assigned training</h1>
-<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
-Hi ${escapeHtml(name)}, your manager has assigned you to <strong>${escapeHtml(params.courseTitle)}</strong>.
-</p>
-<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
-${escapeHtml(accessNote)}
-</p>
-<p style="margin:20px 0 0;">
-<a href="${escapeHtml(params.reachPortalUrl)}" style="display:inline-block;background:#c62828;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Open Reach 360 training</a>
-</p>
-<p style="margin:14px 0 0;font-size:12px;color:#5b6777;word-break:break-all;">${escapeHtml(params.reachPortalUrl)}</p>
-</td></tr></table></td></tr></table></body></html>`;
-
-  const { error } = await resend.emails.send({
-    from: getFromAddress(),
-    to,
-    subject: `You have been assigned: ${params.courseTitle}`,
-    html,
-  });
-
-  if (error) {
-    console.error("[email] Employee training send failed:", error);
-    return { sent: false, reason: error.message };
-  }
-  console.info("[email] Employee training email sent", { to });
-  return { sent: true };
-}
-
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -203,7 +25,75 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function buildEmailHtml(params: {
+/** Course slug → Reach share URL (env overrides). */
+const COURSE_ACCESS_LINKS: Record<string, string> = {
+  "gdpr-fundamentals":
+    process.env.COURSE_LINK_GDPR_FUNDAMENTALS ??
+    "https://vigitrust-9067.reach360.com/share/course/6720ac09-68d9-404c-9204-e522ae19af3b",
+};
+
+export type PurchaseEmailCourse = {
+  slug: string;
+  title: string;
+  url: string;
+  quantity: number;
+};
+
+export type OrderLine = {
+  slug: string;
+  title: string;
+  quantity: number;
+  url?: string;
+};
+
+/** Parse `slug:qty|slug:qty` from checkout metadata. */
+export function parseCartSummary(cartSummary: string): Array<{ slug: string; quantity: number }> {
+  return cartSummary
+    .split("|")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const [slug, qtyStr] = part.split(":");
+      const quantity = Number.parseInt(qtyStr ?? "1", 10);
+      return {
+        slug: (slug ?? "").trim(),
+        quantity: Number.isFinite(quantity) && quantity > 0 ? quantity : 1,
+      };
+    })
+    .filter((l) => l.slug);
+}
+
+export async function resolveOrderLines(params: {
+  cartSummary?: string;
+  cartSlugs?: string;
+}): Promise<OrderLine[]> {
+  const bySlug = new Map(training.courses.map((c) => [c.slug, c]));
+
+  let parsed = params.cartSummary ? parseCartSummary(params.cartSummary) : [];
+  if (!parsed.length && params.cartSlugs) {
+    parsed = params.cartSlugs
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((slug) => ({ slug, quantity: 1 }));
+  }
+
+  return parsed.map(({ slug, quantity }) => {
+    const course = bySlug.get(slug);
+    return {
+      slug,
+      title: course?.title ?? slug,
+      quantity,
+      url: COURSE_ACCESS_LINKS[slug],
+    };
+  });
+}
+
+export function totalOrderQuantity(lines: OrderLine[]): number {
+  return lines.reduce((sum, l) => sum + l.quantity, 0);
+}
+
+function buildCourseAccessHtml(params: {
   firstName: string;
   courses: PurchaseEmailCourse[];
   orderRef: string;
@@ -266,17 +156,22 @@ function buildEmailHtml(params: {
 </html>`;
 }
 
-/**
- * Sends course access email after a successful Stripe payment.
- * No-ops (with a log) when Resend is not configured.
- */
+/** Single-seat purchase: email customer the Reach course link. */
 export async function sendCourseAccessEmail(params: {
   to: string;
   firstName?: string;
-  cartSlugs: string;
+  lines: OrderLine[];
   orderRef: string;
 }): Promise<{ sent: boolean; reason?: string }> {
-  const courses = resolvePurchasedCourses(params.cartSlugs);
+  const courses: PurchaseEmailCourse[] = params.lines
+    .filter((l) => l.url)
+    .map((l) => ({
+      slug: l.slug,
+      title: l.title,
+      url: l.url!,
+      quantity: l.quantity,
+    }));
+
   if (!courses.length) {
     return { sent: false, reason: "No course access links mapped for this cart." };
   }
@@ -298,7 +193,7 @@ export async function sendCourseAccessEmail(params: {
     from: getFromAddress(),
     to,
     subject,
-    html: buildEmailHtml({
+    html: buildCourseAccessHtml({
       firstName,
       courses,
       orderRef: params.orderRef,
@@ -306,10 +201,92 @@ export async function sendCourseAccessEmail(params: {
   });
 
   if (error) {
-    console.error("[email] Resend send failed:", error);
+    console.error("[email] Course access send failed:", error);
     return { sent: false, reason: error.message };
   }
 
   console.info("[email] Course access email sent", { to, courses: courses.map((c) => c.slug) });
+  return { sent: true };
+}
+
+/** Multi-seat / bulk purchase: notify VigiTrust ops to provision in Reach manually. */
+export async function sendBulkOrderOpsEmail(params: {
+  lines: OrderLine[];
+  orderRef: string;
+  customerEmail: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  phone?: string;
+  amountTotal?: number | null;
+  currency?: string | null;
+}): Promise<{ sent: boolean; reason?: string }> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping ops order email.");
+    return { sent: false, reason: "RESEND_API_KEY not configured." };
+  }
+
+  const totalQty = totalOrderQuantity(params.lines);
+  const name = [params.firstName, params.lastName].filter(Boolean).join(" ") || "—";
+  const amount =
+    params.amountTotal != null
+      ? `${(params.amountTotal / 100).toFixed(2)} ${(params.currency ?? "eur").toUpperCase()}`
+      : "—";
+
+  const lineRows = params.lines
+    .map(
+      (l) =>
+        `<tr>
+          <td style="padding:8px;border-bottom:1px solid #e6ebf1;">${escapeHtml(l.title)}</td>
+          <td style="padding:8px;border-bottom:1px solid #e6ebf1;">${escapeHtml(l.slug)}</td>
+          <td style="padding:8px;border-bottom:1px solid #e6ebf1;text-align:right;">${l.quantity}</td>
+        </tr>`,
+    )
+    .join("");
+
+  const html = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;">
+<table role="presentation" width="100%" style="background:#f5f7fa;padding:32px 12px;"><tr><td align="center">
+<table role="presentation" width="100%" style="max-width:640px;background:#fff;border-radius:12px;padding:28px;border:1px solid #e6ebf1;">
+<tr><td>
+<p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#c62828;font-weight:700;">VigiTrust ops</p>
+<h1 style="margin:10px 0 0;font-size:22px;color:#0b1f3a;">Bulk training order — manual Reach setup</h1>
+<p style="margin:14px 0 0;font-size:15px;line-height:1.55;color:#334155;">
+A customer purchased <strong>${totalQty}</strong> course seat(s). Create their Reach group, assign the course(s), and give them manager/login access.
+</p>
+<table role="presentation" width="100%" style="margin-top:18px;font-size:14px;color:#334155;">
+<tr><td style="padding:6px 0;width:140px;color:#5b6777;">Customer</td><td>${escapeHtml(name)}</td></tr>
+<tr><td style="padding:6px 0;color:#5b6777;">Email</td><td>${escapeHtml(params.customerEmail)}</td></tr>
+<tr><td style="padding:6px 0;color:#5b6777;">Company</td><td>${escapeHtml(params.company?.trim() || "—")}</td></tr>
+<tr><td style="padding:6px 0;color:#5b6777;">Phone</td><td>${escapeHtml(params.phone?.trim() || "—")}</td></tr>
+<tr><td style="padding:6px 0;color:#5b6777;">Amount</td><td>${escapeHtml(amount)}</td></tr>
+<tr><td style="padding:6px 0;color:#5b6777;">Order</td><td style="font-family:monospace;font-size:12px;">${escapeHtml(params.orderRef)}</td></tr>
+</table>
+<table role="presentation" width="100%" style="margin-top:20px;border-collapse:collapse;font-size:14px;">
+<thead>
+<tr style="text-align:left;color:#5b6777;">
+<th style="padding:8px;border-bottom:2px solid #e6ebf1;">Course</th>
+<th style="padding:8px;border-bottom:2px solid #e6ebf1;">Slug</th>
+<th style="padding:8px;border-bottom:2px solid #e6ebf1;text-align:right;">Qty</th>
+</tr>
+</thead>
+<tbody>${lineRows}</tbody>
+</table>
+</td></tr></table></td></tr></table></body></html>`;
+
+  const { error } = await resend.emails.send({
+    from: getFromAddress(),
+    to: OPS_ORDER_EMAIL,
+    subject: `Bulk order: ${totalQty} seat(s) — ${params.company?.trim() || params.customerEmail}`,
+    html,
+  });
+
+  if (error) {
+    console.error("[email] Ops bulk order send failed:", error);
+    return { sent: false, reason: error.message };
+  }
+
+  console.info("[email] Ops bulk order email sent", { to: OPS_ORDER_EMAIL, orderRef: params.orderRef });
   return { sent: true };
 }
