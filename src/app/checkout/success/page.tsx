@@ -59,7 +59,7 @@ function SuccessContent() {
         <p className="mt-3 text-vt-muted">
           Your payment was processed securely by Stripe.
           {confirmed && isBulkOrder
-            ? " Our team will set up your Reach training access and contact you shortly with login details."
+            ? " A member of the VigiTrust team will be in touch shortly to provide your course access and walk you through how to get started."
             : confirmed && email
               ? ` We have sent your course access link to ${email}. Please check your inbox (and spam folder).`
               : ""}
