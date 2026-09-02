@@ -311,37 +311,38 @@ export const training = {
     },
     {
       slug: "payment-card-security-pci",
-      title: "Payment Card Security & PCI",
-      priceLabel: "€25.00  -  €75.00",
-      cta: "Select options" as const,
+      title: "Introduction to Payment Card Security",
+      priceLabel: "€25.00",
+      priceFrom: 25,
+      cta: "Buy Now" as const,
       summary:
-        "Help teams understand payment card security obligations and how PCI DSS shapes day-to-day practice across merchants and brands.",
+        "Help teams understand payment card security obligations and how everyday handling of cardholder data protects customers and the business.",
       description:
-        "Practical PCI awareness for people who touch cardholder data environments  -  from front-line handling to programme fundamentals.",
+        "A clear introduction to payment card security for people who handle or support card payments. Learners leave understanding why card data matters, common risks, and practical behaviours that keep transactions safer.",
       image: "/images/courses/pci.webp",
-      level: "Multi-level",
+      level: "Introduction",
       category: "Payment Security",
-      duration: "1-3 hours",
-      skills: ["PCI DSS basics", "Cardholder data handling", "SAQ awareness", "Merchant responsibilities"],
+      duration: "45-60 mins",
+      topics: [
+        "Why payment security matters",
+        "Cardholder data basics",
+        "Common risks",
+        "Safe handling habits",
+      ],
+      skills: [
+        "Payment security basics",
+        "Cardholder data handling",
+        "Risk awareness",
+        "Safe day-to-day practice",
+      ],
+      learningOutcomes: [
+        "Explain why payment card security matters in plain language",
+        "Recognise cardholder data and common handling risks",
+        "Apply safer habits when supporting card payments",
+        "Know when to escalate a suspected payment security issue",
+      ],
       audience: "Retail, hospitality, finance, and operations teams in card-accepting businesses.",
       rating: 4.7,
-      modules: [
-        {
-          name: "Introduction",
-          price: "€25.00",
-          topics: ["Why payment security matters", "Cardholder data basics", "Common risks", "Course test"],
-        },
-        {
-          name: "Fundamentals",
-          price: "€50.00",
-          topics: ["PCI DSS overview", "Roles and responsibilities", "Handling CHD safely", "Course test"],
-        },
-        {
-          name: "Intermediate",
-          price: "€75.00",
-          topics: ["SAQ pathways", "Segmentation concepts", "Evidence expectations", "Course test"],
-        },
-      ],
     },
     {
       slug: "email-phishing-ransomware",

@@ -38,9 +38,9 @@ export const navigation = {
       children: [
         { label: "eLearning Catalogue", href: "/training", description: "Browse courses and add to basket" },
         {
-          label: "PCI DSS Training",
+          label: "Payment Card Security",
           href: "/training/payment-card-security-pci",
-          description: "Payment card security courses",
+          description: "Introduction to payment card security",
         },
         { label: "GDPR Training", href: "/training/gdpr-fundamentals", description: "Privacy and data protection" },
         {

@@ -30,6 +30,9 @@ const COURSE_ACCESS_LINKS: Record<string, string> = {
   "gdpr-fundamentals":
     process.env.COURSE_LINK_GDPR_FUNDAMENTALS ??
     "https://vigitrust-9067.reach360.com/share/course/6720ac09-68d9-404c-9204-e522ae19af3b",
+  ...(process.env.COURSE_LINK_PCI_INTRO?.trim()
+    ? { "payment-card-security-pci": process.env.COURSE_LINK_PCI_INTRO.trim() }
+    : {}),
 };
 
 export type PurchaseEmailCourse = {
