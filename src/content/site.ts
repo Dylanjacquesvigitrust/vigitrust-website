@@ -707,6 +707,7 @@ export const pillars = {
     body: "Mathieu Gorge’s book is aimed at board members, C-Suite, and key decision-makers faced with cyber accountability challenges. It is based on the award-winning 5 Pillars of Security Framework™: a simple, effective, industry-agnostic, timeless methodology allowing enterprises and small businesses to map cybersecurity risks, implement a cybersecurity strategy, and demonstrate cyber accountability to regulators, governing bodies, and law enforcement agencies.",
     href: "https://mathieugorge.com/book/",
     cta: "Learn more about the book",
+    image: "/images/books/cyber-elephant-cover.png",
   },
   help: {
     title: "How can the 5 Pillars of Security Framework™ help you?",
