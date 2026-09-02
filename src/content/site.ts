@@ -46,12 +46,12 @@ export const home = {
     title: "Your Trusted Partner In Governance, Risk & Compliance",
     paragraphs: [
       "For over two decades, VigiTrust has helped organisations in 120+ countries simplify Governance, Risk, and Compliance (GRC).",
-      "Our flagship platform VigiOne® provides a unified framework to assess, monitor, and manage compliance maturity across regulations like ISO 27001, PCI DSS, GDPR, CCPA, and more.",
+      "Our flagship platform VigiOne� provides a unified framework to assess, monitor, and manage compliance maturity across regulations like ISO 27001, PCI DSS, GDPR, CCPA, and more.",
       "We combine interactive eLearning, real-time reporting, and practical methodology so teams can prepare for, validate & maintain continuous compliance.",
     ],
     cards: [
       {
-        title: "VigiOne® Platform",
+        title: "VigiOne� Platform",
         body: "Centralised governance, risk, and compliance management  -  mapping your organisation's controls and policies across multiple standards.",
       },
       {
@@ -76,7 +76,7 @@ export const home = {
       },
       {
         title: "Advisory Board",
-        body: "Connect with VigiTrust’s Global Advisory Board  -  a worldwide network of cyber leaders, regulators, and practitioners sharing threat insight, regulatory trends, and peer best practice across industries and regions.",
+        body: "Connect with VigiTrust�s Global Advisory Board  -  a worldwide network of cyber leaders, regulators, and practitioners sharing threat insight, regulatory trends, and peer best practice across industries and regions.",
       },
       {
         title: "MSSP",
@@ -227,7 +227,7 @@ export const platform = {
   assessment360: {
     eyebrow: "Assessment 360",
     title: "Build, manage and distribute custom compliance & risk assessments",
-    body: "Assessment 360 is VigiOne’s flexible assessment builder  -  create proprietary frameworks, map recognised standards, collect evidence, score maturity, and publish executive-ready reports from one platform.",
+    body: "Assessment 360 is VigiOne�s flexible assessment builder  -  create proprietary frameworks, map recognised standards, collect evidence, score maturity, and publish executive-ready reports from one platform.",
     sectionEyebrow: "One platform. Any framework.",
     sectionTitle: "What Assessment 360 does",
     sectionBody: [
@@ -237,7 +237,7 @@ export const platform = {
       "Whether you are running PCI DSS, ISO 27001, GDPR, NIST CSF, DORA, NIS2, vendor due diligence, or your own proprietary programme, Assessment 360 keeps every assessment on one connected platform.",
     ],
     image: "/images/product/assessment-360.png",
-    tagline: "One Platform · Any Framework · Any Assessment",
+    tagline: "One Platform � Any Framework � Any Assessment",
     featuresTitle: "Assessment builder features",
     features: [
       "Create unlimited custom frameworks",
@@ -350,7 +350,7 @@ export const about = {
       body: "Unified platform for compliance programmes spanning PCI DSS, ISO 27001, PHI/HIPAA, GDPR, and corporate governance.",
     },
     {
-      title: "5 Pillars of Security Framework™",
+      title: "5 Pillars of Security Framework�",
       body: "A simple, industry-agnostic methodology to map cyber risk, implement strategy, and demonstrate accountability to regulators, governing bodies, and law enforcement agencies.",
     },
     {
@@ -359,7 +359,7 @@ export const about = {
     },
     {
       title: "The Cyber Elephant In The Boardroom",
-      body: "The book by CEO Mathieu Gorge delivers strategies and best practices for today’s cybersecurity issues and guidance for the next decade of risks  -  with the 5 Pillars Framework™ as the foundational tool.",
+      body: "The book by CEO Mathieu Gorge delivers strategies and best practices for today�s cybersecurity issues and guidance for the next decade of risks  -  with the 5 Pillars Framework� as the foundational tool.",
     },
   ],
   leadership: {
@@ -378,7 +378,7 @@ export const advisory = {
     titleBefore: "Join a Global Network of",
     titleAccent: "Cybersecurity, Risk & Compliance Leaders",
     lead: "Connect with CISOs, board members, regulators, security leaders and compliance executives from more than 30 countries through the VigiTrust Global Advisory Board.",
-    primaryCta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor" },
+    primaryCta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor#contact-form" },
     secondaryCta: { label: "Explore Membership Options", href: "#membership" },
     stats: [
       { label: "1300+ Members" },
@@ -437,7 +437,7 @@ export const advisory = {
       {
         id: "community",
         name: "Community Member",
-        price: "€120",
+        price: "�120",
         period: "/year",
         description: "For professionals who want to stay connected to the advisory community.",
         features: [
@@ -447,14 +447,14 @@ export const advisory = {
           "Quarterly research summaries",
           "Member event discounts",
         ],
-        cta: { label: "Join Community", href: "/contact?intent=community-member" },
+        cta: { label: "Join Community", href: "/contact?intent=community-member#contact-form" },
         featured: false,
         badge: null as string | null,
       },
       {
         id: "chartered",
         name: "Chartered Advisor",
-        price: "€599",
+        price: "�599",
         period: "/year",
         description: "Designed for cybersecurity, risk and compliance leaders seeking deeper engagement.",
         features: [
@@ -466,7 +466,7 @@ export const advisory = {
           "CPH certificates",
           "Leadership community access",
         ],
-        cta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor" },
+        cta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor#contact-form" },
         featured: true,
         badge: "Most Popular",
         globalNote: {
@@ -477,7 +477,7 @@ export const advisory = {
       {
         id: "executive",
         name: "Executive Circle",
-        price: "€2,499",
+        price: "�2,499",
         period: "/year",
         description: "For senior leaders who want privileged access, curated peer connections and strategic influence.",
         features: [
@@ -489,7 +489,7 @@ export const advisory = {
           "Research steering group participation",
           "Featured leadership profile",
         ],
-        cta: { label: "Request Invitation", href: "/contact?intent=executive-circle" },
+        cta: { label: "Request Invitation", href: "/contact?intent=executive-circle#contact-form" },
         featured: false,
         badge: "Invitation Only",
       },
@@ -501,7 +501,7 @@ export const advisory = {
     body: "To encourage participation from emerging cybersecurity markets, VigiTrust offers reduced-rate memberships through its Global Participation Programme for qualifying professionals.",
     countries: ["India", "South Africa", "Kenya", "Nigeria", "Tanzania", "Philippines", "Indonesia"],
     note: "Ensuring diverse global representation strengthens the collective intelligence of our advisory community and broadens access to executive-level peer networks.",
-    cta: { label: "Apply for Global Participation", href: "/contact?intent=global-participation" },
+    cta: { label: "Apply for Global Participation", href: "/contact?intent=global-participation#contact-form" },
   },
   leadership: {
     title: "Global Leadership",
@@ -523,8 +523,8 @@ export const advisory = {
   finalCta: {
     title: "Ready to Join the Conversation Shaping Cybersecurity Governance?",
     body: "Take your place among the world's most respected cyber, risk and compliance leaders.",
-    primaryCta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor" },
-    secondaryCta: { label: "Schedule a Conversation", href: "/contact?intent=advisory-conversation" },
+    primaryCta: { label: "Become a Chartered Advisor", href: "/contact?intent=chartered-advisor#contact-form" },
+    secondaryCta: { label: "Schedule a Conversation", href: "/contact?intent=advisory-conversation#contact-form" },
   },
 };
 
@@ -541,7 +541,7 @@ export const events = {
     emptyTitle: "No upcoming events scheduled",
     emptyBody:
       "Our next advisory summit and regional gatherings are being finalised. Register your interest to receive early access to invitations and agenda previews.",
-    cta: { label: "Get notified", href: "/contact?intent=events-notify" },
+    cta: { label: "Get notified", href: "/contact?intent=events-notify#contact-form" },
   },
   filters: ["All", "Advisory", "Networking"] as const,
   pastEvents: [
@@ -589,54 +589,16 @@ export const inPersonTraining = {
     eyebrow: "In-person Training",
     title: "Instructor-led workshops for compliance teams",
     body: "Hands-on, facilitator-led sessions that translate framework requirements into operational practice. Delivered on-site, at VigiTrust hubs, or in virtual hybrid formats for distributed teams.",
-    primaryCta: { label: "Request a workshop", href: "/contact?intent=in-person-training" },
+    primaryCta: { label: "Request a workshop", href: "/contact?intent=in-person-training#contact-form" },
     secondaryCta: { label: "Book a demo", href: bookingsUrl },
   },
   workshops: {
     title: "Upcoming open workshops",
     body: "Public sessions open to individual practitioners and small teams. Corporate cohorts can request private delivery at any location.",
-    items: [
-      {
-        id: "dublin-grc",
-        city: "Dublin",
-        format: "In-person",
-        title: "GRC Foundations Intensive",
-        dates: "Sep 16-17, 2026",
-        duration: "2 days",
-        seats: "18 seats",
-        topics: ["ISO 27001 mapping", "Evidence workflows", "Board reporting"],
-      },
-      {
-        id: "paris-privacy",
-        city: "Paris",
-        format: "In-person",
-        title: "Privacy & GDPR Executive Workshop",
-        dates: "Oct 8, 2026",
-        duration: "1 day",
-        seats: "24 seats",
-        topics: ["DPIA practice", "Cross-border transfers", "Regulator expectations"],
-      },
-      {
-        id: "ny-pci",
-        city: "New York",
-        format: "In-person",
-        title: "PCI DSS Readiness Bootcamp",
-        dates: "Nov 4-5, 2026",
-        duration: "2 days",
-        seats: "16 seats",
-        topics: ["SAQ pathways", "Segmentation", "Assessor engagement"],
-      },
-      {
-        id: "virtual-hybrid",
-        city: "Virtual hybrid",
-        format: "Live online + labs",
-        title: "Security Awareness Programme Design",
-        dates: "Monthly cohorts",
-        duration: "Half day",
-        seats: "Unlimited",
-        topics: ["Phishing simulations", "Role-based curricula", "Completion reporting"],
-      },
-    ],
+    emptyTitle: "No open workshops scheduled right now",
+    emptyBody: "Request a session for your team, or ask to be notified when the next public workshop is announced.",
+    emptyCta: { label: "Request a workshop", href: "/contact?intent=in-person-training#contact-form" },
+    items: [],
   },
   agenda: {
     title: "Sample workshop day",
@@ -672,7 +634,7 @@ export const inPersonTraining = {
   corporate: {
     title: "Corporate private workshops",
     body: "Bring a tailored programme to your offices or a VigiTrust hub. We adapt agendas to your frameworks, industry, and team size.",
-    cta: { label: "Discuss private delivery", href: "/contact?intent=corporate-workshop" },
+    cta: { label: "Discuss private delivery", href: "/contact?intent=corporate-workshop#contact-form" },
   },
   relatedLinks: [
     { label: "eLearning Catalogue", href: "/training", description: "Browse self-paced modules and add courses to your basket." },
@@ -707,7 +669,7 @@ export const blog = {
     },
     {
       slug: "advisory-board-dublin-2025",
-      title: "Where Global Minds Meet: Highlights From VigiTrust’s 2025 Annual Advisory Board Event In Dublin",
+      title: "Where Global Minds Meet: Highlights From VigiTrust�s 2025 Annual Advisory Board Event In Dublin",
       date: "2025-05-24",
       category: "News",
       excerpt:
@@ -720,7 +682,7 @@ export const blog = {
       date: "2025-05-20",
       category: "Blog",
       excerpt:
-        "Apple. Google. Facebook. 16 billion credentials. That’s not a typo  -  it’s a wake-up call for access control, awareness training, and continuous monitoring.",
+        "Apple. Google. Facebook. 16 billion credentials. That�s not a typo  -  it�s a wake-up call for access control, awareness training, and continuous monitoring.",
       image: "/images/courses/phishing.webp",
     },
     {
@@ -734,7 +696,7 @@ export const blog = {
     },
     {
       slug: "cybernews-interview-mathieu-gorge",
-      title: "Cybernews Interview: Mathieu Gorge, VigiTrust: “The More Information You Share  -  The Bigger Your Risk Surface Is”",
+      title: "Cybernews Interview: Mathieu Gorge, VigiTrust: �The More Information You Share  -  The Bigger Your Risk Surface Is�",
       date: "2024-09-03",
       category: "Blog",
       excerpt:
@@ -748,11 +710,11 @@ export const resources = {
   hero: {
     eyebrow: "Resources",
     title: "Frameworks, kits, and practical tools",
-    body: "Explore VigiTrust’s methodology, free learning assets, and materials that help teams operationalise compliance.",
+    body: "Explore VigiTrust�s methodology, free learning assets, and materials that help teams operationalise compliance.",
   },
   items: [
     {
-      title: "5 Pillars of Security Framework™",
+      title: "5 Pillars of Security Framework�",
       body: "Map cybersecurity risks, implement strategy, and demonstrate accountability to regulators and boards.",
       href: "/pillars-of-security",
     },
@@ -782,26 +744,26 @@ export const pillars = {
   },
   about: {
     eyebrow: "About the framework",
-    title: "About the 5 Pillars of Security Framework™",
+    title: "About the 5 Pillars of Security Framework�",
     paragraphs: [
-      "Mathieu Gorge, CEO of VigiTrust, developed the award-winning 5 Pillars of Security Framework™ in 2008 to help medium to large sized organisations understand the security risk environment and effectively organise their security risk management roles and protocols. A decade later the Framework remains just as relevant.",
+      "Mathieu Gorge, CEO of VigiTrust, developed the award-winning 5 Pillars of Security Framework� in 2008 to help medium to large sized organisations understand the security risk environment and effectively organise their security risk management roles and protocols. A decade later the Framework remains just as relevant.",
       "The Framework accommodates escalating cybersecurity threats as organisations increasingly move towards cloud-based platforms. Its flexibility also makes it easy to apply to changes in regulation, such as the introduction of the GDPR in May 2018.",
-      "In recognition of this, VigiTrust was named Leading Integrated Risk Management Solution Provider of the Year, Republic of Ireland 2020 for the 5 Pillars of Security Framework™ by Acquisition International.",
+      "In recognition of this, VigiTrust was named Leading Integrated Risk Management Solution Provider of the Year, Republic of Ireland 2020 for the 5 Pillars of Security Framework� by Acquisition International.",
     ],
     surveyCta: {
       label: "Take the 5 Pillars of Security Survey",
-      href: "/contact?intent=5-pillars-survey",
+      href: "/contact?intent=5-pillars-survey#contact-form",
     },
   },
   book: {
     title: "The Cyber Elephant in the Boardroom",
-    body: "Mathieu Gorge’s book is aimed at board members, C-Suite, and key decision-makers faced with cyber accountability challenges. It is based on the award-winning 5 Pillars of Security Framework™: a simple, effective, industry-agnostic, timeless methodology allowing enterprises and small businesses to map cybersecurity risks, implement a cybersecurity strategy, and demonstrate cyber accountability to regulators, governing bodies, and law enforcement agencies.",
+    body: "Mathieu Gorge�s book is aimed at board members, C-Suite, and key decision-makers faced with cyber accountability challenges. It is based on the award-winning 5 Pillars of Security Framework�: a simple, effective, industry-agnostic, timeless methodology allowing enterprises and small businesses to map cybersecurity risks, implement a cybersecurity strategy, and demonstrate cyber accountability to regulators, governing bodies, and law enforcement agencies.",
     href: "https://mathieugorge.com/book/",
     cta: "Learn more about the book",
   },
   help: {
-    title: "How can the 5 Pillars of Security Framework™ help you?",
-    body: "This page covers what you need to know about the 5 Pillars of Security Framework™, and provides a clear path to apply it to your organisation’s Governance, Risk Management and Compliance programme.",
+    title: "How can the 5 Pillars of Security Framework� help you?",
+    body: "This page covers what you need to know about the 5 Pillars of Security Framework�, and provides a clear path to apply it to your organisation�s Governance, Risk Management and Compliance programme.",
   },
   pillars: [
     {
@@ -814,7 +776,7 @@ export const pillars = {
     {
       number: "02",
       title: "People Security",
-      body: "Humans typically present the greatest threat to an organisation’s security, be it through human error or by malicious intent. People Security is about mitigating risk by monitoring and controlling the access and flow of people.",
+      body: "Humans typically present the greatest threat to an organisation�s security, be it through human error or by malicious intent. People Security is about mitigating risk by monitoring and controlling the access and flow of people.",
       items: [
         "Permanent & Contract Staff",
         "Partners",
@@ -841,7 +803,7 @@ export const pillars = {
     {
       number: "05",
       title: "Crisis Management",
-      body: "Effective Crisis Management depends on an organisation’s ability to be prepared for any eventuality. Policies and protocols must be continuously tested and revised to mitigate exposure.",
+      body: "Effective Crisis Management depends on an organisation�s ability to be prepared for any eventuality. Policies and protocols must be continuously tested and revised to mitigate exposure.",
       items: [
         "Documentation & Work Procedures",
         "Emergency Response Plans",
@@ -871,7 +833,7 @@ export const pillars = {
   ],
   vigione: {
     title: "Is VigiOne for you?",
-    body: "If you’re an enterprise organisation, VigiOne enables you to manage compliance in one place. It works just as well for smaller companies. VigiOne is modular, so you can focus on a single regulation or standard if that is all you need. It is designed to be versatile and straightforward to deploy.",
+    body: "If you�re an enterprise organisation, VigiOne enables you to manage compliance in one place. It works just as well for smaller companies. VigiOne is modular, so you can focus on a single regulation or standard if that is all you need. It is designed to be versatile and straightforward to deploy.",
     cta: { label: "Book A Demo", href: bookingsUrl },
     secondaryCta: { label: "Explore VigiOne", href: "/platform" },
   },

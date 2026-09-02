@@ -248,7 +248,7 @@ export default function CheckoutPage() {
                   />
                   <span>
                     I have read and agree to the website{" "}
-                    <Link href="/contact" className="text-vt-red underline">
+                    <Link href="/contact#contact-form" className="text-vt-red underline">
                       terms and conditions
                     </Link>
                   </span>

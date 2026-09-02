@@ -32,9 +32,7 @@ const seedEvents: CmsEvent[] = events.pastEvents.map((event) => ({
 
 const seedCourses: Course[] = training.courses;
 
-const seedWorkshops: CmsWorkshop[] = inPersonTraining.workshops.items.map((item) => ({
-  ...item,
-}));
+const seedWorkshops: CmsWorkshop[] = [...(inPersonTraining.workshops.items as CmsWorkshop[])];
 
 function asRecord(value: Prisma.JsonValue): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)

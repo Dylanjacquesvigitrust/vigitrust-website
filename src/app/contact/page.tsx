@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
+import { ScrollToHash } from "@/components/forms/scroll-to-hash";
 import { PageHero, SectionHeading } from "@/components/ui/section";
 import { offices } from "@/content/site";
 
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <ScrollToHash />
       <PageHero
         eyebrow="Contact"
         title="Let’s talk about your compliance programme"
@@ -32,7 +34,10 @@ export default function ContactPage() {
         </div>
 
         <div className="container-vt mt-12">
-          <div className="grid overflow-hidden rounded-[14px] bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border lg:grid-cols-[0.9fr_1.1fr]">
+          <div
+            id="contact-form"
+            className="grid scroll-mt-28 overflow-hidden rounded-[14px] bg-vt-paper shadow-[var(--shadow-soft)] ring-1 ring-vt-border lg:grid-cols-[0.9fr_1.1fr]"
+          >
             <div className="bg-vt-mist p-8 sm:p-10">
               <SectionHeading
                 title="Send us a message"

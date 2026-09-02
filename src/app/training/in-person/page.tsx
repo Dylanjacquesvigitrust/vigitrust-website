@@ -45,6 +45,17 @@ export default async function InPersonTrainingPage() {
           <div className="mt-8">
             <AdminAddWorkshopForm />
           </div>
+          {workshops.length === 0 ? (
+            <div className="mt-10 rounded-[12px] bg-vt-mist p-8 ring-1 ring-vt-border sm:p-10">
+              <h3 className="type-h3 text-vt-ink">{inPersonTraining.workshops.emptyTitle}</h3>
+              <p className="mt-3 max-w-2xl text-vt-slate">{inPersonTraining.workshops.emptyBody}</p>
+              <div className="mt-6">
+                <Button href={inPersonTraining.workshops.emptyCta.href}>
+                  {inPersonTraining.workshops.emptyCta.label}
+                </Button>
+              </div>
+            </div>
+          ) : (
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
             {workshops.map((workshop) => (
               <article
@@ -94,7 +105,7 @@ export default async function InPersonTrainingPage() {
                   ))}
                 </ul>
                 <div className="mt-6">
-                  <Button href="/contact?intent=in-person-training" variant="ghost" size="sm">
+                  <Button href="/contact?intent=in-person-training#contact-form" variant="ghost" size="sm">
                     Reserve a seat
                   </Button>
                 </div>
@@ -102,6 +113,7 @@ export default async function InPersonTrainingPage() {
               </article>
             ))}
           </div>
+          )}
         </div>
       </section>
 

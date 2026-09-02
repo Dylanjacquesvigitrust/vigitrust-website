@@ -56,7 +56,7 @@ export const navigation = {
       ],
     },
   ],
-  cta: { label: "Contact Us", href: "/contact" },
+  cta: { label: "Contact Us", href: "/contact#contact-form" },
 };
 
 export const footer = {
@@ -71,7 +71,7 @@ export const footer = {
         { label: "VigiOne Platform", href: "/platform" },
         { label: "Advisory Board", href: "/advisory-board" },
         { label: "Events", href: "/events" },
-        { label: "Contact Us", href: "/contact" },
+        { label: "Contact Us", href: "/contact#contact-form" },
       ],
     },
     {
