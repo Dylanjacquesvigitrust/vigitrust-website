@@ -28,11 +28,20 @@ function escapeHtml(value: string) {
 /** Course slug → Reach share URL (env overrides). */
 const COURSE_ACCESS_LINKS: Record<string, string> = {
   "gdpr-fundamentals":
-    process.env.COURSE_LINK_GDPR_FUNDAMENTALS ??
+    process.env.COURSE_LINK_GDPR_FUNDAMENTALS?.trim() ||
     "https://vigitrust-9067.reach360.com/share/course/6720ac09-68d9-404c-9204-e522ae19af3b",
-  ...(process.env.COURSE_LINK_PCI_INTRO?.trim()
-    ? { "payment-card-security-pci": process.env.COURSE_LINK_PCI_INTRO.trim() }
-    : {}),
+  "payment-card-security-pci":
+    process.env.COURSE_LINK_PCI_INTRO?.trim() ||
+    "https://vigitrust-9067.reach360.com/share/course/4aa3d474-560a-4e36-9b8b-70395b948d7d",
+  "introduction-to-pci-dss":
+    process.env.COURSE_LINK_PCI_DSS_INTRO?.trim() ||
+    "https://vigitrust-9067.reach360.com/share/course/cf8b73f3-2ad1-46c7-b635-81fc743de401",
+  "cybersecurity-fundamentals":
+    process.env.COURSE_LINK_CYBERSECURITY_FUNDAMENTALS?.trim() ||
+    "https://vigitrust-9067.reach360.com/share/course/b158aa49-7830-46c9-b63b-7d0b9ceaeecd",
+  "secure-coding":
+    process.env.COURSE_LINK_SECURE_CODING?.trim() ||
+    "https://vigitrust-9067.reach360.com/share/course/2d701c03-823f-4e06-8ee7-92db22576541",
 };
 
 export type PurchaseEmailCourse = {
