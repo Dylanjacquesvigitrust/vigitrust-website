@@ -32,14 +32,15 @@ export function SiteHeader() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-vt-border bg-[color:var(--background)]/95 backdrop-blur-md">
-      <div
-        className={cn(
-          "transition-[box-shadow] duration-200",
-          scrolled && "shadow-[var(--shadow-xs)]",
-        )}
-      >
-        <div className="container-wide grid h-14 grid-cols-[auto_1fr_auto] items-center gap-4 px-5 sm:h-14 sm:px-8 lg:px-10">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-200",
+        scrolled
+          ? "border-b border-vt-border bg-[color:var(--background)]/95 shadow-[var(--shadow-xs)] backdrop-blur-md"
+          : "border-b border-transparent bg-[#f3f8fb]/90 backdrop-blur-md",
+      )}
+    >
+      <div className="container-wide grid h-14 grid-cols-[auto_1fr_auto] items-center gap-4 px-5 sm:h-14 sm:px-8 lg:px-10">
           <BrandLogo priority className="h-7 w-[148px] sm:h-8 sm:w-[168px]" />
 
           <nav className="hidden items-center justify-center gap-0.5 lg:flex" aria-label="Primary">

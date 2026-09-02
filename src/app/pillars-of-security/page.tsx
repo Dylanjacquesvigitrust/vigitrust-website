@@ -22,13 +22,13 @@ const pillarIcons = [Building2, Users, Database, Network, Siren];
 export default function PillarsOfSecurityPage() {
   return (
     <>
-      <section className="relative overflow-hidden hero-wash border-b border-vt-border py-16 md:py-24">
+      <section className="relative overflow-hidden hero-wash py-16 md:py-24">
         <div className="container-vt max-w-4xl px-5 sm:px-8 lg:px-10">
           <p className="type-eyebrow mb-3 text-vt-red">{pillars.hero.eyebrow}</p>
           <h1 className="type-display max-w-3xl text-balance text-vt-ink">{pillars.hero.title}</h1>
           <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">{pillars.hero.body}</p>
 
-          <div className="mt-12 border-t border-vt-border pt-10">
+          <div className="mt-10">
             <SectionHeading eyebrow={pillars.about.eyebrow} title={pillars.about.title} />
             <div className="mt-6 space-y-4">
               {pillars.about.paragraphs.map((p) => (
@@ -47,7 +47,7 @@ export default function PillarsOfSecurityPage() {
       </section>
 
       <section className="border-y border-vt-border bg-vt-mist section-pad">
-        <div className="container-vt grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="container-vt grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
             <p className="type-eyebrow text-vt-red">From the CEO</p>
             <h2 className="type-h2 mt-3 text-vt-ink">{pillars.book.title}</h2>
@@ -58,14 +58,14 @@ export default function PillarsOfSecurityPage() {
               </Button>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[14px] bg-white shadow-[var(--shadow-md)] ring-1 ring-vt-border lg:mx-0 lg:max-w-none">
+          <div className="mx-auto w-full max-w-[280px] lg:mx-0 lg:max-w-[320px]">
             <SiteImage
               src={pillars.book.image}
               alt={`${pillars.book.title} book cover`}
-              width={720}
-              height={900}
-              className="h-auto w-full object-contain"
-              sizes="(max-width:1024px) 90vw, 360px"
+              width={640}
+              height={960}
+              className="h-auto w-full rounded-[6px] shadow-[var(--shadow-md)] ring-1 ring-vt-border"
+              sizes="320px"
             />
           </div>
         </div>
