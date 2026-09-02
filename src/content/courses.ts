@@ -345,6 +345,42 @@ export const training = {
       rating: 4.7,
     },
     {
+      slug: "introduction-to-pci-dss",
+      title: "Introduction to PCI DSS",
+      priceLabel: "€50.00",
+      priceFrom: 50,
+      cta: "Buy Now" as const,
+      summary:
+        "Give teams a clear grounding in PCI DSS — what the standard is for, who it applies to, and how it shapes day-to-day payment security practice.",
+      description:
+        "A practical introduction to the Payment Card Industry Data Security Standard (PCI DSS) for people who support card payments or compliance programmes. Learners leave understanding what PCI DSS is designed to protect, how merchant and service-provider obligations fit together, and what good baseline behaviour looks like around cardholder data environments.",
+      image: "/images/courses/pci.webp",
+      level: "Introduction",
+      category: "Payment Security",
+      duration: "60-90 mins",
+      topics: [
+        "What PCI DSS is and why it exists",
+        "Cardholder data and the CDE",
+        "Roles and responsibilities",
+        "Core control themes",
+      ],
+      skills: [
+        "PCI DSS overview",
+        "Scope awareness",
+        "Merchant responsibilities",
+        "Compliance fundamentals",
+      ],
+      learningOutcomes: [
+        "Explain PCI DSS in plain language and why organisations must take it seriously",
+        "Recognise cardholder data environments and common scope considerations",
+        "Describe the main roles involved in a PCI programme",
+        "Identify everyday practices that support PCI DSS requirements",
+      ],
+      audience:
+        "Compliance, operations, retail, hospitality, and IT teams supporting card-accepting businesses.",
+      rating: 4.8,
+    },
+    {
       slug: "email-phishing-ransomware",
       title: "Email, Phishing And Ransomware",
       priceLabel: "€7.50  -  €27.50",

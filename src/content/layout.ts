@@ -42,6 +42,11 @@ export const navigation = {
           href: "/training/payment-card-security-pci",
           description: "Introduction to payment card security",
         },
+        {
+          label: "Introduction to PCI DSS",
+          href: "/training/introduction-to-pci-dss",
+          description: "PCI DSS foundations for card programmes",
+        },
         { label: "GDPR Training", href: "/training/gdpr-fundamentals", description: "Privacy and data protection" },
         {
           label: "In-Person Training",
