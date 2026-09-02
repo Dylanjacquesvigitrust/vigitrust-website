@@ -42,11 +42,8 @@ export default function AdvisoryBoardPage() {
 
           <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">{advisory.hero.lead}</p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <CharteredAdvisorCheckoutButton size="lg">
-              {advisory.hero.primaryCta.label}
-            </CharteredAdvisorCheckoutButton>
-            <Button href={advisory.hero.secondaryCta.href} variant="ghost" size="lg">
+          <div className="mt-8">
+            <Button href={advisory.hero.secondaryCta.href} size="lg">
               {advisory.hero.secondaryCta.label}
             </Button>
           </div>

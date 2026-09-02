@@ -8,7 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageHero, SectionHeading } from "@/components/ui/section";
+import { SectionHeading } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
 import { pillars } from "@/content/site";
 
@@ -22,32 +22,26 @@ const pillarIcons = [Building2, Users, Database, Network, Siren];
 export default function PillarsOfSecurityPage() {
   return (
     <>
-      <PageHero eyebrow={pillars.hero.eyebrow} title={pillars.hero.title} body={pillars.hero.body}>
-        <div className="flex max-w-2xl flex-col gap-6">
-          <div>
-            <Button href={pillars.about.surveyCta.href} size="lg">
-              {pillars.about.surveyCta.label}
-            </Button>
-          </div>
-          <aside className="rounded-[14px] navy-surface p-7 text-white sm:p-8">
-            <h2 className="type-h3 text-white">{pillars.help.title}</h2>
-            <p className="mt-4 text-sm leading-relaxed text-white/90">{pillars.help.body}</p>
-          </aside>
-        </div>
-      </PageHero>
+      <section className="relative overflow-hidden hero-wash border-b border-vt-border py-16 md:py-24">
+        <div className="container-vt max-w-4xl px-5 sm:px-8 lg:px-10">
+          <p className="type-eyebrow mb-3 text-vt-red">{pillars.hero.eyebrow}</p>
+          <h1 className="type-display max-w-3xl text-balance text-vt-ink">{pillars.hero.title}</h1>
+          <p className="mt-5 max-w-2xl type-body-lg text-vt-slate">{pillars.hero.body}</p>
 
-      <section className="section-pad bg-vt-paper">
-        <div className="container-vt max-w-4xl">
-          <SectionHeading eyebrow={pillars.about.eyebrow} title={pillars.about.title} />
-          <div className="mt-6 space-y-4">
-            {pillars.about.paragraphs.map((p) => (
-              <p key={p.slice(0, 40)} className="type-body-lg text-vt-slate">
-                {p}
-              </p>
-            ))}
-          </div>
-          <div className="mt-8">
-            <Button href={pillars.about.surveyCta.href}>{pillars.about.surveyCta.label}</Button>
+          <div className="mt-12 border-t border-vt-border pt-10">
+            <SectionHeading eyebrow={pillars.about.eyebrow} title={pillars.about.title} />
+            <div className="mt-6 space-y-4">
+              {pillars.about.paragraphs.map((p) => (
+                <p key={p.slice(0, 40)} className="type-body-lg text-vt-slate">
+                  {p}
+                </p>
+              ))}
+            </div>
+            <div className="mt-8">
+              <Button href={pillars.about.surveyCta.href} size="lg">
+                {pillars.about.surveyCta.label}
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -64,7 +58,7 @@ export default function PillarsOfSecurityPage() {
               </Button>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[14px] bg-black shadow-[var(--shadow-md)] ring-1 ring-vt-border lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[14px] bg-white shadow-[var(--shadow-md)] ring-1 ring-vt-border lg:mx-0 lg:max-w-none">
             <SiteImage
               src={pillars.book.image}
               alt={`${pillars.book.title} book cover`}
