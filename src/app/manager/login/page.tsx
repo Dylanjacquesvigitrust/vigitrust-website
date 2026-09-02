@@ -8,14 +8,15 @@ import { withBasePath } from "@/lib/paths";
 export default function ManagerLoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [setupUrl, setSetupUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [resendLoading, setResendLoading] = useState(false);
+  const [recoverLoading, setRecoverLoading] = useState(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSetupUrl(null);
     const form = new FormData(e.currentTarget);
 
     try {
@@ -37,26 +38,30 @@ export default function ManagerLoginPage() {
     }
   }
 
-  async function onResendSetup(e: FormEvent<HTMLFormElement>) {
+  async function onRecoverSetup(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setResendLoading(true);
+    setRecoverLoading(true);
     setError(null);
-    setSuccess(null);
+    setSetupUrl(null);
     const form = new FormData(e.currentTarget);
 
     try {
       const res = await fetch(withBasePath("/api/manager/resend-setup"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.get("resendEmail") }),
+        body: JSON.stringify({ email: form.get("recoverEmail") }),
       });
-      const data = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(data.error ?? "Failed to resend setup email.");
-      setSuccess("Setup email sent. Check your inbox and spam folder.");
+      const data = (await res.json()) as {
+        error?: string;
+        setupUrl?: string;
+        alreadyActive?: boolean;
+      };
+      if (!res.ok) throw new Error(data.error ?? "Could not find setup link.");
+      setSetupUrl(data.setupUrl ?? null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to resend setup email.");
+      setError(err instanceof Error ? err.message : "Could not find setup link.");
     } finally {
-      setResendLoading(false);
+      setRecoverLoading(false);
     }
   }
 
@@ -91,35 +96,46 @@ export default function ManagerLoginPage() {
             />
           </div>
           {error ? <p className="text-sm text-vt-red">{error}</p> : null}
-          {success ? <p className="text-sm text-green-700">{success}</p> : null}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Signing in…" : "Sign in"}
           </Button>
         </form>
 
         <div className="mt-8 border-t border-vt-border pt-6">
-          <h2 className="text-sm font-semibold text-vt-ink">First time here?</h2>
+          <h2 className="text-sm font-semibold text-vt-ink">Need to create a password?</h2>
           <p className="mt-1 text-sm text-vt-muted">
-            After purchasing training licences, you should receive a setup email. If it did not arrive,
-            request a new one below.
+            Enter the email used at checkout to open your on-site account setup link.
           </p>
-          <form className="mt-4 space-y-3" onSubmit={onResendSetup}>
+          <form className="mt-4 space-y-3" onSubmit={onRecoverSetup}>
             <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="resendEmail">
+              <label className="mb-1 block text-sm font-medium" htmlFor="recoverEmail">
                 Purchase email
               </label>
               <input
-                id="resendEmail"
-                name="resendEmail"
+                id="recoverEmail"
+                name="recoverEmail"
                 type="email"
                 required
                 className="w-full rounded-md bg-vt-mist px-3 py-2 ring-1 ring-vt-border"
               />
             </div>
-            <Button type="submit" variant="ghost" className="w-full" disabled={resendLoading}>
-              {resendLoading ? "Sending…" : "Resend setup email"}
+            <Button type="submit" variant="ghost" className="w-full" disabled={recoverLoading}>
+              {recoverLoading ? "Looking up…" : "Get setup link"}
             </Button>
           </form>
+          {setupUrl ? (
+            <div className="mt-4 rounded-lg bg-vt-mist/70 p-3 text-sm">
+              <p className="font-semibold text-vt-ink">Your setup link is ready</p>
+              <a href={setupUrl} className="mt-2 block break-all font-semibold text-vt-red hover:underline">
+                {setupUrl}
+              </a>
+              <div className="mt-3">
+                <Button href={setupUrl} className="w-full">
+                  Create password
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

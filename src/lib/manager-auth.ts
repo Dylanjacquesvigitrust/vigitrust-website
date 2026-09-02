@@ -3,7 +3,6 @@ import { createHash, randomBytes, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { sendManagerSetupEmail } from "@/lib/email";
 
 export const MANAGER_COOKIE = "manager_session";
 export const MANAGER_SESSION_MAX_AGE = 60 * 60 * 24 * 30;
@@ -153,9 +152,12 @@ export async function loginManager(
   return { ok: true, managerId: manager.id, passwordHash: manager.passwordHash };
 }
 
-export async function resendManagerSetupEmail(
+export async function recoverManagerSetupLink(
   email: string,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<
+  | { ok: true; setupUrl: string }
+  | { ok: false; error: string; alreadyActive?: boolean }
+> {
   const normalized = email.trim().toLowerCase();
   if (!normalized) {
     return { ok: false, error: "Email is required." };
@@ -166,9 +168,7 @@ export async function resendManagerSetupEmail(
     include: {
       customer: {
         include: {
-          licenceAllocations: {
-            orderBy: { createdAt: "desc" },
-          },
+          licenceAllocations: { take: 1 },
         },
       },
     },
@@ -179,7 +179,15 @@ export async function resendManagerSetupEmail(
   }
 
   if (manager.status === "active") {
-    return { ok: false, error: "Your account is already set up. Sign in with your password." };
+    return {
+      ok: false,
+      alreadyActive: true,
+      error: "Your account is already set up. Sign in with your password.",
+    };
+  }
+
+  if (!manager.customer.licenceAllocations.length) {
+    return { ok: false, error: "No training licences found for this account." };
   }
 
   let inviteToken = manager.inviteToken;
@@ -195,40 +203,6 @@ export async function resendManagerSetupEmail(
     });
   }
 
-  const coursesBySlug = new Map<string, { title: string; quantity: number }>();
-  for (const allocation of manager.customer.licenceAllocations) {
-    const existing = coursesBySlug.get(allocation.courseSlug);
-    if (existing) {
-      existing.quantity += allocation.quantityPurchased;
-    } else {
-      coursesBySlug.set(allocation.courseSlug, {
-        title: allocation.courseTitle,
-        quantity: allocation.quantityPurchased,
-      });
-    }
-  }
-
-  const courses = [...coursesBySlug.values()];
-  if (!courses.length) {
-    return { ok: false, error: "No training licences found for this account." };
-  }
-
-  const emailResult = await sendManagerSetupEmail({
-    to: normalized,
-    firstName: manager.firstName ?? undefined,
-    inviteToken,
-    courses,
-    orderRef: manager.customerId,
-  });
-
-  if (!emailResult.sent) {
-    return { ok: false, error: emailResult.reason ?? "Could not send setup email." };
-  }
-
-  await prisma.managerAccount.update({
-    where: { id: manager.id },
-    data: { setupEmailSentAt: new Date() },
-  });
-
-  return { ok: true };
+  const setupUrl = `/manager/setup/?token=${encodeURIComponent(inviteToken)}`;
+  return { ok: true, setupUrl };
 }

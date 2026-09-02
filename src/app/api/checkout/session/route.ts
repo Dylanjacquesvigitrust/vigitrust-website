@@ -37,8 +37,9 @@ export async function GET(request: Request) {
       amountTax: session.total_details?.amount_tax != null ? session.total_details.amount_tax / 100 : null,
       currency: session.currency,
       isTrainingLicence: trainingLines.length > 0 || provision.processed,
-      managerEmailSent: provision.managerEmailSent ?? false,
-      managerEmailError: provision.managerEmailError ?? null,
+      managerStatus: provision.managerStatus ?? null,
+      managerSetupUrl: provision.managerSetupUrl ?? null,
+      managerLoginUrl: provision.managerLoginUrl ?? null,
     });
   } catch (error) {
     console.error("[checkout session] failed:", error);

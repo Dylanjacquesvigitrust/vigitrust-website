@@ -1,7 +1,6 @@
 import { randomBytes } from "crypto";
 import type Stripe from "stripe";
 import { prisma } from "@/lib/db";
-import { sendManagerLicencesAddedEmail, sendManagerSetupEmail } from "@/lib/email";
 import {
   createGroup,
   enrollGroupInCourse,
@@ -21,8 +20,9 @@ const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 export type ProvisionTrainingResult = {
   processed: boolean;
   purchaseId?: string;
-  managerEmailSent?: boolean;
-  managerEmailError?: string;
+  managerStatus?: "pending" | "active";
+  managerSetupUrl?: string | null;
+  managerLoginUrl?: string;
 };
 
 export type ParsedTrainingLineItem = {
@@ -151,18 +151,23 @@ export async function parseTrainingLineItems(
   return items;
 }
 
-async function sendManagerNotification(
-  email: string,
-  sessionId: string,
-  trainingLines: ParsedTrainingLineItem[],
-  firstName: string | null,
-): Promise<{ sent: boolean; error?: string }> {
+async function resolveManagerAccessLinks(email: string): Promise<{
+  managerStatus: "pending" | "active";
+  managerSetupUrl: string | null;
+  managerLoginUrl: string;
+}> {
+  const managerLoginUrl = "/manager/login/";
+
   let managerRecord = await prisma.managerAccount.findUnique({ where: { email } });
   if (!managerRecord) {
-    return { sent: false, error: "Manager account not found." };
+    return { managerStatus: "pending", managerSetupUrl: null, managerLoginUrl };
   }
 
-  if (managerRecord.status === "pending" && !managerRecord.inviteToken) {
+  if (managerRecord.status === "active") {
+    return { managerStatus: "active", managerSetupUrl: null, managerLoginUrl };
+  }
+
+  if (!managerRecord.inviteToken) {
     const inviteToken = generateInviteToken();
     managerRecord = await prisma.managerAccount.update({
       where: { id: managerRecord.id },
@@ -173,54 +178,11 @@ async function sendManagerNotification(
     });
   }
 
-  if (managerRecord.inviteToken && managerRecord.status === "pending") {
-    if (managerRecord.setupEmailSentAt) {
-      return { sent: true };
-    }
-
-    const emailResult = await sendManagerSetupEmail({
-      to: email,
-      firstName: managerRecord.firstName ?? firstName ?? undefined,
-      inviteToken: managerRecord.inviteToken,
-      courses: trainingLines.map((l) => ({
-        title: l.product.title,
-        quantity: l.quantity,
-      })),
-      orderRef: sessionId,
-    });
-
-    if (!emailResult.sent) {
-      console.error("[training-provision] Manager setup email failed:", emailResult.reason, { email });
-      return { sent: false, error: emailResult.reason ?? "Email send failed." };
-    }
-
-    await prisma.managerAccount.update({
-      where: { id: managerRecord.id },
-      data: { setupEmailSentAt: new Date() },
-    });
-    return { sent: true };
-  }
-
-  if (managerRecord.status === "active") {
-    const emailResult = await sendManagerLicencesAddedEmail({
-      to: email,
-      firstName: managerRecord.firstName ?? firstName ?? undefined,
-      courses: trainingLines.map((l) => ({
-        title: l.product.title,
-        quantity: l.quantity,
-      })),
-      orderRef: sessionId,
-    });
-
-    if (!emailResult.sent) {
-      console.error("[training-provision] Licences added email failed:", emailResult.reason, { email });
-      return { sent: false, error: emailResult.reason ?? "Email send failed." };
-    }
-
-    return { sent: true };
-  }
-
-  return { sent: false, error: "Manager account is not ready for notification." };
+  return {
+    managerStatus: "pending",
+    managerSetupUrl: `/manager/setup/?token=${encodeURIComponent(managerRecord.inviteToken!)}`,
+    managerLoginUrl,
+  };
 }
 
 async function ensureReachGroup(
@@ -308,15 +270,13 @@ export async function provisionTrainingPurchase(
   const email = await resolvePurchaserEmail(session);
   if (!email) {
     console.warn("[training-provision] No purchaser email on session", session.id);
-    return { processed: false, managerEmailError: "No purchaser email on checkout session." };
+    return { processed: false };
   }
 
   const trainingLines = await parseTrainingLineItems(session.id, session);
   if (!trainingLines.length) {
     return { processed: false };
   }
-
-  const firstName = session.metadata?.customer_first_name?.trim() || null;
 
   const existingPurchase = await prisma.trainingPurchase.findUnique({
     where: { stripeCheckoutSessionId: session.id },
@@ -339,16 +299,16 @@ export async function provisionTrainingPurchase(
       );
     }
 
-    const notification = await sendManagerNotification(email, session.id, trainingLines, firstName);
+    const access = await resolveManagerAccessLinks(email);
     return {
       processed: true,
       purchaseId: existingPurchase.id,
-      managerEmailSent: notification.sent,
-      managerEmailError: notification.error,
+      ...access,
     };
   }
 
   const companyName = session.metadata?.customer_company?.trim() || null;
+  const firstName = session.metadata?.customer_first_name?.trim() || null;
   const lastName = session.metadata?.customer_last_name?.trim() || null;
   const stripeCustomerId =
     typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
@@ -450,20 +410,18 @@ export async function provisionTrainingPurchase(
     );
   }
 
-  const notification = await sendManagerNotification(email, session.id, trainingLines, firstName);
+  const access = await resolveManagerAccessLinks(email);
 
   console.info("[training-provision] Complete", {
     sessionId: session.id,
     purchaseId: purchase.trainingPurchase.id,
     lines: trainingLines.map((l) => ({ slug: l.product.slug, qty: l.quantity })),
-    managerEmailSent: notification.sent,
-    managerEmailError: notification.error,
+    managerStatus: access.managerStatus,
   });
 
   return {
     processed: true,
     purchaseId: purchase.trainingPurchase.id,
-    managerEmailSent: notification.sent,
-    managerEmailError: notification.error,
+    ...access,
   };
 }

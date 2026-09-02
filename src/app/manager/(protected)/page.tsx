@@ -100,11 +100,19 @@ export default function ManagerDashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "resend-email", assignmentId }),
       });
-      const data = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(data.error ?? "Failed to resend email.");
-      setSuccessMessage("Training access email sent.");
+      const data = (await res.json()) as {
+        error?: string;
+        reachPortalUrl?: string;
+        isNewInvite?: boolean;
+      };
+      if (!res.ok) throw new Error(data.error ?? "Failed to resend Reach invite.");
+      setSuccessMessage(
+        data.isNewInvite
+          ? "Reach invitation re-sent. Ask the employee to check their inbox (and spam)."
+          : `Employee enrolled again. They can sign in at ${data.reachPortalUrl ?? "Reach 360"}.`,
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to resend email.");
+      setError(err instanceof Error ? err.message : "Failed to resend Reach invite.");
     } finally {
       setResendingId(null);
     }
@@ -162,9 +170,9 @@ export default function ManagerDashboardPage() {
         <div className="mt-6 rounded-2xl border border-vt-border bg-vt-mist/60 p-4 text-sm text-vt-muted">
           <p className="font-semibold text-vt-ink">How employees access training</p>
           <p className="mt-2">
-            This portal is for <strong>managers only</strong> — to assign licences and track progress.
-            Employees do not log in here. When you add an employee, they receive an email with a link to{" "}
-            <strong>Reach 360</strong> where they take the course.
+            This portal is for <strong>managers only</strong>. When you add an employee, Reach 360
+            invites them by email (from Reach) and enrols them in the course. Share the training
+            portal link below if they need it.
           </p>
           {reachPortalUrl ? (
             <p className="mt-2">
@@ -306,7 +314,7 @@ export default function ManagerDashboardPage() {
                               disabled={resendingId === e.id}
                               onClick={() => void onResendEmail(e.id)}
                             >
-                              {resendingId === e.id ? "Sending…" : "Resend email"}
+                              {resendingId === e.id ? "Sending…" : "Resend Reach invite"}
                             </button>
                           ) : null}
                           {e.licenceStatus === "failed" ? (

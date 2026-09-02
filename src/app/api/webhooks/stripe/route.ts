@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { sendCourseAccessEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
 import { provisionTrainingPurchase } from "@/lib/training-provision";
 
@@ -29,22 +28,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     console.info("[stripe webhook] training licences provisioned", {
       sessionId: session.id,
       purchaseId: training.purchaseId,
+      managerStatus: training.managerStatus,
     });
-    return;
-  }
-
-  const cartSlugs = session.metadata?.cart_slugs ?? "";
-  if (!cartSlugs || !email) return;
-
-  const result = await sendCourseAccessEmail({
-    to: email,
-    firstName: session.metadata?.customer_first_name,
-    cartSlugs,
-    orderRef: session.id,
-  });
-
-  if (!result.sent) {
-    console.warn("[stripe webhook] course email not sent:", result.reason);
   }
 }
 

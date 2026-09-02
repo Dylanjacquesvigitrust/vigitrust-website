@@ -10,7 +10,6 @@ import {
   ReachApiError,
 } from "@/lib/reach360";
 import { getReachLearnerPortalUrl, getTrainingProductBySlug } from "@/lib/training-products";
-import { sendEmployeeTrainingAssignedEmail } from "@/lib/email";
 
 export type AddEmployeeInput = {
   customerId: string;
@@ -24,7 +23,9 @@ export type AddEmployeeResult =
   | { ok: true; assignmentId: string; employeeId: string }
   | { ok: false; error: string };
 
-export type ResendEmployeeResult = { ok: true } | { ok: false; error: string };
+export type ResendEmployeeResult =
+  | { ok: true; reachPortalUrl: string; isNewInvite: boolean }
+  | { ok: false; error: string };
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
@@ -146,14 +147,6 @@ async function provisionEmployeeInReach(params: {
         data: { quantityAssigned: { increment: 1 } },
       }),
     ]);
-
-    await sendEmployeeTrainingAssignedEmail({
-      to: email,
-      firstName,
-      courseTitle: product.title,
-      reachPortalUrl: getReachLearnerPortalUrl(),
-      isNewInvite: !reachUserId,
-    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Reach provisioning failed.";
     await prisma.trainingAssignment.update({
@@ -415,22 +408,11 @@ export async function resendEmployeeAssignmentAccess(
       },
     });
 
-    const emailResult = await sendEmployeeTrainingAssignedEmail({
-      to: email,
-      firstName,
-      courseTitle: product.title,
+    return {
+      ok: true,
       reachPortalUrl: getReachLearnerPortalUrl(),
       isNewInvite: !reachUserId,
-    });
-
-    if (!emailResult.sent) {
-      return {
-        ok: false,
-        error: emailResult.reason ?? "Could not send the training email.",
-      };
-    }
-
-    return { ok: true };
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to resend training access.";
     return { ok: false, error: message };

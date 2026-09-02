@@ -76,7 +76,11 @@ export async function POST(request: Request) {
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      reachPortalUrl: result.reachPortalUrl,
+      isNewInvite: result.isNewInvite,
+    });
   }
 
   if (!body.courseSlug || !body.firstName || !body.lastName || !body.email) {
