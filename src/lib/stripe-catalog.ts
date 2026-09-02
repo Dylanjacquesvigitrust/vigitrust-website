@@ -20,10 +20,24 @@ export const STRIPE_PRODUCT_PCI_DSS_INTRO =
 export const STRIPE_PRICE_PCI_DSS_INTRO =
   process.env.STRIPE_PRICE_PCI_DSS_INTRO ?? "price_1UBHRBHa2NVkmBhFxH58dRi5";
 
+export const STRIPE_PRODUCT_CYBERSECURITY_FUNDAMENTALS =
+  process.env.STRIPE_PRODUCT_CYBERSECURITY_FUNDAMENTALS ?? "prod_VBerPqFxxg00U8";
+
+export const STRIPE_PRICE_CYBERSECURITY_FUNDAMENTALS =
+  process.env.STRIPE_PRICE_CYBERSECURITY_FUNDAMENTALS ?? "price_1UBHXtHa2NVkmBhFvZ6wGte2";
+
+export const STRIPE_PRODUCT_SECURE_CODING =
+  process.env.STRIPE_PRODUCT_SECURE_CODING ?? "prod_VBeqRtHub5fB3x";
+
+export const STRIPE_PRICE_SECURE_CODING =
+  process.env.STRIPE_PRICE_SECURE_CODING ?? "price_1UBHWQHa2NVkmBhFURT5QWWQ";
+
 const COURSE_PRICE_IDS: Record<string, string> = {
   "gdpr-fundamentals": STRIPE_PRICE_GDPR_FUNDAMENTALS,
   "payment-card-security-pci": STRIPE_PRICE_PCI_INTRO,
   "introduction-to-pci-dss": STRIPE_PRICE_PCI_DSS_INTRO,
+  "cybersecurity-fundamentals": STRIPE_PRICE_CYBERSECURITY_FUNDAMENTALS,
+  "secure-coding": STRIPE_PRICE_SECURE_CODING,
 };
 
 export function getStripePriceIdForSlug(slug: string): string | undefined {

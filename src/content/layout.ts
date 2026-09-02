@@ -47,6 +47,16 @@ export const navigation = {
           href: "/training/introduction-to-pci-dss",
           description: "PCI DSS foundations for card programmes",
         },
+        {
+          label: "Cybersecurity Fundamentals",
+          href: "/training/cybersecurity-fundamentals",
+          description: "Everyday threats and how to counter them",
+        },
+        {
+          label: "Secure Coding",
+          href: "/training/secure-coding",
+          description: "OWASP Top 10 and secure development",
+        },
         { label: "GDPR Training", href: "/training/gdpr-fundamentals", description: "Privacy and data protection" },
         {
           label: "In-Person Training",

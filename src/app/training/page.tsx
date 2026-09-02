@@ -9,7 +9,7 @@ import { courseDetails, training } from "@/content/courses";
 export const metadata: Metadata = {
   title: "eLearning Catalogue",
   description:
-    "Browse VigiTrust eLearning courses  -  GDPR, PCI, HIPAA, Secure Coding, phishing awareness and 200+ learning modules.",
+    "Browse VigiTrust eLearning courses — GDPR, PCI DSS, Cybersecurity Fundamentals, Secure Coding, and more.",
 };
 
 export default async function TrainingPage() {

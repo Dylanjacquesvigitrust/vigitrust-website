@@ -11,6 +11,7 @@ import {
   type Course as CmsCourse,
 } from "@/lib/cms-types";
 import { saveImageOverride } from "@/lib/site-images";
+import { usesStripeCatalogPrice } from "@/lib/stripe-catalog";
 
 type CmsRow = {
   kind: string;
@@ -182,7 +183,9 @@ export async function getPublishedEvents(): Promise<CmsEvent[]> {
 
 export async function getPublishedCourses(): Promise<Course[]> {
   const rows = await loadRows("course");
-  return mergeItems(seedCourses, rows, (course) => course.slug, parseCourse);
+  return mergeItems(seedCourses, rows, (course) => course.slug, parseCourse).filter((course) =>
+    usesStripeCatalogPrice(course.slug),
+  );
 }
 
 export async function getPublishedCourse(slug: string): Promise<Course | null> {
