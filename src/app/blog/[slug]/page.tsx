@@ -3,15 +3,15 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHero, Reveal } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
-import { getPublishedPost } from "@/lib/cms";
-import { blog } from "@/content/site";
+import { getPublishedPost, getPublishedPosts } from "@/lib/cms";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  return blog.posts.map((post) => ({ slug: post.slug }));
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -44,20 +44,22 @@ export default async function BlogPostPage({ params }: Props) {
               <div className="relative aspect-[16/9]">
                 <SiteImage src={post.image} alt="" fill className="object-cover" sizes="768px" />
               </div>
-              <div className="space-y-5 p-8 text-vt-slate sm:p-10">
-                {(post.body ?? post.excerpt)
-                  .split(/\n{2,}/)
-                  .map((paragraph) => (
-                    <p key={paragraph.slice(0, 48)}>{paragraph}</p>
-                  ))}
-                {!post.body ? (
-                  <p>
-                    This article reflects themes covered across VigiTrust’s news, Advisory Board
-                    conversations, and customer programmes: operationalising GRC, strengthening
-                    workforce awareness, and keeping evidence continuous rather than episodic.
-                  </p>
-                ) : null}
-                <div className="pt-2">
+              <div className="p-8 sm:p-10">
+                {post.bodyHtml ? (
+                  <div
+                    className="article-body text-vt-slate"
+                    dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
+                  />
+                ) : (
+                  <div className="space-y-5 text-vt-slate">
+                    {(post.body ?? post.excerpt)
+                      .split(/\n{2,}/)
+                      .map((paragraph) => (
+                        <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+                      ))}
+                  </div>
+                )}
+                <div className="pt-8">
                   <Button href="/blog" variant="ghost">
                     Back to blog
                   </Button>

@@ -5,14 +5,28 @@ import { PageHero } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/site-image";
 import { getPublishedPosts } from "@/lib/cms";
 import { blog } from "@/content/site";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Blog & News",
   description: blog.hero.body,
 };
 
-export default async function BlogPage() {
+type Props = { searchParams: Promise<{ category?: string }> };
+
+export default async function BlogPage({ searchParams }: Props) {
+  const { category: categoryParam } = await searchParams;
+  const category =
+    categoryParam === "News" || categoryParam === "Blog" ? categoryParam : "All";
   const posts = await getPublishedPosts();
+  const filtered =
+    category === "All" ? posts : posts.filter((post) => post.category === category);
+
+  const tabs = [
+    { label: "All", value: "All", count: posts.length },
+    { label: "News", value: "News", count: posts.filter((p) => p.category === "News").length },
+    { label: "Blog", value: "Blog", count: posts.filter((p) => p.category === "Blog").length },
+  ] as const;
 
   return (
     <>
@@ -20,8 +34,25 @@ export default async function BlogPage() {
       <section className="section-pad">
         <div className="container-vt">
           <AdminAddPostForm />
+          <div className="mb-8 flex flex-wrap gap-2">
+            {tabs.map((tab) => (
+              <Link
+                key={tab.value}
+                href={tab.value === "All" ? "/blog" : `/blog?category=${tab.value}`}
+                className={cn(
+                  "rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                  category === tab.value
+                    ? "bg-vt-navy text-white"
+                    : "bg-vt-mist text-vt-slate ring-1 ring-vt-border hover:bg-vt-paper",
+                )}
+              >
+                {tab.label}
+                <span className="ml-2 opacity-70">{tab.count}</span>
+              </Link>
+            ))}
+          </div>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {posts.map((post) => (
+            {filtered.map((post) => (
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}

@@ -5,8 +5,10 @@
 
 export { brand, navigation, footer, bookingsUrl } from "./layout";
 export { training, type Course } from "./courses";
+export { blogPosts } from "./blog-posts";
 
 import { bookingsUrl } from "./layout";
+import { blogPosts } from "./blog-posts";
 
 export const offices = [
   {
@@ -646,64 +648,9 @@ export const blog = {
   hero: {
     eyebrow: "Insights",
     title: "News, analysis, and practical GRC guidance",
-    body: "Perspectives from VigiTrust on compliance frameworks, cyber risk, and workforce awareness.",
+    body: "Perspectives from VigiTrust on compliance frameworks, cyber risk, and workforce awareness — sourced from the VigiTrust newsroom and blog.",
   },
-  posts: [
-    {
-      slug: "irm-saas-solution-of-the-year-ireland-2025",
-      title: "VigiTrust Recognized As IRM SaaS Solution Of The Year  -  Ireland 2025 By FDI Insider",
-      date: "2025-06-12",
-      category: "News",
-      excerpt:
-        "We're proud to share that VigiTrust has been named IRM SaaS Solution of the Year  -  Ireland 2025 Winner  -  recognising continuous innovation in integrated risk management.",
-      image: "/images/heroes/team-sm.webp",
-    },
-    {
-      slug: "cybrpro-company-to-watch-2025",
-      title: "VigiTrust Featured In CYBRPRO As A Revolutionary Risk Management Company To Watch In 2025",
-      date: "2025-05-28",
-      category: "News",
-      excerpt:
-        "We are proud to announce that VigiTrust and our CEO, Mathieu Gorge, have been featured among risk management companies to watch.",
-      image: "/images/heroes/security-sm.webp",
-    },
-    {
-      slug: "advisory-board-dublin-2025",
-      title: "Where Global Minds Meet: Highlights From VigiTrust�s 2025 Annual Advisory Board Event In Dublin",
-      date: "2025-05-24",
-      category: "News",
-      excerpt:
-        "VigiTrust welcomes Global Advisory Board members from across the world to its flagship two-day event  -  a vibrant gathering of cybersecurity thought leadership.",
-      image: "/images/heroes/office-sm.webp",
-    },
-    {
-      slug: "16-billion-passwords-leaked",
-      title: "16 Billion Passwords Leaked: A Wake-Up Call For Every Business",
-      date: "2025-05-20",
-      category: "Blog",
-      excerpt:
-        "Apple. Google. Facebook. 16 billion credentials. That�s not a typo  -  it�s a wake-up call for access control, awareness training, and continuous monitoring.",
-      image: "/images/courses/phishing.webp",
-    },
-    {
-      slug: "ukraine-cybersecurity-critical-infrastructure",
-      title: "Conflicts In Ukraine And Key Challenges Of Cybersecurity And Critical Infrastructure Protection",
-      date: "2024-11-12",
-      category: "Blog",
-      excerpt:
-        "The conflict in Ukraine has had a significant impact on global geopolitics and the cybersecurity industry, particularly with regards to cyber-attacks and critical infrastructure protection.",
-      image: "/images/heroes/datacenter-web.webp",
-    },
-    {
-      slug: "cybernews-interview-mathieu-gorge",
-      title: "Cybernews Interview: Mathieu Gorge, VigiTrust: �The More Information You Share  -  The Bigger Your Risk Surface Is�",
-      date: "2024-09-03",
-      category: "Blog",
-      excerpt:
-        "The rapid global digital transformation introduced not only new technologies but also a new approach to working  -  and a larger risk surface.",
-      image: "/images/courses/privacy.webp",
-    },
-  ],
+  posts: blogPosts,
 };
 
 export const resources = {

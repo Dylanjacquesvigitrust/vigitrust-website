@@ -86,15 +86,20 @@ export function SiteImage({ src, alt, className, fill, unoptimized, ...props }: 
   const overrideSrc = overrides[slot];
   const resolved =
     overrideSrc ??
-    (slot.startsWith("/cms/") ? mediaUrlForSlot(slot) : withBasePath(src));
+    (slot.startsWith("http://") || slot.startsWith("https://") || slot.startsWith("//")
+      ? src
+      : slot.startsWith("/cms/")
+        ? mediaUrlForSlot(slot)
+        : withBasePath(src));
   const editable = isAdmin && slot.startsWith("/");
+  const remote = /^https?:\/\//i.test(resolved) || resolved.startsWith("//");
 
   const image = (
     <Image
       src={resolved}
       alt={alt}
       fill={fill}
-      unoptimized={unoptimized || Boolean(overrideSrc) || slot.startsWith("/cms/")}
+      unoptimized={unoptimized || Boolean(overrideSrc) || slot.startsWith("/cms/") || remote}
       className={className}
       {...props}
     />

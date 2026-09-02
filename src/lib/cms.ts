@@ -93,6 +93,8 @@ function parsePost(payload: Prisma.JsonValue, slug: string): BlogPost | null {
     excerpt: String(data.excerpt ?? ""),
     image: String(data.image ?? "/images/heroes/team-sm.webp"),
     body: typeof data.body === "string" && data.body.trim() ? data.body : undefined,
+    bodyHtml: typeof data.bodyHtml === "string" && data.bodyHtml.trim() ? data.bodyHtml : undefined,
+    sourceUrl: typeof data.sourceUrl === "string" && data.sourceUrl.trim() ? data.sourceUrl : undefined,
   };
 }
 

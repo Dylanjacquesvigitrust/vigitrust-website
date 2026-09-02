@@ -9,7 +9,11 @@ export type BlogPost = {
   category: "News" | "Blog";
   excerpt: string;
   image: string;
+  /** Plain-text body (legacy / admin CMS). */
   body?: string;
+  /** Rich HTML body imported from vigitrust.com (images rewritten to local paths). */
+  bodyHtml?: string;
+  sourceUrl?: string;
 };
 
 export type CmsEvent = {
